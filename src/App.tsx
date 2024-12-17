@@ -1,9 +1,16 @@
 import './styles/App.css';
 
+import { useState } from 'react';
+
 function App() {
 
+  const [text, setText] = useState<string>("");
+
   return (
-    <p>Hello World!</p>
+    <>
+      <input type="text" id="text" name="text" value={text} onChange={(e: React.FormEvent<HTMLInputElement>) => setText(e.currentTarget.value)} />
+      <p>{text}</p>
+    </>
   );
 }
 
