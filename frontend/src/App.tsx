@@ -9,7 +9,7 @@ function App() {
   return (
     <>
       <input type="text" id="text" name="text" value={text} onChange={(e: React.FormEvent<HTMLInputElement>) => setText(e.currentTarget.value)} />
-      <p>{text}</p>
+      <p style={{color: "red"}}>{text}</p>
     </>
   );
 }
