@@ -9,6 +9,5 @@ app.get("/", (req, res) => {
 
 app.listen(port, ipv4, () => {
     console.log(`Server started on port ${port}`);
+    console.log(`${ipv4}:${port}`);
 });
-
-// Access via url = ipv4:port 
