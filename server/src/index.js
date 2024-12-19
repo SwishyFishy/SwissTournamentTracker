@@ -1,14 +1,14 @@
 const express = require("express");
 const app = express();
 
-const port = 1234;
+const {ipv4, port} = require("./private.js");
 
 app.get("/", (req, res) => {
-    res.send("Hello World!");
+    res.send("Hello Again,  World!");
 })
 
-// Include ip address in listen - does it work on not Trent network?
-
-app.listen(port, () => {
+app.listen(port, ipv4, () => {
     console.log(`Server started on port ${port}`);
 });
+
+// Access via url = ipv4:port 
