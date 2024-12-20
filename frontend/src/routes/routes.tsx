@@ -6,7 +6,7 @@ import EventAdminHome from "./EventAdminHome";
 import JoinEvent from "./JoinEvent";
 import EventParticipantHome from "./EventParticipantHome";
 
-const router = [
+const routes = [
     {
         path: "/",
         element: <Layout />,
@@ -36,4 +36,4 @@ const router = [
     }
 ];
 
-export default router;
+export default routes;
