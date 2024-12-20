@@ -4,7 +4,6 @@ const app = express();
 
 // Get required modules
 const {ipv4, port} = require("./private.js");
-const path = require("path");
 const cors = require("cors");
 app.use(cors());
 
