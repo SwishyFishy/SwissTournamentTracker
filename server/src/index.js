@@ -5,9 +5,11 @@ const app = express();
 // Get required modules
 const {ipv4, port} = require("./private.js");
 const path = require("path");
+const cors = require("cors");
 
 // Define location of static files
 app.use(express.static(__dirname + 'public'));
+app.use(cors());
 
 // Define responses
 app.get("/", (req, res) => {
