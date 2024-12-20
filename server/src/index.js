@@ -6,19 +6,24 @@ const app = express();
 const {ipv4, port} = require("./private.js");
 const path = require("path");
 const cors = require("cors");
-
-// Define location of static files
-app.use(express.static(__dirname + 'public'));
 app.use(cors());
 
+///////////////////
 // Define responses
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "index.html"));
-})
+///////////////////
 
+// Test
 app.get("/submit", (req, res) => {
     res.send("Submitted!");
 })
+
+// Default
+app.use("*", (req, res) => {
+    res.status(404);
+    res.send('Page Not Found');
+})
+
+///////////////////
 
 // Listen on port
 app.listen(port, ipv4, () => {
