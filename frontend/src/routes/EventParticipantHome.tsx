@@ -1,4 +1,4 @@
-function EventParticipantHome()
+function EventParticipantHome(): JSX.Element
 {
     return(
         <p>EventParticipantHome page</p>

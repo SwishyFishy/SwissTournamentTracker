@@ -1,6 +1,6 @@
 import { Outlet } from "react-router";
 
-function Layout()
+function Layout(): JSX.Element
 {
     return(
         <Outlet />

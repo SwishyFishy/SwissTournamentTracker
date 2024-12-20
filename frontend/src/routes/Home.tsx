@@ -1,15 +1,14 @@
 import { useState, useEffect, useContext } from "react";
 import { CONTEXT_serverBaseUrl } from "../main";
 
-function Home()
+function Home(): JSX.Element
 {
     const [resp, setResp] = useState("");
     const serverUrl: string = useContext(CONTEXT_serverBaseUrl);
 
-    async function getData()
+    async function getData(): Promise<void>
     {
-        const url: string = serverUrl + "submit";
-        const response = await fetch(url);
+        const response = await fetch(serverUrl + "submit");
 
         if(response.ok)
         {
