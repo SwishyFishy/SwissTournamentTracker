@@ -13,7 +13,7 @@ app.use(cors());
 
 // Define responses
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "test.html"));
+    res.sendFile(path.join(__dirname, "public", "index.html"));
 })
 
 app.get("/submit", (req, res) => {
