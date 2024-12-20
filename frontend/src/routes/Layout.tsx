@@ -1,7 +1,9 @@
+import { Outlet } from "react-router";
+
 function Layout()
 {
     return(
-        <p>Hello World!</p>
+        <Outlet />
     );
 }
 
