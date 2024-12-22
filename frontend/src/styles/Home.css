@@ -28,4 +28,6 @@
     border: .25em solid var(--secondary-text);
     border-radius: 2em;;
     margin: 1em;
+
+    cursor: pointer;
 }
