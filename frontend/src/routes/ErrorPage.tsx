@@ -1,4 +1,4 @@
-import '../styles/errorPage.css';
+import '../styles/ErrorPage.css';
 
 function ErrorPage(): JSX.Element
 {

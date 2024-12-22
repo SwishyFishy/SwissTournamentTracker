@@ -1,0 +1,31 @@
+.home{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+    margin-top: 9em;
+}
+
+.home h1{
+    margin-bottom: 2em;
+}
+
+.home form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.home form input{
+    font-size: larger;
+    font-weight: bold;
+    color: var(--primary-text);
+    background-color: var(--secondary-text);
+
+    width: 10em;
+
+    padding: .5em;
+    border: .25em solid var(--secondary-text);
+    border-radius: 2em;;
+    margin: 1em;
+}

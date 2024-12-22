@@ -1,30 +1,27 @@
-import { useState, useEffect, useContext } from "react";
-import { CONTEXT_serverBaseUrl } from "../main";
+import { useNavigate } from "react-router";
+
+import '../styles/Home.css';
 
 function Home(): JSX.Element
 {
-    const [resp, setResp] = useState("");
-    const serverUrl: string = useContext(CONTEXT_serverBaseUrl);
+    const navigate = useNavigate();
 
-    async function getData(): Promise<void>
-    {
-        const response = await fetch(serverUrl + "submit");
+    const handleCreateEvent = () =>{
+        navigate("/host");
+    };
 
-        if(response.ok)
-        {
-            setResp(await response.text())
-        }
-    }
-
-    useEffect(() => {
-        getData();
-    }, [])
+    const handleJoinEvent = () => {
+        navigate("/join");
+    };
 
     return(
-        <>
-            <p>Home page</p>
-            <p>Response: {resp}</p>
-        </>
+        <div className="home">
+            <h1>TMTGC Draft Tracker</h1>
+            <form>
+                <input type="button" name="CreateEvent" id="CreateEvent" value="Create Event" onClick={handleCreateEvent}/>
+                <input type="button" name="JoinEvent" id="JoinEvent" value="Join Event" onClick={handleJoinEvent}/>
+            </form>
+        </div>
     );
 }
 
