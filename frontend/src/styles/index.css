@@ -2,8 +2,10 @@
     --primary-background: #011627;
     --primary-text: #EEE5E9;
     --secondary-text: #D64933;
-    --accent2: #587B7F;
+    --accent: #587B7F;
 
     background-color: var(--primary-background);
     color: var(--primary-text);
+    
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
 }
