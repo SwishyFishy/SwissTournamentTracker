@@ -1,9 +1,13 @@
 import { Outlet } from "react-router";
 
+import '../styles/Layout.css';
+
 function Layout(): JSX.Element
 {
     return(
-        <Outlet />
+        <div className="layout">
+            <Outlet />
+        </div>
     );
 }
 
