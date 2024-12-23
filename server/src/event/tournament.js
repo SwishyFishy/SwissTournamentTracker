@@ -182,7 +182,8 @@ class Tournament
     }
     __MatchBuilder(unmatchedParticipants)
     {
-
+        // Ignore "DROP" players
+        // recursively find a pairing, remove those players, call self, until all pairings made successfully
     }
 }
 
