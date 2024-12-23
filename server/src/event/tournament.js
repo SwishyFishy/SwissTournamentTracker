@@ -5,13 +5,13 @@ class Tournament
     {
         this.participants = [];
         participants.forEach((player) => {
-            this.participants.push(player);
-        })
+            this.participants.push({name: player, score: 0, omw: 0, gw: 0, ogw: 0, opponents: []});
+        });
 
-        this.matches = []
+        this.matches = [];
+        this.currentRound = [];
         this.rounds = 0;
-        this.currentRount = 0;
-        this.hasStarted = false;
+        this.currentRound = 0;
     }
 
     // Utility Methods
@@ -38,8 +38,7 @@ class Tournament
         }
 
         this.rounds = Math.max(Math.ceil(Math.log2(this.participants.length)), 3);
-        this.currentRount = 1;
-        this.hasStarted = true;
+        this.NextRound(true);
     }
 
     // User-Facing Methods
@@ -49,19 +48,20 @@ class Tournament
     AddParticipant(participant)
     {
         // Fail if the event has started or if the participant is already registered
-        if (this.hasStarted || this.participants.indexOf(participant) > -1)
+        if (this.currentRound < 1 || this.participants.indexOf(participant) > -1)
         {
             return false;
         }
 
-        this.participants.push(participant);
+        this.participants.push({name: participant, score: 0, omw: 0, gw: 0, ogw: 0, opponents: []});
         return true;
     }
 
+    // Drop a participant
     DropParticipant(participant)
     {
         // Find index of dropping participant in participants array
-        const found = this.participants.indexOf(participant);
+        const found = this.participants.indexOf(this.participants.find((player) => player.name = participant));
 
         // Fail if given participant is not in participants array
         if (found === -1)
@@ -72,5 +72,32 @@ class Tournament
         // Remove participant
         this.participants.splice(found, 1);
         return true;
+    }
+
+    // Advance to the next round, recording the current round
+    // Associated private function __MatchBuilder for recursively building the next round's matches
+    NextRound(startevent = false)
+    {
+        // Record current round match results
+        if (!startevent)
+        {
+
+        }
+
+        // Check if the tournament is over
+        this.currentRound++;
+        if (this.currentRound > this.rounds)
+        {
+            return false
+        }
+
+        // Set up next round
+        
+
+        return true;
+    }
+    static __MatchBuilder()
+    {
+
     }
 }
