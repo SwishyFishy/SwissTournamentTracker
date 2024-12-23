@@ -5,7 +5,7 @@ class Tournament
     {
         this.participants = [];
         participants.forEach((player) => {
-            this.participants.push({name: player, score: 0, omw: 0, gw: 0, ogw: 0, opponents: []});
+            this.participants.push({name: player, wins: 0, losses: 0, draws: 0, omw: 0, gw: 0, ogw: 0, opponents: []});
         });
 
         this.matches = [];
@@ -53,7 +53,7 @@ class Tournament
             return false;
         }
 
-        this.participants.push({name: participant, score: 0, omw: 0, gw: 0, ogw: 0, opponents: []});
+        this.participants.push({name: participant, wins: 0, losses: 0, draws: 0, omw: 0, gw: 0, ogw: 0, opponents: []});
         return true;
     }
 
@@ -92,12 +92,19 @@ class Tournament
         }
 
         // Set up next round
-        
+        const sortedParticipants = this.participants.toSorted((par1, par2) => {
+            -1 * ((par1.wins * 3 + par1.draws) - (par2.wins * 3 + par2.draws));
+        });
+        this.__MatchBuilder(sortedParticipants);
 
+        console.log(this);
         return true;
     }
-    static __MatchBuilder()
+    __MatchBuilder(unmatchedParticipants)
     {
 
     }
 }
+
+test = new Tournament(['john', 'jonah', 'jim', 'jacob', 'jules', 'george', 'jeff']);
+test.StartTournament();
