@@ -5,7 +5,7 @@ class Tournament
     {
         this.participants = [];
         participants.forEach((player) => {
-            this.participants.push({name: player, wins: 0, losses: 0, draws: 0, omw: 0, gw: 0, ogw: 0, opponents: []});
+            this.participants.push({name: player, points: 0, wins: 0, losses: 0, draws: 0, omw: 0, gw: 0, ogw: 0, opponents: []});
         });
 
         this.matches = [];
@@ -53,7 +53,7 @@ class Tournament
             return false;
         }
 
-        this.participants.push({name: participant, wins: 0, losses: 0, draws: 0, omw: 0, gw: 0, ogw: 0, opponents: []});
+        this.participants.push({name: participant, points: 0, wins: 0, losses: 0, draws: 0, omw: 0, gw: 0, ogw: 0, opponents: []});
         return true;
     }
 
@@ -74,6 +74,43 @@ class Tournament
         return true;
     }
 
+    // Determine participant placement on the leaderboard
+    // Associated private function __ComparePlacement is the CompareFn implementation for Array.Protoptype.toSorted
+    RankParticipants()
+    {
+        return this.participants.toSorted(this.__ComparePlacement);
+    }
+    __ComparePlacement(par1, par2)
+    {
+        // Compare points
+        const pointOrder = -1 * (par1.points - par2.points);
+        if (pointOrder != 0)
+        {
+            return pointOrder;
+        }
+
+        // Compare OMW
+        const omwOrder = -1 * (par1.omw - par2.omw);
+        if (omwOrder != 0)
+        {
+            return omwOrder;
+        }
+
+        // Compare GW
+        const gwOrder = -1 * (par1.gw - par2.gw);
+        if (gwOrder != 0)
+        {
+            return gwOrder;
+        }
+
+        // Compare OGW
+        const ogwOrder = -1 * (par1.ogw - par2.ogw);
+        if (ogwOrder != 0)
+        {
+            return ogwOrder;
+        }
+    }
+
     // Advance to the next round, recording the current round
     // Associated private function __MatchBuilder for recursively building the next round's matches
     NextRound(startevent = false)
@@ -92,9 +129,7 @@ class Tournament
         }
 
         // Set up next round
-        const sortedParticipants = this.participants.toSorted((par1, par2) => {
-            -1 * ((par1.wins * 3 + par1.draws) - (par2.wins * 3 + par2.draws));
-        });
+        const sortedParticipants = this.RankParticipants();
         this.__MatchBuilder(sortedParticipants);
 
         console.log(this);
