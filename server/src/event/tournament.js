@@ -5,7 +5,7 @@ class Tournament
     {
         this.participants = [];
         participants.forEach((player) => {
-            this.participants.push({name: player, points: 0, wins: 0, losses: 0, draws: 0, omw: 0, gw: 0, ogw: 0, opponents: []});
+            this.participants.push({id: 0, name: player, points: 0, wins: 0, losses: 0, draws: 0, omw: 0, gw: 0, ogw: 0});
         });
 
         this.matches = [];
@@ -27,7 +27,9 @@ class Tournament
         }
 
         // Initialize a 2d array of booleans to false to track which players have played a match
-        // Only initialie the lower triangle, since the upper triangle is redundant. Use the diagonal for byes
+        // Only initialize the lower triangle, since the upper triangle is redundant. Use the diagonal for byes
+        // Hijack the loop to assign unique integer participant ids.
+        //      The array of participants is expected to mutate, so each participant is assigned a unique integer id corresponding to their initial position in the array, used to index players in the matches array
         for (let i = 0; i < this.participants.length; i++)
         {
             this.matches.push([]);
@@ -35,6 +37,8 @@ class Tournament
             {
                 this.matches[i].push(false);
             }
+            
+            this.participants[i].id = i;
         }
 
         this.rounds = Math.max(Math.ceil(Math.log2(this.participants.length)), 3);
@@ -48,18 +52,24 @@ class Tournament
     AddParticipant(participant)
     {
         // Fail if the event has started or if the participant is already registered
-        if (this.currentRound < 1 || this.participants.indexOf(participant) > -1)
+        if (this.currentRound > 0 || this.participants.indexOf(participant) > -1)
         {
             return false;
         }
 
-        this.participants.push({name: participant, points: 0, wins: 0, losses: 0, draws: 0, omw: 0, gw: 0, ogw: 0, opponents: []});
+        this.participants.push({id: 0, name: participant, points: 0, wins: 0, losses: 0, draws: 0, omw: 0, gw: 0, ogw: 0});
         return true;
     }
 
-    // Drop a participant
-    DropParticipant(participant)
+    // Remove a participant from the event.
+    RemoveParticipant(participant)
     {
+        // Fail if the event has started
+        if (this.currentRound > 0)
+        {
+            return false;
+        }
+
         // Find index of dropping participant in participants array
         const found = this.participants.indexOf(this.participants.find((player) => player.name = participant));
 
@@ -74,11 +84,17 @@ class Tournament
         return true;
     }
 
+    // Drop a participant mid-event
+    DropParticipant(participant)
+    {
+
+    }
+
     // Determine participant placement on the leaderboard
     // Associated private function __ComparePlacement is the CompareFn implementation for Array.Protoptype.toSorted
     RankParticipants()
     {
-        return this.participants.toSorted(this.__ComparePlacement);
+        this.participants.sort(this.__ComparePlacement);
     }
     __ComparePlacement(par1, par2)
     {
@@ -129,10 +145,11 @@ class Tournament
         }
 
         // Set up next round
-        const sortedParticipants = this.RankParticipants();
-        this.__MatchBuilder(sortedParticipants);
+        this.RankParticipants();
+        this.__MatchBuilder(structuredClone(this.participants));
 
         console.log(this);
+
         return true;
     }
     __MatchBuilder(unmatchedParticipants)
