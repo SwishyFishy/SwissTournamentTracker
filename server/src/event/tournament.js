@@ -17,7 +17,7 @@ class Tournament
     // Utility Methods
     //////////////////
 
-    StartEvent()
+    StartTournament()
     {
         // Shuffle the participants array so that join-order is sure to not matter
         for (let i = this.participants.length - 1; i >= 0; i--) 
@@ -30,14 +30,14 @@ class Tournament
         // Only initialie the lower triangle, since the upper triangle is redundant. Use the diagonal for byes
         for (let i = 0; i < this.participants.length; i++)
         {
-            this.matches[i].push([]);
+            this.matches.push([]);
             for (let j = 0; j <= i; j++)
             {
                 this.matches[i].push(false);
             }
         }
 
-        this.rounds = Math.max(Math.ceil(Math.log2(participants.length)), 3);
+        this.rounds = Math.max(Math.ceil(Math.log2(this.participants.length)), 3);
         this.currentRount = 1;
         this.hasStarted = true;
     }
@@ -48,8 +48,8 @@ class Tournament
     // Add a new participant
     AddParticipant(participant)
     {
-        // Fail if the event has started
-        if (this.hasStarted)
+        // Fail if the event has started or if the participant is already registered
+        if (this.hasStarted || this.participants.indexOf(participant) > -1)
         {
             return false;
         }
@@ -61,7 +61,7 @@ class Tournament
     DropParticipant(participant)
     {
         // Find index of dropping participant in participants array
-        found = this.participants.indexOf(participant);
+        const found = this.participants.indexOf(participant);
 
         // Fail if given participant is not in participants array
         if (found === -1)
