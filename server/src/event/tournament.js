@@ -71,7 +71,7 @@ class Tournament
         }
 
         // Find index of dropping participant in participants array
-        const found = this.participants.indexOf(this.participants.find((player) => player.name = participant));
+        const found = this.participants.indexOf(this.participants.find((player) => player.name == participant));
 
         // Fail if given participant is not in participants array
         if (found === -1)
@@ -87,11 +87,41 @@ class Tournament
     // Drop a participant mid-event
     DropParticipant(participant)
     {
+        // Fail if the event has not started
+        if (this.currentRound < 1)
+        {
+            return false;
+        }
 
+        // Find index of dropping participant in participants array
+        const found = this.participants.findIndex((player) => player.name == participant);
+
+        // Fail if given participant is not in participants array
+        if (found === -1)
+        {
+            return false;
+        }
+
+        // Mark this player's row in matches as "DROP". __MatchBuilder will discard this participant
+        // Mark this player as having had a match with every other player. __MatchBuilder will discard this participant as a potential pairing
+        for (let i = 0; i < this.participants.length; i++)
+        {
+            for (let j = 0; j <= i; j++)
+            {
+                if (i == found)
+                {
+                    this.matches[i] = "DROP";
+                }
+                else if (j == found)
+                {
+                    this.matches[i][j] = true;
+                }
+            }
+        }
     }
 
     // Determine participant placement on the leaderboard
-    // Associated private function __ComparePlacement is the CompareFn implementation for Array.Protoptype.toSorted
+    // Associated private function __ComparePlacement is the CompareFn implementation for Array.Protoptype.sort
     RankParticipants()
     {
         this.participants.sort(this.__ComparePlacement);
@@ -128,7 +158,7 @@ class Tournament
     }
 
     // Advance to the next round, recording the current round
-    // Associated private function __MatchBuilder for recursively building the next round's matches
+    // Associated private function __MatchBuilder recursively builds the next round's matches
     NextRound(startevent = false)
     {
         // Record current round match results
@@ -148,8 +178,6 @@ class Tournament
         this.RankParticipants();
         this.__MatchBuilder(structuredClone(this.participants));
 
-        console.log(this);
-
         return true;
     }
     __MatchBuilder(unmatchedParticipants)
@@ -160,3 +188,5 @@ class Tournament
 
 test = new Tournament(['john', 'jonah', 'jim', 'jacob', 'jules', 'george', 'jeff']);
 test.StartTournament();
+test.DropParticipant('jacob');
+console.log(test);
