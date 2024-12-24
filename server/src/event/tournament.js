@@ -1,5 +1,7 @@
 class Participant
 {
+    // Constructor
+    // name: string
     constructor(name)
     {
         this.id = 0;
@@ -11,6 +13,29 @@ class Participant
         this.games = 0;
         this.omr = {w: 0, p: 0};
         this.ogr = {w: 0, p: 0};
+    }
+
+    // User-Facing Methods
+    //////////////////////
+
+    CalcPoints()
+    {
+        return (3 * this.wins) + this.draws;
+    }
+
+    CalcOMW()
+    {
+        return (this.omr.w / this.omr.p) * 100;
+    }
+
+    CalcGW()
+    {
+        return (this.wins / this.matches) * 100;
+    }
+
+    CalcOGW()
+    {
+        return (this.ogr.w / this.ogr.p) * 100;
     }
 }
 
@@ -71,28 +96,28 @@ class Tournament
     __ComparePlacement(par1, par2)
     {
         // Compare points
-        const pointOrder = -1 * (par1.points - par2.points);
+        const pointOrder = -1 * (par1.CalcPoints - par2.CalcPoints);
         if (pointOrder != 0)
         {
             return pointOrder;
         }
 
         // Compare OMW
-        const omwOrder = -1 * (par1.omw - par2.omw);
+        const omwOrder = -1 * (par1.CalcOMW - par2.CalcOMW);
         if (omwOrder != 0)
         {
             return omwOrder;
         }
 
         // Compare GW
-        const gwOrder = -1 * (par1.gw - par2.gw);
+        const gwOrder = -1 * (par1.CalcGW - par2.CalcGW);
         if (gwOrder != 0)
         {
             return gwOrder;
         }
 
         // Compare OGW
-        const ogwOrder = -1 * (par1.ogw - par2.ogw);
+        const ogwOrder = -1 * (par1.CalcOGW - par2.CalcOGW);
         if (ogwOrder != 0)
         {
             return ogwOrder;
