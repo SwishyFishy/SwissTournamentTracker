@@ -9,7 +9,7 @@ class Tournament
         });
 
         this.matches = [];
-        this.currentRound = [];
+        this.currentMatches = [];
         this.rounds = 0;
         this.currentRound = 0;
     }
@@ -44,6 +44,44 @@ class Tournament
         this.rounds = Math.max(Math.ceil(Math.log2(this.participants.length)), 3);
         this.NextRound(true);
     }
+    
+    // Determine participant placement on the leaderboard
+    // Associated private function __ComparePlacement is the CompareFn implementation for Array.Protoptype.sort
+    RankParticipants()
+    {
+        this.participants.sort(this.__ComparePlacement);
+    }
+    __ComparePlacement(par1, par2)
+    {
+        // Compare points
+        const pointOrder = -1 * (par1.points - par2.points);
+        if (pointOrder != 0)
+        {
+            return pointOrder;
+        }
+
+        // Compare OMW
+        const omwOrder = -1 * (par1.omw - par2.omw);
+        if (omwOrder != 0)
+        {
+            return omwOrder;
+        }
+
+        // Compare GW
+        const gwOrder = -1 * (par1.gw - par2.gw);
+        if (gwOrder != 0)
+        {
+            return gwOrder;
+        }
+
+        // Compare OGW
+        const ogwOrder = -1 * (par1.ogw - par2.ogw);
+        if (ogwOrder != 0)
+        {
+            return ogwOrder;
+        }
+    }
+
 
     // User-Facing Methods
     //////////////////////
@@ -102,8 +140,8 @@ class Tournament
             return false;
         }
 
-        // Mark this player's row in matches as "DROP". __MatchBuilder will discard this participant
-        // Mark this player as having had a match with every other player. __MatchBuilder will discard this participant as a potential pairing
+        // Mark this player's row in matches as "DROP"
+        // Mark this player as having had a match with every other player
         for (let i = 0; i < this.participants.length; i++)
         {
             for (let j = 0; j <= i; j++)
@@ -117,43 +155,6 @@ class Tournament
                     this.matches[i][j] = true;
                 }
             }
-        }
-    }
-
-    // Determine participant placement on the leaderboard
-    // Associated private function __ComparePlacement is the CompareFn implementation for Array.Protoptype.sort
-    RankParticipants()
-    {
-        this.participants.sort(this.__ComparePlacement);
-    }
-    __ComparePlacement(par1, par2)
-    {
-        // Compare points
-        const pointOrder = -1 * (par1.points - par2.points);
-        if (pointOrder != 0)
-        {
-            return pointOrder;
-        }
-
-        // Compare OMW
-        const omwOrder = -1 * (par1.omw - par2.omw);
-        if (omwOrder != 0)
-        {
-            return omwOrder;
-        }
-
-        // Compare GW
-        const gwOrder = -1 * (par1.gw - par2.gw);
-        if (gwOrder != 0)
-        {
-            return gwOrder;
-        }
-
-        // Compare OGW
-        const ogwOrder = -1 * (par1.ogw - par2.ogw);
-        if (ogwOrder != 0)
-        {
-            return ogwOrder;
         }
     }
 
@@ -175,19 +176,73 @@ class Tournament
         }
 
         // Set up next round
+        // Pass __MatchBuilder an array of players in leaderboard order, with any that dropped the event filtered out.
         this.RankParticipants();
-        this.__MatchBuilder(structuredClone(this.participants));
+        this.currentMatches = this.__MatchBuilder(structuredClone(this.participants).filter((player) => this.matches[player.id] !== "DROP"))
+        if (this.currentMatches === false)
+        {
+            throw new Error("No Valid Pairings");
+        }
 
         return true;
     }
-    __MatchBuilder(unmatchedParticipants)
+    __MatchBuilder(unmatchedParticipants, proposedPairs = [])
     {
-        // Ignore "DROP" players
-        // recursively find a pairing, remove those players, call self, until all pairings made successfully
+        // Recursively find a pairing, remove those players, call self, until all pairings made successfully
+        // For the highest-ranked unmatched player, check all possible pairings in descending leaderboared order
+        // Use the bye only as a last resort
+        const player = unmatchedParticipants[0];
+        let opponentIndex;
+        for (let i = unmatchedParticipants.length - 1; i >= 0; i--)
+        {
+            // Invert countdown except on 0 such that matches are checked in descending leaderboard order, then the bye
+            if (i != 0)
+            {
+                opponentIndex = unmatchedParticipants.length - i;
+            }
+            else
+            {
+                opponentIndex = i;
+            }
+
+            // Normalize player, opponent since only 1 triangle of this.matches is used
+            const opponent = unmatchedParticipants[opponentIndex];
+            let p1, p2;
+            if (player.id < opponent.id)
+            {
+                p1 = opponent;
+                p2 = player;
+            }
+            else
+            {
+                p1 = player;
+                p2 = opponent;
+            }
+
+            // Check pairing validity
+            if (this.matches[p1.id][p2.id] == false)
+            {
+                // Base case - there are no more unmatchedParticipants
+                if (unmatchedParticipants.length <= 2)
+                {
+                    proposedPairs.push({player, opponent});
+                    return proposedPairs;
+                }
+                // Recursive case
+                else if (this.__MatchBuilder(unmatchedParticipants.toSpliced(opponentIndex, 1).toSpliced(0, 1), proposedPairs) !== false)
+                {
+                    proposedPairs.push({player, opponent});
+                    return proposedPairs;
+                }
+            }
+        }
+
+        // Return false if there is no possible pairing for the initial conditions
+        return false;
     }
 }
 
-test = new Tournament(['john', 'jonah', 'jim', 'jacob', 'jules', 'george', 'jeff']);
+test = new Tournament(['john', 'jonah', 'jim', 'jacob', 'jules', 'george', 'jeff', 'joseph', 'james']);
 test.StartTournament();
 test.DropParticipant('jacob');
 console.log(test);
