@@ -199,6 +199,11 @@ class Tournament
         {
             this.currentMatches.forEach((match) => {
 
+                // Set this.matches = true for this pairing
+                const low = Math.min(match.p1id, match.p2id);
+                const high = Math.max(match.p1id, match.p2id);
+                this.matches[high][low] = true;
+
                 // Handle bye
                 if (match.p1id == match.p2id)
                 {
@@ -209,7 +214,7 @@ class Tournament
                     player.points = player.points + 3;
                     player.gw = player.wins / (player.wins + player.losses + player.draws) * 100;
 
-                    // Update previous opponents stats (omw, ogw)
+                    // Update previous opponents' stats (omw, ogw)
 
                 }
                 // Handle match
@@ -230,7 +235,7 @@ class Tournament
                         player2.points = player2.points + 1;
                         player2.gw = player2.wins / (player2.wins + player2.losses + player2.draws) * 100;
                         
-                        // Update previous opponents stats (omw, ogw) - also does these stats for the current round opponent
+                        // Update previous opponents' stats (omw, ogw) - also does these stats for the current round opponent
 
                     }
                     // Handle a victory
@@ -256,7 +261,7 @@ class Tournament
                         loser.losses = winner.losses + 1;
                         loser.gw = loser.wins / (loser.wins + loser.losses + loser.draws) * 100;
                         
-                        // Update previous opponents stats (omw, ogw) - also does these stats for the current round opponent
+                        // Update previous opponents' stats (omw, ogw) - also does these stats for the current round opponent
 
                     }
 
