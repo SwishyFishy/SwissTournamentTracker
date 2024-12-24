@@ -1,6 +1,7 @@
 class Tournament
 {
     // Constructor
+    // participants: array<string>
     constructor(participants = [])
     {
         this.participants = [];
@@ -87,6 +88,7 @@ class Tournament
     //////////////////////
 
     // Add a new participant
+    // participant: string
     AddParticipant(participant)
     {
         // Fail if the event has started or if the participant is already registered
@@ -100,6 +102,7 @@ class Tournament
     }
 
     // Remove a participant from the event.
+    // participant: string
     RemoveParticipant(participant)
     {
         // Fail if the event has started
@@ -123,6 +126,7 @@ class Tournament
     }
 
     // Drop a participant mid-event
+    // participant: string
     DropParticipant(participant)
     {
         // Fail if the event has not started
@@ -156,10 +160,33 @@ class Tournament
                 }
             }
         }
+
+        return true;
+    }
+
+    // Update the values of player wins in one element of currentMatches
+    // player1: string
+    // player2: string
+    // p1wins: int
+    // p2wins: int
+    ReportMatchResults(player1, player2, p1wins, p2wins)
+    {
+        // Fail if the given pair of players do not have an ongoing match
+        const match = this.currentMatches.find((match) => match.p1name == player1 && match.p2name == player2);
+        if (match === undefined)
+        {
+            return false;
+        }
+
+        match.p1wins = p1wins;
+        match.p2wins = p2wins;
+
+        return true;
     }
 
     // Advance to the next round, recording the current round
     // Associated private function __MatchBuilder recursively builds the next round's matches
+    // startevent: boolean
     NextRound(startevent = false)
     {
         // Record current round match results
@@ -186,6 +213,8 @@ class Tournament
 
         return true;
     }
+    // unmatchedParticipants: array<Object>
+    // proposedPairs: array<Object>
     __MatchBuilder(unmatchedParticipants, proposedPairs = [])
     {
         // Recursively find a pairing, remove those players, call self, until all pairings made successfully
@@ -222,16 +251,10 @@ class Tournament
             // Check pairing validity
             if (this.matches[p1.id][p2.id] == false)
             {
-                // Base case - there are no more unmatchedParticipants
-                if (unmatchedParticipants.length <= 2)
+                if (unmatchedParticipants.length <= 2 ||                                            // Base case - there are no more unmatchedParticipants
+                    this.__MatchBuilder(unmatchedParticipants.toSpliced(opponentIndex, 1).toSpliced(0, 1), proposedPairs) !== false)     // Recursive case
                 {
-                    proposedPairs.push({player, opponent});
-                    return proposedPairs;
-                }
-                // Recursive case
-                else if (this.__MatchBuilder(unmatchedParticipants.toSpliced(opponentIndex, 1).toSpliced(0, 1), proposedPairs) !== false)
-                {
-                    proposedPairs.push({player, opponent});
+                    proposedPairs.push({p1id: player.id, p1name: player.name, p2id: opponent.id, p2name: opponent.name, p1wins: 0, p2wins: 0});
                     return proposedPairs;
                 }
             }
@@ -244,5 +267,4 @@ class Tournament
 
 test = new Tournament(['john', 'jonah', 'jim', 'jacob', 'jules', 'george', 'jeff', 'joseph', 'james']);
 test.StartTournament();
-test.DropParticipant('jacob');
 console.log(test);
