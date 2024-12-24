@@ -1,3 +1,5 @@
+const { preProcessFile } = require("typescript");
+
 class Tournament
 {
     // Constructor
@@ -6,7 +8,7 @@ class Tournament
     {
         this.participants = [];
         participants.forEach((player) => {
-            this.participants.push({id: 0, name: player, points: 0, wins: 0, losses: 0, draws: 0, omw: 0, gw: 0, ogw: 0});
+            this.participants.push({id: 0, name: player, points: 0, wins: 0, losses: 0, draws: 0, matches: 0, games: 0, omw: 0, gw: 0, ogw: 0});
         });
 
         this.matches = [];
@@ -97,7 +99,7 @@ class Tournament
             return false;
         }
 
-        this.participants.push({id: 0, name: participant, points: 0, wins: 0, losses: 0, draws: 0, omw: 0, gw: 0, ogw: 0});
+        this.participants.push({id: 0, name: participant, points: 0, wins: 0, losses: 0, draws: 0, matches: 0, games: 0, omw: 0, gw: 0, ogw: 0});
         return true;
     }
 
@@ -211,11 +213,27 @@ class Tournament
 
                     // Update player stats (wins, points, gw)
                     player.wins = player.wins + 1;
+                    player.matches = player.matches + 1;
                     player.points = player.points + 3;
-                    player.gw = player.wins / (player.wins + player.losses + player.draws) * 100;
+                    player.gw = player.wins / player.matches * 100;
 
                     // Update previous opponents' stats (omw, ogw)
-
+                    for (let i = 0; i <= player.id; i++)
+                    {
+                        if (this.matches[player.id][i])
+                        {
+                            previousOpponent = this.participants.find((opponent) => opponent.id == i);
+                            previousOpponent.omw = ((previousOpponent.omw / 100 * (player.matches - 1)) + 1) / player.matches * 100;
+                        }
+                    }
+                    for (let i = player.id + 1; i < this.participants.length; i++)
+                    {
+                        if (this.matches[i][player.id])
+                        {
+                            previousOpponent = this.participants.find((opponent) => opponent.id == i);
+                            previousOpponent.omw = ((previousOpponent.omw / 100 * (player.matches - 1)) + 1) / player.matches * 100;
+                        }
+                    }
                 }
                 // Handle match
                 else
@@ -228,10 +246,14 @@ class Tournament
                     {
                         // Update player stats (wins, losses, draws, points, gw)
                         player1.draws = player1.draws + 1;
+                        player1.matches = player1.matches + 1;
+                        player1.games = player1.games + match.p1wins + match.p2wins;
                         player1.points = player1.points + 1;
                         player1.gw = player1.wins / (player1.wins + player1.losses + player1.draws) * 100;
                         
                         player2.draws = player2.draws + 1;
+                        player2.matches = player2.matches + 1;
+                        player2.games = player2.games + match.p1wins + match.p2wins;
                         player2.points = player2.points + 1;
                         player2.gw = player2.wins / (player2.wins + player2.losses + player2.draws) * 100;
                         
@@ -255,17 +277,19 @@ class Tournament
 
                         // Update player stats (wins, losses, draws, points, gw)
                         winner.wins = winner.wins + 1;
+                        winner.matches = winner.matches + 1;
+                        winner.games = winner.games + match.p1wins + match.p2wins;
                         winner.points = winner.points + 3;
                         winner.gw = winner.wins / (winner.wins + winner.losses + winner.draws) * 100;
                         
                         loser.losses = winner.losses + 1;
+                        loser.matches = loser.matches + 1;
+                        loser.games = loser.games + match.p1wins + match.p2wins;
                         loser.gw = loser.wins / (loser.wins + loser.losses + loser.draws) * 100;
                         
                         // Update previous opponents' stats (omw, ogw) - also does these stats for the current round opponent
 
                     }
-
-
                 }  
             });
         }
