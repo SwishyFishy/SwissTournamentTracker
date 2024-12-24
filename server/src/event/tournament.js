@@ -177,6 +177,11 @@ class Tournament
         {
             return false;
         }
+        // Fail if the given pair of players are the same player (i.e. the bye)
+        if (match.p1id == match.p2id)
+        {
+            return false;
+        }
 
         match.p1wins = p1wins;
         match.p2wins = p2wins;
@@ -192,7 +197,72 @@ class Tournament
         // Record current round match results
         if (!startevent)
         {
+            this.currentMatches.forEach((match) => {
 
+                // Handle bye
+                if (match.p1id == match.p2id)
+                {
+                    const player = this.participants.find((player) => player.id == match.p1id);
+
+                    // Update player stats (wins, points, gw)
+                    player.wins = player.wins + 1;
+                    player.points = player.points + 3;
+                    player.gw = player.wins / (player.wins + player.losses + player.draws) * 100;
+
+                    // Update previous opponents stats (omw, ogw)
+
+                }
+                // Handle match
+                else
+                {
+                    const player1 = this.participants.find((player) => player.id == match.p1id);
+                    const player2 = this.participants.find((player) => player.id == match.p2id);
+
+                    // Handle a draw
+                    if (match.p1wins == match.p2wins)
+                    {
+                        // Update player stats (wins, losses, draws, points, gw)
+                        player1.draws = player1.draws + 1;
+                        player1.points = player1.points + 1;
+                        player1.gw = player1.wins / (player1.wins + player1.losses + player1.draws) * 100;
+                        
+                        player2.draws = player2.draws + 1;
+                        player2.points = player2.points + 1;
+                        player2.gw = player2.wins / (player2.wins + player2.losses + player2.draws) * 100;
+                        
+                        // Update previous opponents stats (omw, ogw) - also does these stats for the current round opponent
+
+                    }
+                    // Handle a victory
+                    else
+                    {
+                        let winner, loser;
+                        if (match.p1wins > match.p2wins)
+                        {
+                            winner = player1;
+                            loser = player2;
+                        }
+                        else
+                        {
+                            winner = player2;
+                            loser = player1;
+                        }
+
+                        // Update player stats (wins, losses, draws, points, gw)
+                        winner.wins = winner.wins + 1;
+                        winner.points = winner.points + 3;
+                        winner.gw = winner.wins / (winner.wins + winner.losses + winner.draws) * 100;
+                        
+                        loser.losses = winner.losses + 1;
+                        loser.gw = loser.wins / (loser.wins + loser.losses + loser.draws) * 100;
+                        
+                        // Update previous opponents stats (omw, ogw) - also does these stats for the current round opponent
+
+                    }
+
+
+                }  
+            });
         }
 
         // Check if the tournament is over
@@ -254,7 +324,16 @@ class Tournament
                 if (unmatchedParticipants.length <= 2 ||                                            // Base case - there are no more unmatchedParticipants
                     this.__MatchBuilder(unmatchedParticipants.toSpliced(opponentIndex, 1).toSpliced(0, 1), proposedPairs) !== false)     // Recursive case
                 {
-                    proposedPairs.push({p1id: player.id, p1name: player.name, p2id: opponent.id, p2name: opponent.name, p1wins: 0, p2wins: 0});
+                    // Handle the bye
+                    if (player.id == opponent.id)
+                    {
+                        proposedPairs.push({p1id: player.id, p2id: player.id, p1name: player.name, p1wins: 2});
+                    }
+                    else
+                    {   
+                        proposedPairs.push({p1id: player.id, p1name: player.name, p2id: opponent.id, p2name: opponent.name, p1wins: 0, p2wins: 0});
+                    }
+
                     return proposedPairs;
                 }
             }
