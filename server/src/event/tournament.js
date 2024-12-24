@@ -1,3 +1,19 @@
+class Participant
+{
+    constructor(name)
+    {
+        this.id = 0;
+        this.name = name;
+        this.wins = 0;
+        this.losses = 0;
+        this.draws = 0;
+        this.matches = 0;
+        this.games = 0;
+        this.omr = {w: 0, p: 0};
+        this.ogr = {w: 0, p: 0};
+    }
+}
+
 class Tournament
 {
     // Constructor
@@ -6,7 +22,7 @@ class Tournament
     {
         this.participants = [];
         participants.forEach((player) => {
-            this.participants.push({id: 0, name: player, wins: 0, losses: 0, draws: 0, matches: 0, games: 0, omr: {w: 0, p:0}, ogr: {w: 0, p:0}});
+            this.participants.push(new Participant(player));
         });
 
         this.matches = [];
@@ -97,7 +113,7 @@ class Tournament
             return false;
         }
 
-        this.participants.push({id: 0, name: participant, wins: 0, losses: 0, draws: 0, matches: 0, games: 0, omr: {w: 0, p:0}, ogr: {w: 0, p:0}});
+        this.participants.push(new Participant(participant));
         return true;
     }
 
