@@ -12,7 +12,7 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
 
-    height: 40vh;
+    height: 50vh;
 
     padding: 0em;
     border-radius: 1em;
@@ -28,7 +28,8 @@
     justify-content: space-between;
     align-items: center;
 
-    width: 50vw;
+    width: 20vw;
+    min-width: 10em;
 
     margin: 1.25em;
 }

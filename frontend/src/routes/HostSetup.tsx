@@ -27,6 +27,7 @@ function HostSetup(): JSX.Element
         });
     }
 
+    // Connect to server on load to receive push events when a player joins
     useEffect(() => {
         // Create a handler to recieve pushed server events and append players to the player list
         const playerJoinEventSource: EventSource = new EventSource(serverUrl);
