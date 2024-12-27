@@ -1,7 +1,14 @@
+import { useNavigate } from "react-router";
+
 function HostSetup(): JSX.Element
 {
+    const navigate = useNavigate();
+    navigate("/host/event");
+
     return(
-        <p>HostSetup page</p>
+        <div className="hostSetup">
+            <p>Creating your event...</p>
+        </div>
     );
 }
 
