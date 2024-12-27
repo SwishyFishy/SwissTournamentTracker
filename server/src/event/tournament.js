@@ -23,6 +23,11 @@ class Participant
         return (3 * this.wins) + this.draws;
     }
 
+    CalcMW()
+    {
+        return (this.wins / this.matches) * 100
+    }
+
     CalcOMW()
     {
         return (this.omr.w / this.omr.p) * 100;
@@ -30,7 +35,7 @@ class Participant
 
     CalcGW()
     {
-        return (this.wins / this.matches) * 100;
+        return (this.wins / this.games) * 100;
     }
 
     CalcOGW()
@@ -96,28 +101,28 @@ class Tournament
     __ComparePlacement(par1, par2)
     {
         // Compare points
-        const pointOrder = -1 * (par1.CalcPoints - par2.CalcPoints);
+        const pointOrder = -1 * (par1.CalcPoints() - par2.CalcPoints());
         if (pointOrder != 0)
         {
             return pointOrder;
         }
 
         // Compare OMW
-        const omwOrder = -1 * (par1.CalcOMW - par2.CalcOMW);
+        const omwOrder = -1 * (par1.CalcOMW() - par2.CalcOMW());
         if (omwOrder != 0)
         {
             return omwOrder;
         }
 
         // Compare GW
-        const gwOrder = -1 * (par1.CalcGW - par2.CalcGW);
+        const gwOrder = -1 * (par1.CalcGW() - par2.CalcGW());
         if (gwOrder != 0)
         {
             return gwOrder;
         }
 
         // Compare OGW
-        const ogwOrder = -1 * (par1.CalcOGW - par2.CalcOGW);
+        const ogwOrder = -1 * (par1.CalcOGW() - par2.CalcOGW());
         if (ogwOrder != 0)
         {
             return ogwOrder;
@@ -250,7 +255,7 @@ class Tournament
                 {
                     const player = this.participants.find((player) => player.id == match.p1id);
 
-                    // Update player stats (wins, points, gw)
+                    // Update player stats (wins, matches)
                     player.wins = player.wins + 1;
                     player.matches = player.matches + 1;
 
@@ -259,7 +264,7 @@ class Tournament
                     {
                         if (this.matches[player.id][i])
                         {
-                            previousOpponent = this.participants.find((opponent) => opponent.id == i);
+                            const previousOpponent = this.participants.find((opponent) => opponent.id == i);
                             previousOpponent.omr.w = previousOpponent.omr.w + 1;
                             previousOpponent.omr.p = previousOpponent.omr.p + 1;
                         }
@@ -268,7 +273,7 @@ class Tournament
                     {
                         if (this.matches[i][player.id])
                         {
-                            previousOpponent = this.participants.find((opponent) => opponent.id == i);
+                            const previousOpponent = this.participants.find((opponent) => opponent.id == i);
                             previousOpponent.omr.w = previousOpponent.omr.w + 1;
                             previousOpponent.omr.p = previousOpponent.omr.p + 1;
                         }
@@ -283,7 +288,7 @@ class Tournament
                     // Handle a draw
                     if (match.p1wins == match.p2wins)
                     {
-                        // Update player stats (wins, losses, draws, points, gw)
+                        // Update player stats (draws, matches, games)
                         player1.draws = player1.draws + 1;
                         player1.matches = player1.matches + 1;
                         player1.games = player1.games + match.p1wins + match.p2wins;
@@ -298,7 +303,7 @@ class Tournament
                         {
                             if (this.matches[player1.id][i])
                             {
-                                previousOpponent = this.participants.find((opponent) => opponent.id == i);
+                                const previousOpponent = this.participants.find((opponent) => opponent.id == i);
                                 previousOpponent.omr.p = previousOpponent.omr.p + 1;
                                 previousOpponent.ogr.w = previousOpponent.ogr.w + match.p1wins;
                                 previousOpponent.ogr.p = previousOpponent.ogr.p + match.p1wins + match.p2wins;
@@ -308,7 +313,7 @@ class Tournament
                         {
                             if (this.matches[i][player1.id])
                             {
-                                previousOpponent = this.participants.find((opponent) => opponent.id == i);
+                                const previousOpponent = this.participants.find((opponent) => opponent.id == i);
                                 previousOpponent.omr.p = previousOpponent.omr.p + 1;
                                 previousOpponent.ogr.w = previousOpponent.ogr.w + match.p1wins;
                                 previousOpponent.ogr.p = previousOpponent.ogr.p + match.p1wins + match.p2wins;
@@ -319,7 +324,7 @@ class Tournament
                         {
                             if (this.matches[player2.id][i])
                             {
-                                previousOpponent = this.participants.find((opponent) => opponent.id == i);
+                                const previousOpponent = this.participants.find((opponent) => opponent.id == i);
                                 previousOpponent.omr.p = previousOpponent.omr.p + 1;
                                 previousOpponent.ogr.w = previousOpponent.ogr.w + match.p2wins;
                                 previousOpponent.ogr.p = previousOpponent.ogr.p + match.p1wins + match.p2wins;
@@ -329,7 +334,7 @@ class Tournament
                         {
                             if (this.matches[i][player2.id])
                             {
-                                previousOpponent = this.participants.find((opponent) => opponent.id == i);
+                                const previousOpponent = this.participants.find((opponent) => opponent.id == i);
                                 previousOpponent.omr.p = previousOpponent.omr.p + 1;
                                 previousOpponent.ogr.w = previousOpponent.ogr.w + match.p2wins;
                                 previousOpponent.ogr.p = previousOpponent.ogr.p + match.p1wins + match.p2wins;
@@ -366,7 +371,7 @@ class Tournament
                         {
                             if (this.matches[winner.id][i])
                             {
-                                previousOpponent = this.participants.find((opponent) => opponent.id == i);
+                                const previousOpponent = this.participants.find((opponent) => opponent.id == i);
                                 previousOpponent.omr.w = previousOpponent.omr.w + 1
                                 previousOpponent.omr.p = previousOpponent.omr.p + 1;
                                 previousOpponent.ogr.w = previousOpponent.ogr.w + Math.max(match.p1wins, match.p2wins);
@@ -377,7 +382,7 @@ class Tournament
                         {
                             if (this.matches[i][winner.id])
                             {
-                                previousOpponent = this.participants.find((opponent) => opponent.id == i);
+                                const previousOpponent = this.participants.find((opponent) => opponent.id == i);
                                 previousOpponent.omr.w = previousOpponent.omr.w + 1
                                 previousOpponent.omr.p = previousOpponent.omr.p + 1;
                                 previousOpponent.ogr.w = previousOpponent.ogr.w + Math.max(match.p1wins, match.p2wins);
@@ -389,7 +394,7 @@ class Tournament
                         {
                             if (this.matches[loser.id][i])
                             {
-                                previousOpponent = this.participants.find((opponent) => opponent.id == i);
+                                const previousOpponent = this.participants.find((opponent) => opponent.id == i);
                                 previousOpponent.omr.p = previousOpponent.omr.p + 1;
                                 previousOpponent.ogr.w = previousOpponent.ogr.w + Math.min(match.p1wins, match.p2wins);
                                 previousOpponent.ogr.p = previousOpponent.ogr.p + match.p1wins + match.p2wins;
@@ -399,7 +404,7 @@ class Tournament
                         {
                             if (this.matches[i][loser.id])
                             {
-                                previousOpponent = this.participants.find((opponent) => opponent.id == i);
+                                const previousOpponent = this.participants.find((opponent) => opponent.id == i);
                                 previousOpponent.omr.p = previousOpponent.omr.p + 1;
                                 previousOpponent.ogr.w = previousOpponent.ogr.w + Math.min(match.p1wins, match.p2wins);
                                 previousOpponent.ogr.p = previousOpponent.ogr.p + match.p1wins + match.p2wins;
