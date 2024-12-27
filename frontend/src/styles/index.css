@@ -2,7 +2,8 @@
     --primary-background: #011627;
     --primary-text: #EEE5E9;
     --highlight-text: #D64933;
-    --accent: #587B7F;
+    --accent: #354a4d;
+    --attention: red;
 
     background-color: var(--primary-background);
     color: var(--primary-text);

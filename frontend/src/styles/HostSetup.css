@@ -1,0 +1,46 @@
+.hostSetup h2{
+    margin: 0em;
+}
+
+.hostSetup ul{
+    background-color: var(--accent);
+
+    list-style: none;
+    overflow-y: scroll;
+
+    /*Hide the scrollbar in IE, Edge, Firefox*/
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    height: 40vh;
+
+    padding: 0em;
+    border-radius: 1em;
+}
+/*Hide the scrollbar in Chrome, Safari, Opera*/
+.hostSetup ul::-webkit-scrollbar{
+    display: none;
+}
+
+.hostSetup ul li{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 50vw;
+
+    margin: 1.25em;
+}
+
+.hostSetup ul li input[type="button"]{
+    background-color: var(--attention);
+
+    font-size: small;
+    width: 1.5em;
+
+    padding: 0.15em;
+    border: none;
+    border-radius: .25em;
+    margin: 0em;
+}
