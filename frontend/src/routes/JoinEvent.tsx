@@ -2,8 +2,8 @@ import { useState } from "react";
 
 function JoinEvent(): JSX.Element
 {
-    const [name, setName] = useState("");
-    const [code, setCode] = useState("");
+    const [name, setName] = useState<string>("");
+    const [code, setCode] = useState<string>("");
 
     const handleNameInput = (e: any) => {
         setName(e.currentTarget?.value);
