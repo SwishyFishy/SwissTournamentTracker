@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 
 function JoinEvent(): JSX.Element
@@ -9,7 +8,7 @@ function JoinEvent(): JSX.Element
     const handleNameInput = (e: any) => {
         setName(e.currentTarget?.value);
     };
-    
+
     const handleCodeInput = (e: any) => {
         setCode(e.currentTarget?.value);
     };
