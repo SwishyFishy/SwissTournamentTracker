@@ -19,6 +19,7 @@ function JoinEvent(): JSX.Element
             <form>
                 <input type="text" name="name" id="name" placeholder="Your Name" value={name} onChange={handleNameInput}/>
                 <input type="text" name="code" id="code" placeholder="Event Code" value={code} onChange={handleCodeInput}/>
+                <input type="button" name="join" id="join" value="Join Event" />
             </form>
         </div>
     );

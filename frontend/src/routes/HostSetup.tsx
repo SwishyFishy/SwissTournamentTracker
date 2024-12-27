@@ -49,7 +49,7 @@ function HostSetup(): JSX.Element
                 ))}
             </ul>
             <form>
-                <input type="submit" name="submit" id="submit" value="Start Event" />
+                <input type="button" name="submit" id="submit" value="Start Event" />
             </form>
         </div>
     );
