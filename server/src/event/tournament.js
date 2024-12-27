@@ -261,7 +261,7 @@ class Tournament
                     player.matches = player.matches + 1;
 
                     // Update previous opponents' stats (omr)
-                    for (let i = 0; i <= player.id; i++)
+                    for (let i = 0; i < player.id; i++)
                     {
                         if (this.matches[player.id][i])
                         {
@@ -302,7 +302,7 @@ class Tournament
                         
                         // Update previous opponents' stats (omr, ogr) - also does these stats for the current round opponent
                         // Player 1
-                        for (let i = 0; i <= player1.id; i++)
+                        for (let i = 0; i < player1.id; i++)
                         {
                             if (this.matches[player1.id][i])
                             {
@@ -323,7 +323,7 @@ class Tournament
                             }
                         }
                         // Player 2
-                        for (let i = 0; i <= player2.id; i++)
+                        for (let i = 0; i < player2.id; i++)
                         {
                             if (this.matches[player2.id][i])
                             {
@@ -372,7 +372,7 @@ class Tournament
                         
                         // Update previous opponents' stats (omw, ogw) - also does these stats for the current round opponent
                         // Winner
-                        for (let i = 0; i <= winner.id; i++)
+                        for (let i = 0; i < winner.id; i++)
                         {
                             if (this.matches[winner.id][i])
                             {
@@ -395,7 +395,7 @@ class Tournament
                             }
                         }
                         // Loser
-                        for (let i = 0; i <= loser.id; i++)
+                        for (let i = 0; i < loser.id; i++)
                         {
                             if (this.matches[loser.id][i])
                             {
