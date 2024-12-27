@@ -14,7 +14,7 @@ function JoinEvent(): JSX.Element
     };
 
     return(
-        <div className="joinEvent">
+        <div className="wrapper joinEvent">
             <h1>Join Event</h1>
             <form>
                 <input type="text" name="name" id="name" placeholder="Your Name" value={name} onChange={handleNameInput}/>

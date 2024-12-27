@@ -15,7 +15,7 @@ function Home(): JSX.Element
     };
 
     return(
-        <div className="home">
+        <div className="wrapper home">
             <h1>TMTGC Draft Tracker</h1>
             <form>
                 <input type="button" name="CreateEvent" id="CreateEvent" value="Create Event" onClick={handleCreateEvent}/>

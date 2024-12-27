@@ -9,3 +9,36 @@
     
     font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
+
+.wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.wrapper h1{
+    margin-bottom: 2em;
+}
+
+.wrapper form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.wrapper input[type="button"], .wrapper input[type="submit"]{
+    color: var(--primary-text);
+    background-color: var(--secondary-text);
+    
+    font-size: larger;
+    font-weight: bold;
+
+    width: 10em;
+
+    padding: .5em;
+    border: .25em solid var(--secondary-text);
+    border-radius: 2em;;
+    margin: 1em;
+
+    cursor: pointer;
+}

@@ -1,7 +1,9 @@
 function EventParticipantHome(): JSX.Element
 {
     return(
-        <p>EventParticipantHome page</p>
+        <div className="wrapper eventParticipantHome">
+            <p>EventParticipantHome page</p>
+        </div>
     );
 }
 

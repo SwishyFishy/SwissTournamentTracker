@@ -4,7 +4,7 @@ import { CONTEXT_serverBaseUrl } from "../main";
 
 function HostSetup(): JSX.Element
 {
-    const [players, setPlayers] = useState<Array<{id: string, name: string}>>([{id: '1', name: 'jonah'}]);
+    const [players, setPlayers] = useState<Array<{id: string, name: string}>>([]);
     const serverUrl: string = useContext(CONTEXT_serverBaseUrl);
 
     // Kick a player using the X button
@@ -28,7 +28,7 @@ function HostSetup(): JSX.Element
     }, []);
 
     return(
-        <div className="eventAdminHome">
+        <div className="wrapper eventAdminHome">
             <h1>Event Lobby</h1>
             <h2>Players</h2>
             <ul>
