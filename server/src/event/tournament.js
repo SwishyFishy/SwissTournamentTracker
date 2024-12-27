@@ -6,10 +6,11 @@ class Participant
     {
         this.id = 0;
         this.name = name;
-        this.wins = 0;
-        this.losses = 0;
-        this.draws = 0;
+        this.mWins = 0;
+        this.mLosses = 0;
+        this.mDraws = 0;
         this.matches = 0;
+        this.gWins = 0;
         this.games = 0;
         this.omr = {w: 0, p: 0};
         this.ogr = {w: 0, p: 0};
@@ -20,27 +21,27 @@ class Participant
 
     CalcPoints()
     {
-        return (3 * this.wins) + this.draws;
+        return (3 * this.mWins) + this.mDraws;
     }
 
     CalcMW()
     {
-        return (this.wins / this.matches) * 100
+        return this.matches == 0 ? 0 : (this.mWins / this.matches) * 100
     }
 
     CalcOMW()
     {
-        return (this.omr.w / this.omr.p) * 100;
+        return this.omr.p == 0 ? 0 : (this.omr.w / this.omr.p) * 100;
     }
 
     CalcGW()
     {
-        return (this.wins / this.games) * 100;
+        return this.games == 0 ? 0 : (this.gWins / this.games) * 100;
     }
 
     CalcOGW()
     {
-        return (this.ogr.w / this.ogr.p) * 100;
+        return this.ogr.p == 0 ? 0 : (this.ogr.w / this.ogr.p) * 100;
     }
 }
 
@@ -256,7 +257,7 @@ class Tournament
                     const player = this.participants.find((player) => player.id == match.p1id);
 
                     // Update player stats (wins, matches)
-                    player.wins = player.wins + 1;
+                    player.mWins = player.mWins + 1;
                     player.matches = player.matches + 1;
 
                     // Update previous opponents' stats (omr)
@@ -289,11 +290,13 @@ class Tournament
                     if (match.p1wins == match.p2wins)
                     {
                         // Update player stats (draws, matches, games)
-                        player1.draws = player1.draws + 1;
+                        player1.mDraws = player1.mDraws + 1;
+                        player1.gWins = player1.gWins + match.p1wins;
                         player1.matches = player1.matches + 1;
                         player1.games = player1.games + match.p1wins + match.p2wins;
                         
-                        player2.draws = player2.draws + 1;
+                        player2.mDraws = player2.mDraws + 1;
+                        player2.gWins = player2.gWins + match.p2wins;
                         player2.matches = player2.matches + 1;
                         player2.games = player2.games + match.p1wins + match.p2wins;
                         
@@ -357,11 +360,13 @@ class Tournament
                         }
 
                         // Update player stats (wins, losses, draws, points, gw)
-                        winner.wins = winner.wins + 1;
+                        winner.mWins = winner.mWins + 1;
+                        winner.gWins = winner.gWins + Math.max(match.p1wins, match.p2wins);;
                         winner.matches = winner.matches + 1;
                         winner.games = winner.games + match.p1wins + match.p2wins;
                         
-                        loser.losses = loser.losses + 1;
+                        loser.mLosses = loser.mLosses + 1;
+                        loser.gWins = loser.gWins + Math.min(match.p1wins, match.p2wins);;
                         loser.matches = loser.matches + 1;
                         loser.games = loser.games + match.p1wins + match.p2wins;
                         
@@ -492,8 +497,21 @@ class Tournament
         // Return false if there is no possible pairing for the initial conditions
         return false;
     }
+
+    // Testing Methods
+    //////////////////
+
+    Dump()
+    {
+        console.log(`Round: ${this.currentRound} / ${this.rounds}`);
+        this.participants.forEach((player) => {
+            console.log(player, player.CalcPoints(), player.CalcOMW(), player.CalcGW(), player.CalcOGW())
+        })
+        console.log(`Match History:`, this.matches);
+        console.log(`Current Matches:`, this.currentMatches);
+    }
 }
 
 test = new Tournament(['john', 'jonah', 'jim', 'jacob', 'jules', 'george', 'jeff', 'joseph', 'james']);
 test.StartTournament();
-console.log(test);
+test.Dump();
