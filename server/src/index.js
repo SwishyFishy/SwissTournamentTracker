@@ -17,8 +17,11 @@ const tournament = new Tournament();
 ///////////////////
 
 // Test
-app.get("/submit", (req, res) => {
-    res.send("Submitted!");
+app.get("/join/:name", (req, res) => {
+    const name = req.params.name;
+    tournament.AddParticipant(name);
+    console.log(tournament);
+    res.send("Joined!");
 })
 
 // Default
