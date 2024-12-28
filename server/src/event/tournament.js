@@ -4,6 +4,7 @@ class Participant
     // name: string
     constructor(name)
     {
+        // Data members
         this.id = 0;
         this.name = name;
         this.opponents = [];
@@ -14,7 +15,32 @@ class Participant
         this.gWins = 0;
         this.gLosses = 0;
         this.games = 0;
-    }
+
+        // Data members calculated on-call
+        /*this.points = () => {return (3 * this.mWins) + this.mDraws};
+        this.mw = () => {this.matches == 0 ? 0 : (this.mWins / this.matches) * 100};
+        this.omw = () => {
+            let oppWins = 0;
+            let oppMatches = 0;
+            this.opponents.forEach((opponent) => {
+                oppWins += opponent.mWins;
+                oppMatches += opponent.matches;
+            })
+
+            return oppMatches == 0 ? 0 : (oppWins / oppMatches) * 100;
+        };
+        this.gw = () => {return this.games == 0 ? 0 : (this.gWins / this.games) * 100};
+        this.ogw = () => {
+            let oppWins = 0;
+            let oppGames = 0;
+            this.opponents.forEach((opponent) => {
+                oppWins += opponent.gWins;
+                oppGames += opponent.games;
+            })
+    
+            return oppGames == 0 ? 0 : (oppWins / oppGames) * 100
+        };*/
+        }
 
     // User-Facing Methods
     //////////////////////
@@ -26,13 +52,13 @@ class Participant
 
     CalcMW()
     {
-        return this.matches == 0 ? 0 : (this.mWins / this.matches) * 100
+        return this.matches == 0 ? 0 : (this.mWins / this.matches) * 100;
     }
 
     CalcOMW()
     {
-        const oppWins = 0;
-        const oppMatches = 0;
+        let oppWins = 0;
+        let oppMatches = 0;
         this.opponents.forEach((opponent) => {
             oppWins += opponent.mWins;
             oppMatches += opponent.matches;
@@ -48,8 +74,8 @@ class Participant
 
     CalcOGW()
     {
-        const oppWins = 0;
-        const oppGames = 0;
+        let oppWins = 0;
+        let oppGames = 0;
         this.opponents.forEach((opponent) => {
             oppWins += opponent.gWins;
             oppGames += opponent.games;
