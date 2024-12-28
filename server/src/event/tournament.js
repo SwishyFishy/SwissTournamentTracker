@@ -446,4 +446,4 @@ class Tournament
     }
 }
 
-export default Tournament;
+module.exports = Tournament;

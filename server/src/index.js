@@ -1,5 +1,3 @@
-import Tournament from "./event/tournament.js";
-
 // Get express
 const express = require("express");
 const app = express();
@@ -8,6 +6,11 @@ const app = express();
 const {ipv4, port} = require("./private.js");
 const cors = require("cors");
 app.use(cors());
+
+const Tournament = require("./event/tournament.js");
+
+// Create tournament
+const tournament = new Tournament();
 
 ///////////////////
 // Define responses
