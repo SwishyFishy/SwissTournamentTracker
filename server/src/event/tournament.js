@@ -15,32 +15,7 @@ class Participant
         this.gWins = 0;
         this.gLosses = 0;
         this.games = 0;
-
-        // Data members calculated on-call
-        /*this.points = () => {return (3 * this.mWins) + this.mDraws};
-        this.mw = () => {this.matches == 0 ? 0 : (this.mWins / this.matches) * 100};
-        this.omw = () => {
-            let oppWins = 0;
-            let oppMatches = 0;
-            this.opponents.forEach((opponent) => {
-                oppWins += opponent.mWins;
-                oppMatches += opponent.matches;
-            })
-
-            return oppMatches == 0 ? 0 : (oppWins / oppMatches) * 100;
-        };
-        this.gw = () => {return this.games == 0 ? 0 : (this.gWins / this.games) * 100};
-        this.ogw = () => {
-            let oppWins = 0;
-            let oppGames = 0;
-            this.opponents.forEach((opponent) => {
-                oppWins += opponent.gWins;
-                oppGames += opponent.games;
-            })
-    
-            return oppGames == 0 ? 0 : (oppWins / oppGames) * 100
-        };*/
-        }
+    }
 
     // User-Facing Methods
     //////////////////////
@@ -125,6 +100,9 @@ class Tournament
             this.participants.push(new Participant(player));
         });
 
+        this.hasStarted = false;
+        this.running = false;
+
         this.matches = [];
         this.currentMatches = [];
         this.rounds = 0;
@@ -134,38 +112,27 @@ class Tournament
     // Utility Methods
     //////////////////
 
-    // Initialize round 1 and disable AddParticipant
-    StartTournament()
+    // Verify that the tournament has yet to run
+    __VerifyNotStarted()
     {
-        // Shuffle the participants array so that join-order is sure to not matter
-        for (let i = this.participants.length - 1; i >= 0; i--) 
+        if (!this.hasStarted)
         {
-            const index = Math.floor(Math.random() * (i + 1));
-            [this.participants[i], this.participants[index]] = [this.participants[index], this.participants[i]];
+            throw new Error("Tournament not started");
         }
+    }
 
-        // Initialize a 2d array of booleans to false to track which players have played a match
-        // Only initialize the lower triangle, since the upper triangle is redundant. Use the diagonal for byes
-        // Hijack the loop to assign unique integer participant ids.
-        //      The array of participants is expected to mutate, so each participant is assigned a unique integer id corresponding to their initial position in the array, used to index players in the matches array
-        for (let i = 0; i < this.participants.length; i++)
+    // Verify that the tournament is running
+    __VerifyRunning()
+    {
+        if (!this.running)
         {
-            this.matches.push([]);
-            for (let j = 0; j <= i; j++)
-            {
-                this.matches[i].push(false);
-            }
-            
-            this.participants[i].id = i;
+            throw new Error("Tournament not running");
         }
-
-        this.rounds = Math.max(Math.ceil(Math.log2(this.participants.length)), 3);
-        this.NextRound(true);
     }
     
     // Determine participant placement on the leaderboard
     // Associated private function __ComparePlacement is the CompareFn implementation for Array.Protoptype.sort
-    RankParticipants()
+    __RankParticipants()
     {
         this.participants.sort(this.__ComparePlacement);
     }
@@ -200,7 +167,6 @@ class Tournament
         }
     }
 
-
     // User-Facing Methods
     //////////////////////
 
@@ -209,7 +175,8 @@ class Tournament
     AddParticipant(participant)
     {
         // Fail if the event has started or if the participant is already registered
-        if (this.currentRound > 0 || this.participants.indexOf(participant) > -1)
+        this.__VerifyNotStarted();
+        if (this.participants.indexOf(participant) > -1)
         {
             return false;
         }
@@ -223,10 +190,7 @@ class Tournament
     RemoveParticipant(participant)
     {
         // Fail if the event has started
-        if (this.currentRound > 0)
-        {
-            return false;
-        }
+        this.__VerifyNotStarted();
 
         // Find index of dropping participant in participants array
         const found = this.participants.indexOf(this.participants.find((player) => player.name == participant));
@@ -247,10 +211,7 @@ class Tournament
     DropParticipant(participant)
     {
         // Fail if the event has not started
-        if (this.currentRound < 1)
-        {
-            return false;
-        }
+        this.__VerifyRunning();
 
         // Find id of dropping player
         let found = this.participants.find((player) => player.name == participant);
@@ -284,6 +245,8 @@ class Tournament
     // p2wins: int
     ReportMatchResults(player1, player2, p1wins, p2wins)
     {
+        this.__VerifyRunning();
+
         // Fail if the given pair of players do not have an ongoing match
         const match = this.currentMatches.find((match) => match.p1name == player1 && match.p2name == player2);
         if (match === undefined)
@@ -302,11 +265,53 @@ class Tournament
         return true;
     }
 
+    // Initialize round 1 and disable AddParticipant
+    StartTournament()
+    {
+        // Declare that the tournament is now running
+        if (!this.hasStarted)
+        {
+            this.hasStarted = true;
+            this.running = true;
+        }
+        else
+        {
+            throw new Error("Tournament already started");
+        }
+
+        // Shuffle the participants array so that join-order is sure to not matter
+        for (let i = this.participants.length - 1; i >= 0; i--) 
+        {
+            const index = Math.floor(Math.random() * (i + 1));
+            [this.participants[i], this.participants[index]] = [this.participants[index], this.participants[i]];
+        }
+
+        // Initialize a 2d array of booleans to false to track which players have played a match
+        // Only initialize the lower triangle, since the upper triangle is redundant. Use the diagonal for byes
+        // Hijack the loop to assign unique integer participant ids.
+        //      The array of participants is expected to mutate, so each participant is assigned a unique integer id corresponding to their initial position in the array, used to index players in the matches array
+        for (let i = 0; i < this.participants.length; i++)
+        {
+            this.matches.push([]);
+            for (let j = 0; j <= i; j++)
+            {
+                this.matches[i].push(false);
+            }
+            
+            this.participants[i].id = i;
+        }
+
+        this.rounds = Math.max(Math.ceil(Math.log2(this.participants.length)), 3);
+        return this.NextRound(true);
+    }
+
     // Advance to the next round, recording the current round
     // Associated private function __MatchBuilder recursively builds the next round's matches
     // startevent: boolean
     NextRound(startevent = false)
     {
+        this.__VerifyRunning();
+
         // Record current round match results
         if (!startevent)
         {
@@ -342,19 +347,19 @@ class Tournament
         this.currentRound++;
         if (this.currentRound > this.rounds)
         {
-            return false
+            return this.EndTournament();
         }
 
         // Set up next round
         // Pass __MatchBuilder an array of players in leaderboard order, with any that dropped the event filtered out.
-        this.RankParticipants();
+        this.__RankParticipants();
         this.currentMatches = this.__MatchBuilder(structuredClone(this.participants).filter((player) => this.matches[player.id] !== "DROP"))
         if (this.currentMatches === false)
         {
-            throw new Error("No Valid Pairings");
+            return false;
         }
 
-        return true;
+        return ["Round", this.currentMatches];
     }
     // unmatchedParticipants: array<Object>
     // proposedPairs: array<Object>
@@ -414,6 +419,16 @@ class Tournament
 
         // Return false if there is no possible pairing for the initial conditions
         return false;
+    }
+
+    // Disable round advancement & matchmaking and return a final leaderboard
+    EndTournament()
+    {
+        this.__VerifyRunning();
+        this.running = false;
+
+        this.__RankParticipants();
+        return ["Leaderboard", this.participants];
     }
 
     // Testing Methods
