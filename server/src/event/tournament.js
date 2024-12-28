@@ -252,30 +252,26 @@ class Tournament
             return false;
         }
 
-        // Find index of dropping participant in participants array
-        const found = this.participants.findIndex((player) => player.name == participant);
+        // Find id of dropping player
+        let found = this.participants.find((player) => player.name == participant);
 
         // Fail if given participant is not in participants array
-        if (found === -1)
+        if (found === undefined)
         {
             return false;
         }
+        else
+        {
+            found = found.id;
+        }
 
         // Mark this player's row in matches as "DROP"
+        this.matches[found] = "DROP";
+        
         // Mark this player as having had a match with every other player
-        for (let i = 0; i < this.participants.length; i++)
+        for (let i = found + 1; i < this.matches.length; i++)
         {
-            for (let j = 0; j <= i; j++)
-            {
-                if (i == found)
-                {
-                    this.matches[i] = "DROP";
-                }
-                else if (j == found)
-                {
-                    this.matches[i][j] = true;
-                }
-            }
+            this.matches[i][found] = true;
         }
 
         return true;
@@ -319,7 +315,10 @@ class Tournament
                 // Set this.matches = true for this pairing
                 const low = Math.min(match.p1id, match.p2id);
                 const high = Math.max(match.p1id, match.p2id);
-                this.matches[high][low] = true;
+                if (this.matches[high] != "DROP")
+                {
+                    this.matches[high][low] = true;
+                }
 
                 // Handle bye
                 if (match.p1id == match.p2id)
@@ -433,4 +432,13 @@ class Tournament
 
 test = new Tournament(['john', 'jonah', 'jim', 'jacob', 'jules', 'george', 'jeff', 'joseph', 'james']);
 test.StartTournament();
+for(let i = 1; i < test.currentMatches.length; i++)
+{
+    test.ReportMatchResults(test.currentMatches[i].p1name, test.currentMatches[i].p2name, Math.floor(Math.random() * 3), Math.floor(Math.random() * 3))
+}
+test.NextRound();
+for(let i = 1; i < test.currentMatches.length; i++)
+{
+    test.ReportMatchResults(test.currentMatches[i].p1name, test.currentMatches[i].p2name, Math.floor(Math.random() * 3), Math.floor(Math.random() * 3))
+}
 test.Dump();
