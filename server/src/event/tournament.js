@@ -116,7 +116,7 @@ class Tournament
     // Verify that the tournament has yet to run
     __VerifyNotStarted()
     {
-        if (!this.hasStarted)
+        if (this.hasStarted)
         {
             throw new Error("Tournament not started");
         }
@@ -177,7 +177,7 @@ class Tournament
     {
         // Fail if the event has started or if the participant is already registered
         this.__VerifyNotStarted();
-        if (this.participants.indexOf(participant) > -1)
+        if (this.participants.indexOf(this.participants.find((player) => player.name == participant)) > -1)
         {
             return false;
         }
@@ -269,16 +269,12 @@ class Tournament
     // Initialize round 1 and disable AddParticipant
     StartTournament()
     {
+        // Fail if the tournament has started
+        this.__VerifyNotStarted();
+
         // Declare that the tournament is now running
-        if (!this.hasStarted)
-        {
-            this.hasStarted = true;
-            this.running = true;
-        }
-        else
-        {
-            throw new Error("Tournament already started");
-        }
+        this.hasStarted = true;
+        this.running = true;
 
         // Shuffle the participants array so that join-order is sure to not matter
         for (let i = this.participants.length - 1; i >= 0; i--) 
