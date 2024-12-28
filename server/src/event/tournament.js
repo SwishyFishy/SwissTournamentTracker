@@ -1,103 +1,104 @@
-class Participant
-{
-    // Constructor
-    // name: string
-    constructor(name)
-    {
-        // Data members
-        this.id = 0;
-        this.name = name;
-        this.opponents = [];
-        this.mWins = 0;
-        this.mLosses = 0;
-        this.mDraws = 0;
-        this.matches = 0;
-        this.gWins = 0;
-        this.gLosses = 0;
-        this.games = 0;
-    }
-
-    // User-Facing Methods
-    //////////////////////
-
-    CalcPoints()
-    {
-        return (3 * this.mWins) + this.mDraws;
-    }
-
-    CalcMW()
-    {
-        return this.matches == 0 ? 0 : (this.mWins / this.matches) * 100;
-    }
-
-    CalcOMW()
-    {
-        let oppWins = 0;
-        let oppMatches = 0;
-        this.opponents.forEach((opponent) => {
-            oppWins += opponent.mWins;
-            oppMatches += opponent.matches;
-        })
-
-        return oppMatches == 0 ? 0 : (oppWins / oppMatches) * 100
-    }
-
-    CalcGW()
-    {
-        return this.games == 0 ? 0 : (this.gWins / this.games) * 100;
-    }
-
-    CalcOGW()
-    {
-        let oppWins = 0;
-        let oppGames = 0;
-        this.opponents.forEach((opponent) => {
-            oppWins += opponent.gWins;
-            oppGames += opponent.games;
-        })
-
-        return oppGames == 0 ? 0 : (oppWins / oppGames) * 100
-    }
-
-    HasBye()
-    {
-        this.mWins += 1;
-        this.matches += 1;
-    }
-
-    SubmitMatchResults(wins, losses, opponent)
-    {
-        this.gWins += wins;
-        this.gLosses += losses;
-        this.games += wins + losses;
-
-        if (wins > losses)
-        {
-            this.mWins += 1;
-        }
-        else if (wins < losses)
-        {
-            this.mLosses += 1;
-        }
-        else
-        {
-            this.mDraws += 1;
-        }
-        this.matches += 1;
-
-        this.opponents.push(opponent);
-    }
-}
-
 class Tournament
 {
+    // Nested Participant class to store player information
+    __Participant = class
+    {
+        // Constructor
+        // name: string
+        constructor(name)
+        {
+            // Data members
+            this.id = 0;
+            this.name = name;
+            this.opponents = [];
+            this.mWins = 0;
+            this.mLosses = 0;
+            this.mDraws = 0;
+            this.matches = 0;
+            this.gWins = 0;
+            this.gLosses = 0;
+            this.games = 0;
+        }
+
+        // User-Facing Methods
+        //////////////////////
+
+        CalcPoints()
+        {
+            return (3 * this.mWins) + this.mDraws;
+        }
+
+        CalcMW()
+        {
+            return this.matches == 0 ? 0 : (this.mWins / this.matches) * 100;
+        }
+
+        CalcOMW()
+        {
+            let oppWins = 0;
+            let oppMatches = 0;
+            this.opponents.forEach((opponent) => {
+                oppWins += opponent.mWins;
+                oppMatches += opponent.matches;
+            })
+
+            return oppMatches == 0 ? 0 : (oppWins / oppMatches) * 100
+        }
+
+        CalcGW()
+        {
+            return this.games == 0 ? 0 : (this.gWins / this.games) * 100;
+        }
+
+        CalcOGW()
+        {
+            let oppWins = 0;
+            let oppGames = 0;
+            this.opponents.forEach((opponent) => {
+                oppWins += opponent.gWins;
+                oppGames += opponent.games;
+            })
+
+            return oppGames == 0 ? 0 : (oppWins / oppGames) * 100
+        }
+
+        HasBye()
+        {
+            this.mWins += 1;
+            this.matches += 1;
+        }
+
+        SubmitMatchResults(wins, losses, opponent)
+        {
+            this.gWins += wins;
+            this.gLosses += losses;
+            this.games += wins + losses;
+
+            if (wins > losses)
+            {
+                this.mWins += 1;
+            }
+            else if (wins < losses)
+            {
+                this.mLosses += 1;
+            }
+            else
+            {
+                this.mDraws += 1;
+            }
+            this.matches += 1;
+
+            this.opponents.push(opponent);
+        }
+    }   
+
     // Constructor
     // participants: array<string>
     constructor(participants = [])
     {
         this.participants = [];
         participants.forEach((player) => {
-            this.participants.push(new Participant(player));
+            this.participants.push(new this.__Participant(player));
         });
 
         this.hasStarted = false;
@@ -181,7 +182,7 @@ class Tournament
             return false;
         }
 
-        this.participants.push(new Participant(participant));
+        this.participants.push(new this.__Participant(participant));
         return true;
     }
 
@@ -444,16 +445,3 @@ class Tournament
         console.log(`Current Matches:`, this.currentMatches);
     }
 }
-
-test = new Tournament(['john', 'jonah', 'jim', 'jacob', 'jules', 'george', 'jeff', 'joseph', 'james']);
-test.StartTournament();
-for(let i = 1; i < test.currentMatches.length; i++)
-{
-    test.ReportMatchResults(test.currentMatches[i].p1name, test.currentMatches[i].p2name, Math.floor(Math.random() * 3), Math.floor(Math.random() * 3))
-}
-test.NextRound();
-for(let i = 1; i < test.currentMatches.length; i++)
-{
-    test.ReportMatchResults(test.currentMatches[i].p1name, test.currentMatches[i].p2name, Math.floor(Math.random() * 3), Math.floor(Math.random() * 3))
-}
-test.Dump();
