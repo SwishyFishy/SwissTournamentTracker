@@ -1,3 +1,5 @@
+import Tournament from "./event/tournament.js";
+
 // Get express
 const express = require("express");
 const app = express();

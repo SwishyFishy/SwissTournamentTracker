@@ -445,3 +445,5 @@ class Tournament
         console.log(`Current Matches:`, this.currentMatches);
     }
 }
+
+export default Tournament;
