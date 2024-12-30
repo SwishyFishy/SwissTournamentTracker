@@ -38,7 +38,7 @@ app.get("/join/:name", (req, res) => {
     {
         res.status(409);
         res.send("This tournament can no longer be joined");
-    }  
+    }
 })
 
 // Remove a player from the tournament
@@ -63,7 +63,7 @@ app.get("/leave/:name", (req, res) => {
     {
         res.status(409);
         res.send("This tournament has already started");
-    }  
+    }
 })
 
 // Drop a player from the tournament
@@ -88,7 +88,7 @@ app.get("/drop/:name", (req, res) => {
     {
         res.status(409);
         res.send("This tournament has not started");
-    }  
+    }
 })
 
 // Default
