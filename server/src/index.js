@@ -41,6 +41,56 @@ app.get("/join/:name", (req, res) => {
     }  
 })
 
+// Remove a player from the tournament
+app.get("/leave/:name", (req, res) => {
+    const name = req.params.name;
+
+    // Attempt to remove player
+    try
+    {
+        if (tournament.RemoveParticipant(name))
+        {
+            res.status(200);
+            res.send("Removed");
+        }
+        else
+        {
+            res.status(400);
+            res.send("This tournament does not contain a player with that name")
+        }
+    }
+    catch (Error)
+    {
+        res.status(409);
+        res.send("This tournament has already started");
+    }  
+})
+
+// Drop a player from the tournament
+app.get("/drop/:name", (req, res) => {
+    const name = req.params.name;
+
+    // Attempt to drop player
+    try
+    {
+        if (tournament.DropParticipant(name))
+        {
+            res.status(200);
+            res.send("Dropped");
+        }
+        else
+        {
+            res.status(400);
+            res.send("This tournament does not contain a player with that name")
+        }
+    }
+    catch (Error)
+    {
+        res.status(409);
+        res.send("This tournament has not started");
+    }  
+})
+
 // Default
 app.use("*", (req, res) => {
     res.status(404);
