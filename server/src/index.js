@@ -16,12 +16,29 @@ const tournament = new Tournament();
 // Define responses
 ///////////////////
 
-// Test
+// Add a player to the tournament
 app.get("/join/:name", (req, res) => {
     const name = req.params.name;
-    tournament.AddParticipant(name);
-    console.log(tournament);
-    res.send("Joined!");
+
+    // Attempt to add player
+    try
+    {
+        if (tournament.AddParticipant(name))
+        {
+            res.status(200);
+            res.send("Added");
+        }
+        else
+        {
+            res.status(400);
+            res.send("This tournament already contains a player with that name")
+        }
+    }
+    catch (Error)
+    {
+        res.status(409);
+        res.send("This tournament can no longer be joined");
+    }  
 })
 
 // Default
