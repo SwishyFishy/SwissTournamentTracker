@@ -177,7 +177,7 @@ class Tournament
     {
         // Fail if the event has started or if the participant is already registered
         this.__VerifyNotStarted();
-        if (this.participants.indexOf(this.participants.find((player) => player.name == participant)) > -1)
+        if (this.participants.findIndex((player) => player.name == participant) > -1)
         {
             return false;
         }
@@ -194,7 +194,7 @@ class Tournament
         this.__VerifyNotStarted();
 
         // Find index of dropping participant in participants array
-        const found = this.participants.indexOf(this.participants.find((player) => player.name == participant));
+        const found = this.participants.findIndex((player) => player.name == participant);
 
         // Fail if given participant is not in participants array
         if (found === -1)
