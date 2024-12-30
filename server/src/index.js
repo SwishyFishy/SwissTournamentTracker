@@ -8,16 +8,29 @@ const cors = require("cors");
 app.use(cors());
 
 const Tournament = require("./event/tournament.js");
+const ShortUniqueId = require("short-unique-id");
+const codegen = new ShortUniqueId({length: 8});
 
 // Create tournament
-const tournament = new Tournament();
+const events = [];
 
 ///////////////////
 // Define responses
 ///////////////////
 
+// Create a new tournament
+app.get("/create", (req, res) => {
+    const code = codegen.rnd();
+    events.push({code: code, tournament: new Tournament});
+    res.status(200);
+    res.json({
+        code: code
+    })
+})
+
 // Add a player to the tournament
-app.get("/join/:name", (req, res) => {
+app.get("/join/:event/:name", (req, res) => {
+    const tournament = req.params.event;
     const name = req.params.name;
 
     // Attempt to add player
@@ -42,7 +55,8 @@ app.get("/join/:name", (req, res) => {
 })
 
 // Remove a player from the tournament
-app.get("/leave/:name", (req, res) => {
+app.get("/leave/:event/:name", (req, res) => {
+    const tournament = req.params.event;
     const name = req.params.name;
 
     // Attempt to remove player
@@ -67,7 +81,8 @@ app.get("/leave/:name", (req, res) => {
 })
 
 // Drop a player from the tournament
-app.get("/drop/:name", (req, res) => {
+app.get("/drop/:event/:name", (req, res) => {
+    const tournament = req.params.event;
     const name = req.params.name;
 
     // Attempt to drop player
