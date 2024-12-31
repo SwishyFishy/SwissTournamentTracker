@@ -6,7 +6,7 @@ function Home(): JSX.Element
 {
     const navigate = useNavigate();
 
-    const handleCreateEvent = () =>{
+    const handleCreateEvent = () => {
         navigate("/host");
     };
 

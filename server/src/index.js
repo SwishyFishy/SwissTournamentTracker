@@ -15,7 +15,7 @@ const codegen = new ShortUniqueId({length: 8});
 const events = [];
 
 ///////////////////
-// Define responses
+// Define endpoints
 ///////////////////
 
 // Create a new tournament

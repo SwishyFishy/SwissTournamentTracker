@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router";
 
 import { CONTEXT_serverBaseUrl } from "../main";
 
@@ -17,7 +18,9 @@ function HostSetup(): JSX.Element
         {id: '8', name: 'ken'},
         {id: '9', name: 'chad'}
     ]);
+    const [eventCode, setEventCode] = useState<string>("");
     const serverUrl: string = useContext(CONTEXT_serverBaseUrl);
+    const navigate = useNavigate();
 
     // Kick a player using the X button
     const handleKickPlayer = (e: any) => {
@@ -29,6 +32,22 @@ function HostSetup(): JSX.Element
 
     // Connect to server on load to receive push events when a player joins
     useEffect(() => {
+        // Create and link to a tournament on the server
+        async function createTournament()
+        {
+            const response: Response = await fetch(serverUrl + "create");
+            if (!response.ok)
+            {
+                console.log(response);
+                navigate("/");
+            }
+            
+            const code = await response.text;
+            setEventCode(code);
+        }
+
+        createTournament();
+
         // Create a handler to recieve pushed server events and append players to the player list
         const playerJoinEventSource: EventSource = new EventSource(serverUrl);
         playerJoinEventSource.onmessage = (e) => {
