@@ -28,6 +28,15 @@ app.get("/create", (req, res) => {
     })
 })
 
+// Delete a tournament
+app.get("/delete/:event", (req, res) => {
+    const tournament = events.findIndex((event) => event.code == req.params.event);
+    events.splice(tournament, 1);
+
+    res.status(200);
+    res.send("Deleted");
+})
+
 // Add a player to the tournament
 app.get("/join/:event/:name", (req, res) => {
     const tournament = req.params.event;

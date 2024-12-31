@@ -7,18 +7,8 @@ import '../styles/HostSetup.css';
 
 function HostSetup(): JSX.Element
 {
-    const [players, setPlayers] = useState<Array<{id: string, name: string}>>([
-        {id: '1', name: 'jonah'},
-        {id: '2', name: 'curt'},
-        {id: '3', name: 'gregory'},
-        {id: '4', name: 'spock'},
-        {id: '5', name: 'aslan'},
-        {id: '6', name: 'janice'},
-        {id: '7', name: 'hela'},
-        {id: '8', name: 'ken'},
-        {id: '9', name: 'chad'}
-    ]);
-    const [eventCode, setEventCode] = useState<string>("");
+    const [players, setPlayers] = useState<Array<{id: string, name: string}>>([]);
+    const [eventCode, setEventCode] = useState("");
     const serverUrl: string = useContext(CONTEXT_serverBaseUrl);
     const navigate = useNavigate();
 
@@ -30,20 +20,33 @@ function HostSetup(): JSX.Element
         });
     }
 
-    // Connect to server on load to receive push events when a player joins
-    useEffect(() => {
-        // Create and link to a tournament on the server
-        async function createTournament()
-        {
-            const response: Response = await fetch(serverUrl + "create");
+    // Cancel this event
+    const handleCancelEvent = () => {
+        const deleteEvent = async() => {
+            const response = await fetch(serverUrl + `delete/${eventCode}`);
             if (!response.ok)
             {
                 console.log(response);
+            }
+            else
+            {
                 navigate("/");
             }
-            
-            const code = response.json;
-            setEventCode(code);
+        }
+        deleteEvent();
+    }
+
+    // Connect to server on load to receive push events when a player joins
+    useEffect(() => {
+        // Create and link to a tournament on the server
+        const createTournament = async() => {
+            await fetch(serverUrl + "create")
+            .then(response => response.json())
+            .then(response => setEventCode(response.code))
+            .catch(err => {
+                console.log(err);
+                navigate("/");
+            })
         }
 
         createTournament();
@@ -61,7 +64,7 @@ function HostSetup(): JSX.Element
 
     return(
         <div className="wrapper hostSetup">
-            <h1>Event Lobby</h1>
+            <h1>Event: {eventCode}</h1>
             <h2>Players</h2>
             <ul>
                 {players.map((player) => (
@@ -69,7 +72,8 @@ function HostSetup(): JSX.Element
                 ))}
             </ul>
             <form>
-                <input type="button" name="submit" id="submit" value="Start Event" />
+                <input type="button" name="start" id="start" value="Start Event" />
+                <input type="button" name="delete" id="delete" value="Cancel Event" onClick={handleCancelEvent}/>
             </form>
         </div>
     );
