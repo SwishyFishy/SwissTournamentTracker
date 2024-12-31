@@ -23,7 +23,7 @@ function HostSetup(): JSX.Element
     // Cancel this event
     const handleCancelEvent = () => {
         const deleteEvent = async() => {
-            const response = await fetch(serverUrl + `delete/${eventCode}`);
+            const response: Response = await fetch(serverUrl + `delete/${eventCode}`);
             if (!response.ok)
             {
                 console.log(response);
