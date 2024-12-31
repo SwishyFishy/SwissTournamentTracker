@@ -42,7 +42,7 @@ function HostSetup(): JSX.Element
                 navigate("/");
             }
             
-            const code = await response.text;
+            const code = response.json;
             setEventCode(code);
         }
 
