@@ -175,9 +175,9 @@ class Tournament
     // participant: string
     AddParticipant(participant)
     {
-        // Fail if the event has started or if the participant is already registered
+        // Fail if the event has started or if the participant is already registered or if the participant has not provided a name
         this.__VerifyNotStarted();
-        if (this.participants.findIndex((player) => player.name == participant) > -1)
+        if (participant == "" || this.participants.findIndex((player) => player.name == participant) > -1)
         {
             return false;
         }
