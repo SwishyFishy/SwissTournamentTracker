@@ -2,7 +2,7 @@ import { createContext } from 'react'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router'
-import routes from './routes/routes'
+import routes from './routes/routes.tsx'
 import {server_ipv4, server_port} from './private.tsx';
 
 import './styles/index.css'
