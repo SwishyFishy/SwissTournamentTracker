@@ -9,7 +9,7 @@ app.use(cors());
 
 const Tournament = require("./event/tournament.js");
 const ShortUniqueId = require("short-unique-id");
-const codegen = new ShortUniqueId({length: 8});
+const codegen = new ShortUniqueId({length: 8, dictionary: 'alphanum_lower'});
 
 // Create tournament
 const events = [];
@@ -30,7 +30,7 @@ app.get("/create", (req, res) => {
 
 // Delete a tournament
 app.get("/delete/:event", (req, res) => {
-    const tournament = events.findIndex((event) => event.code == req.params.event);
+    const tournament = events.findIndex((t) => t.code == req.params.event);
     events.splice(tournament, 1);
 
     res.status(200);
@@ -39,7 +39,7 @@ app.get("/delete/:event", (req, res) => {
 
 // Add a player to the tournament
 app.get("/join/:event/:name", (req, res) => {
-    const tournament = req.params.event;
+    const tournament = events.find((t) => t.code == req.params.event).tournament;
     const name = req.params.name;
 
     // Attempt to add player
@@ -65,7 +65,7 @@ app.get("/join/:event/:name", (req, res) => {
 
 // Remove a player from the tournament
 app.get("/leave/:event/:name", (req, res) => {
-    const tournament = req.params.event;
+    const tournament = events.find((t) => t.code == req.params.event).tournament;
     const name = req.params.name;
 
     // Attempt to remove player
@@ -91,7 +91,7 @@ app.get("/leave/:event/:name", (req, res) => {
 
 // Drop a player from the tournament
 app.get("/drop/:event/:name", (req, res) => {
-    const tournament = req.params.event;
+    const tournament = events.find((t) => t.code == req.params.event).tournament;
     const name = req.params.name;
 
     // Attempt to drop player
