@@ -14,10 +14,15 @@ function HostSetup(): JSX.Element
 
     // Kick a player using the X button
     const handleKickPlayer = (e: any) => {
-        const kickId: string = e.currentTarget.parentElement.getAttribute('data-id');
-        setPlayers((curPlayers) => {
-            return curPlayers.filter((p) => p.id != kickId)
-        });
+        const kick: string = e.currentTarget.parentElement.getAttribute('data-name');
+        const kickPlayer = async() => {
+            fetch(serverUrl + `/leave/${eventCode}?name=${kick}`)
+            .catch(err => {
+                console.log(err);
+            })
+        };
+        kickPlayer();
+        handleRefreshParticipants();        
     }
 
     // Cancel this event
@@ -67,7 +72,7 @@ function HostSetup(): JSX.Element
             <h2>Players</h2>
             <ul>
                 {players.map((player) => (
-                    <li key={player.id} data-id={player.id}><span>{player.name}</span> <input type="button" name="kick" id="kick" value="X" onClick={handleKickPlayer} /></li>
+                    <li key={player.id} data-name={player.name}><span>{player.name}</span> <input type="button" name="kick" id="kick" value="X" onClick={handleKickPlayer} /></li>
                 ))}
             </ul>
             <form>
