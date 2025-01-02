@@ -25,9 +25,19 @@ function HostSetup(): JSX.Element
         const deleteEvent = async() => {
             fetch(serverUrl + `/delete/${eventCode}`);
             navigate("/");
-        }
+        };
+
         deleteEvent();
     }
+
+    // Get and set the player list
+    const handleRefreshParticipants = () => {
+        const getPlayers = async() => {
+            
+        };
+
+        getPlayers();
+    };
 
     // Connect to server on load to receive push events when a player joins
     useEffect(() => {
@@ -40,19 +50,9 @@ function HostSetup(): JSX.Element
                 console.log(err);
                 navigate("/", {state: {error: true, emsg: "The tournament could not be created"}});
             })
-        }
-
-        createTournament();
-
-        // Create a handler to recieve pushed server events and append players to the player list
-        const playerJoinEventSource: EventSource = new EventSource(serverUrl + `/join/${eventCode}`);
-        playerJoinEventSource.onmessage = (e) => {
-            const player = JSON.parse(e.data);
-            setPlayers([...players, player]);
         };
 
-        // Close the connection on component unmount
-        return () => playerJoinEventSource.close();
+        createTournament();
     }, []);
 
     return(
@@ -65,6 +65,7 @@ function HostSetup(): JSX.Element
                 ))}
             </ul>
             <form>
+                <input type="button" name="refresh" id="refresh" value="Refresh Participants" onClick={handleRefreshParticipants} />
                 <input type="button" name="start" id="start" value="Start Event" />
                 <input type="button" name="delete" id="delete" value="Cancel Event" onClick={handleCancelEvent}/>
             </form>
