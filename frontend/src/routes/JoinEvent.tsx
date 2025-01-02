@@ -38,7 +38,7 @@ function JoinEvent(): JSX.Element
         else
         {
             const joinTournament = async() => {
-                await fetch(serverUrl + `join/${code}/${name}`)
+                await fetch(serverUrl + `/join/${code}?name=${name}`)
                 .then(response => {
                     if (response.ok)
                     {

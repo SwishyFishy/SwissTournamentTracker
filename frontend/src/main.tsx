@@ -8,7 +8,7 @@ import {server_ipv4, server_port} from './private.tsx';
 import './styles/index.css'
 
 const router = createBrowserRouter(routes);
-export const CONTEXT_serverBaseUrl: React.Context<string> = createContext(`http://${server_ipv4}:${server_port}/`);
+export const CONTEXT_serverBaseUrl: React.Context<string> = createContext(`http://${server_ipv4}:${server_port}`);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

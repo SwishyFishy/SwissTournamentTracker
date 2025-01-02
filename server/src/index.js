@@ -38,9 +38,9 @@ app.get("/delete/:event", (req, res) => {
 })
 
 // Add a player to the tournament
-app.get("/join/:event/:name", (req, res) => {
+app.get("/join/:event", (req, res) => {
     const tournament = events.find((t) => t.code == req.params.event).tournament;
-    const name = req.params.name;
+    const name = req.query.name;
 
     // Attempt to add player
     try
@@ -64,9 +64,9 @@ app.get("/join/:event/:name", (req, res) => {
 })
 
 // Remove a player from the tournament
-app.get("/leave/:event/:name", (req, res) => {
+app.get("/leave/:event", (req, res) => {
     const tournament = events.find((t) => t.code == req.params.event).tournament;
-    const name = req.params.name;
+    const name = req.query.name;
 
     // Attempt to remove player
     try
@@ -90,9 +90,9 @@ app.get("/leave/:event/:name", (req, res) => {
 })
 
 // Drop a player from the tournament
-app.get("/drop/:event/:name", (req, res) => {
+app.get("/drop/:event", (req, res) => {
     const tournament = events.find((t) => t.code == req.params.event).tournament;
-    const name = req.params.name;
+    const name = req.query.name;
 
     // Attempt to drop player
     try

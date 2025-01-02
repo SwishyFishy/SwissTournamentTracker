@@ -23,7 +23,7 @@ function HostSetup(): JSX.Element
     // Cancel this event
     const handleCancelEvent = () => {
         const deleteEvent = async() => {
-            fetch(serverUrl + `delete/${eventCode}`);
+            fetch(serverUrl + `/delete/${eventCode}`);
             navigate("/");
         }
         deleteEvent();
@@ -33,7 +33,7 @@ function HostSetup(): JSX.Element
     useEffect(() => {
         // Create and link to a tournament on the server
         const createTournament = async() => {
-            await fetch(serverUrl + "create")
+            await fetch(serverUrl + "/create")
             .then(response => response.json())
             .then(response => setEventCode(response.code))
             .catch(err => {
@@ -45,7 +45,7 @@ function HostSetup(): JSX.Element
         createTournament();
 
         // Create a handler to recieve pushed server events and append players to the player list
-        const playerJoinEventSource: EventSource = new EventSource(serverUrl);
+        const playerJoinEventSource: EventSource = new EventSource(serverUrl + `/${eventCode}`);
         playerJoinEventSource.onmessage = (e) => {
             const player = JSON.parse(e.data);
             setPlayers([...players, player]);
