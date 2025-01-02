@@ -112,7 +112,7 @@ class Tournament
         this.players = () => {
             const players = [];
             this.participants.forEach((player) => {
-                players.push(player.name);
+                players.push({id: String(player.id), name: player.name});
             })
             return players;
         }

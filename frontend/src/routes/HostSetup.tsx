@@ -33,7 +33,13 @@ function HostSetup(): JSX.Element
     // Get and set the player list
     const handleRefreshParticipants = () => {
         const getPlayers = async() => {
-            
+            await fetch(serverUrl + `/list/${eventCode}`)
+            .then(response => response.json())
+            .then(response => setPlayers(response.players))
+            .catch(err => {
+                console.log(err);
+                setPlayers([{id: '0', name: 'Network Error - unable to fetch player list'}])
+            })
         };
 
         getPlayers();
@@ -65,7 +71,7 @@ function HostSetup(): JSX.Element
                 ))}
             </ul>
             <form>
-                <input type="button" name="refresh" id="refresh" value="Refresh Participants" onClick={handleRefreshParticipants} />
+                <input type="button" name="refresh" id="refresh" value="Refresh" onClick={handleRefreshParticipants} />
                 <input type="button" name="start" id="start" value="Start Event" />
                 <input type="button" name="delete" id="delete" value="Cancel Event" onClick={handleCancelEvent}/>
             </form>
