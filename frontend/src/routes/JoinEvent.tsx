@@ -1,10 +1,13 @@
 import { useState } from "react";
 
+import '../styles/JoinEvent.css';
+
 function JoinEvent(): JSX.Element
 {
     const [name, setName] = useState<string>("");
     const [code, setCode] = useState<string>("");
 
+    // State management for input fields
     const handleNameInput = (e: any) => {
         setName(e.currentTarget?.value);
     };

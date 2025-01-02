@@ -1,0 +1,13 @@
+.joinEvent input[type="text"]{
+    color: var(--primary-background);
+    background-color: var(--primary-text);
+    
+    font-weight: bold;
+
+    width: 10em;
+
+    padding: .5em;
+    border: .25em solid var(--highlight-text);
+    border-radius: 2em;;
+    margin: 1em;
+}
