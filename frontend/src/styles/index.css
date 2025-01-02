@@ -52,6 +52,12 @@ input:focus{
     outline: none;
 }
 
+/*Footer*/
+footer{
+    position: fixed;
+    bottom: 3em;
+}
+
 /*Definition Classes*/
 .hidden{
     display: none;
