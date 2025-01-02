@@ -9,6 +9,8 @@ function JoinEvent(): JSX.Element
 {
     const [name, setName] = useState<string>("");
     const [code, setCode] = useState<string>("");
+    const [nameError, setNameError] = useState<boolean>(false);
+    const [codeError, setCodeError] = useState<boolean>(false);
     const navigate = useNavigate();
     const serverUrl = useContext(CONTEXT_serverBaseUrl);
 
@@ -23,32 +25,40 @@ function JoinEvent(): JSX.Element
 
     // Attempt to join event
     const handleSubmitJoin = () => {
+        // Validate user input
+        if (name == "")
+        {
+            setNameError(true);
+        }
+        else if (code == "")
+        {
+            setCodeError(true);
+        }
         // Attempt to enter a tournament with the in-form code
-        const joinTournament = async() => {
-            await fetch(serverUrl + `join/${code}/${name}`)
-            .then(response => {
-                if (response.ok)
-                {
-                    navigate("/join/event");
-                }
-                else if (response.status == 400)
-                {
-                    navigate("/", {state: {error: true, emsg: "The tournament could not be joined - there is already a participant wiht that name"}});
-                }
-                else if (response.status == 404)
-                {
-                    navigate("/", {state: {error: true, emsg: "The tournament could not be joined - no tournament with that entry code exists"}});
-                }
-                else
-                {
-                    navigate("/", {state: {error: true, emsg: "The tournament could not be joined - the tournament has already started"}});
-                }
-            })
-            .catch(err => {
-                console.log(err);
-                navigate("/", {state: {error: true, emsg: "The tournament could not be joined"}});
-            })}
-        joinTournament();
+        else
+        {
+            const joinTournament = async() => {
+                await fetch(serverUrl + `join/${code}/${name}`)
+                .then(response => {
+                    if (response.ok)
+                    {
+                        navigate("/join/event");
+                    }
+                    else if (response.status == 400)
+                    {
+                        setNameError(true);
+                    }
+                    else
+                    {
+                        setCodeError(true);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    navigate("/", {state: {error: true, emsg: "Network Error"}});
+                })}
+            joinTournament();
+        }
     };
 
     return(
@@ -56,7 +66,9 @@ function JoinEvent(): JSX.Element
             <h1>Join Event</h1>
             <form>
                 <input type="text" name="name" id="name" placeholder="Your Name" value={name} onChange={handleNameInput}/>
+                <span className={nameError ? "italics" : "hidden"}>Name unavailable</span>
                 <input type="text" name="code" id="code" placeholder="Event Code" value={code} onChange={handleCodeInput}/>
+                <span className={codeError ? "italics" : "hidden"}>Tournament unavailable</span>
                 <input type="button" name="join" id="join" value="Join Event" onClick={handleSubmitJoin} />
             </form>
         </div>
