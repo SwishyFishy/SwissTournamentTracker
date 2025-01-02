@@ -16,6 +16,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
+
+    max-width: 25em;
 }
 
 .wrapper h1{
@@ -43,6 +45,10 @@ input[type="button"], input[type="submit"]{
     margin: 1em;
 
     cursor: pointer;
+}
+
+input:focus{
+    outline: none;
 }
 
 .hidden{
