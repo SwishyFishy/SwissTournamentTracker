@@ -108,6 +108,14 @@ class Tournament
         this.currentMatches = [];
         this.rounds = 0;
         this.currentRound = 0;
+
+        this.players = () => {
+            const players = [];
+            this.participants.forEach((player) => {
+                players.push(player.name);
+            })
+            return players;
+        }
     }
 
     // Utility Methods

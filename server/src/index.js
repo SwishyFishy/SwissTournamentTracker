@@ -115,6 +115,15 @@ app.get("/drop/:event", (req, res) => {
     }
 })
 
+// Get the list of players in the tournament
+app.get("/list/:event", (req, res) => {
+    const tournament = events.find((t) => t.code == req.params.event).tournament;
+    res.status(200);
+    res.json({
+        players: tournament.players()
+    })
+})
+
 // Default
 app.use("*", (req, res) => {
     res.status(404);
