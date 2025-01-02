@@ -23,7 +23,7 @@ function Home(): JSX.Element
 
     return(
         <div className="wrapper home">
-            <h1>TMTGC Draft Tracker</h1>
+            <h1>TMTGC Tournament Tracker</h1>
             <Popup open={open} closeOnDocumentClick>
                 <h1>Uh Oh...</h1>
                 <p>{emsg}</p>
