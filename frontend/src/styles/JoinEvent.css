@@ -2,6 +2,7 @@
     color: var(--primary-background);
     background-color: var(--primary-text);
     
+    font-size: larger;
     font-weight: bold;
 
     width: 10em;

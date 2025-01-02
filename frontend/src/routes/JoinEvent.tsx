@@ -61,6 +61,10 @@ function JoinEvent(): JSX.Element
         }
     };
 
+    const handleCancelJoin = () => {
+        navigate("/");
+    };
+
     return(
         <div className="wrapper joinEvent">
             <h1>Join Event</h1>
@@ -70,6 +74,7 @@ function JoinEvent(): JSX.Element
                 <input type="text" name="code" id="code" placeholder="Event Code" value={code} onChange={handleCodeInput}/>
                 <span className={codeError ? "italics" : "hidden"}>Tournament unavailable</span>
                 <input type="button" name="join" id="join" value="Join Event" onClick={handleSubmitJoin} />
+                <input type="button" name="return" id="return" value="Cancel" onClick={handleCancelJoin} />
             </form>
         </div>
     );
