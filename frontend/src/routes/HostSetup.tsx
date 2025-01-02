@@ -23,15 +23,8 @@ function HostSetup(): JSX.Element
     // Cancel this event
     const handleCancelEvent = () => {
         const deleteEvent = async() => {
-            const response: Response = await fetch(serverUrl + `delete/${eventCode}`);
-            if (!response.ok)
-            {
-                console.log(response);
-            }
-            else
-            {
-                navigate("/");
-            }
+            fetch(serverUrl + `delete/${eventCode}`);
+            navigate("/");
         }
         deleteEvent();
     }
@@ -45,7 +38,7 @@ function HostSetup(): JSX.Element
             .then(response => setEventCode(response.code))
             .catch(err => {
                 console.log(err);
-                navigate("/");
+                navigate("/", {state: {error: true, emsg: "The tournament could not be created"}});
             })
         }
 

@@ -44,3 +44,11 @@
 
     cursor: pointer;
 }
+
+.hidden{
+    display: none;
+}
+
+.italics{
+    font-style: italic;
+}
