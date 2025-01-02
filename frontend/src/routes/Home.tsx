@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router";
 import Popup from "reactjs-popup";
 
@@ -8,13 +9,8 @@ function Home(): JSX.Element
     // Detect if this page is the landing zone of an error
     const navigate = useNavigate();
     const location = useLocation();
-    let error: boolean = false;
-    let emsg: string = "";
-    if (location.state?.error)
-    {
-        error = true;
-        emsg = location.state.emsg;
-    }
+    const [open, setOpen] = useState<boolean>(location.state?.error ? true : false);
+    const emsg: string = location.state?.emsg;
 
     // Functionality for the buttons
     const handleCreateEvent = () => {
@@ -28,10 +24,10 @@ function Home(): JSX.Element
     return(
         <div className="wrapper home">
             <h1>TMTGC Draft Tracker</h1>
-            <Popup open={error} closeOnDocumentClick>
+            <Popup open={open} closeOnDocumentClick>
                 <h1>Uh Oh...</h1>
                 <p>{emsg}</p>
-                <p className="italics">Click to dismiss</p>
+                <input type="button" name="dismiss" id="dismiss" value="Dismiss" onClick={() => setOpen(false)} />
             </Popup>
             <form>
                 <input type="button" name="CreateEvent" id="CreateEvent" value="Create Event" onClick={handleCreateEvent}/>

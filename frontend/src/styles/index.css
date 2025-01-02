@@ -28,7 +28,7 @@
     align-items: center;
 }
 
-.wrapper input[type="button"], .wrapper input[type="submit"]{
+input[type="button"], input[type="submit"]{
     color: var(--primary-text);
     background-color: var(--highlight-text);
     
