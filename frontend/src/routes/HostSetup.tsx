@@ -45,7 +45,7 @@ function HostSetup(): JSX.Element
         createTournament();
 
         // Create a handler to recieve pushed server events and append players to the player list
-        const playerJoinEventSource: EventSource = new EventSource(serverUrl + `/${eventCode}`);
+        const playerJoinEventSource: EventSource = new EventSource(serverUrl + `/join/${eventCode}`);
         playerJoinEventSource.onmessage = (e) => {
             const player = JSON.parse(e.data);
             setPlayers([...players, player]);
