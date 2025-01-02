@@ -56,6 +56,8 @@ input:focus{
 footer{
     position: fixed;
     bottom: 3em;
+    padding: 1em;
+    background-color: var(--primary-background);
 }
 
 /*Definition Classes*/
