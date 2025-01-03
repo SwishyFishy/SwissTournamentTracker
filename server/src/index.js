@@ -175,6 +175,31 @@ app.get("/start/:event", (req, res) => {
     }
 })
 
+// Advance to the next round
+app.get("/advance/:event", (req, res) => {
+    const tournament = events.find((t) => t.code == req.params.event).tournament;
+    if (tournament === undefined)
+    {
+        res.status(400);
+        res.send("Tournament does not exist");
+    }
+
+    // Advance to the next round
+    try
+    {
+        const result = tournament.NextRound();
+        res.status(200);
+        res.json({
+            status: result[0] == "Leaderboard" ? 'Over' : 'Continue'
+        })
+    }
+    catch (Error)
+    {
+        res.status(409);
+        res.send("Cannot advance to next round");
+    }
+})
+
 // Get the record of the current matches
 app.get("/round/:event", (req, res) => {
     const tournament = events.find((t) => t.code == req.params.event).tournament;

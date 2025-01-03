@@ -118,6 +118,10 @@ class Tournament
             return players;
         }
 
+        this.getLeaderboard = () => {
+            
+        }
+
         this.getRounds = () => {
             return {currentRound: this.currentRound, maxRound: this.rounds}
         }
