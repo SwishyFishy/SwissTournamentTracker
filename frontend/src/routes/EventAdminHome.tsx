@@ -32,6 +32,28 @@ function EventAdminHome(): JSX.Element
         getRound();
     }
 
+    // Advance to the next round
+    const handleAdvanceRound = () => {
+        const advanceRound = async() => {
+            await fetch(serverUrl + `/advance/${eventCode}`)
+            .then(response => response.json())
+            .then(response => {
+                if (response.status == 'Continue')
+                {
+                    handleRefreshMatches();
+                }
+                else
+                {
+                    // Navigate to tournament-over wrapup page
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        }
+        advanceRound();
+    }
+
     // Load matches on component mount
     useEffect(() => handleRefreshMatches(), []);
 
@@ -51,7 +73,7 @@ function EventAdminHome(): JSX.Element
             </ul>
             <form>
                 <input type="button" name="refresh" id="refresh" value="Refresh" onClick={handleRefreshMatches} />
-                <input type="button" name="next" id="next" value="Next Round" />
+                <input type="button" name="next" id="next" value="Next Round" onClick={handleAdvanceRound} />
             </form>
         </div>
     );
