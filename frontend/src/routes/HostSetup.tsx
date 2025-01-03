@@ -26,16 +26,6 @@ function HostSetup(): JSX.Element
         handleRefreshParticipants();        
     }
 
-    // Cancel this event
-    const handleCancelEvent = () => {
-        const deleteEvent = async() => {
-            fetch(serverUrl + `/delete/${eventCode}`);
-            navigate("/");
-        };
-
-        deleteEvent();
-    }
-
     // Get and set the player list
     const handleRefreshParticipants = () => {
         const getPlayers = async() => {
@@ -50,6 +40,37 @@ function HostSetup(): JSX.Element
 
         getPlayers();
     };
+
+    // Start this event
+    const handleStartEvent = () => {
+        const startEvent = async() => {
+            await fetch(serverUrl + `/start/${eventCode}`)
+            .then(response => {
+                if (response.ok)
+                {
+                    navigate("/host/event", {state: {code: eventCode}} )
+                }
+                else
+                {
+                    throw new Error;
+                }
+            })
+            .catch((err) =>{
+                console.log(err);
+            })
+        }
+        startEvent();
+    }
+
+    // Cancel this event
+    const handleCancelEvent = () => {
+        const deleteEvent = async() => {
+            fetch(serverUrl + `/delete/${eventCode}`);
+            navigate("/");
+        };
+
+        deleteEvent();
+    }
 
     // Connect to server on load to receive push events when a player joins
     useEffect(() => {
@@ -78,7 +99,7 @@ function HostSetup(): JSX.Element
             </ul>
             <form>
                 <input type="button" name="refresh" id="refresh" value="Refresh" onClick={handleRefreshParticipants} />
-                <input type="button" name="start" id="start" value="Start Event" />
+                <input type="button" name="start" id="start" value="Start Event" onClick={handleStartEvent} />
                 <input type="button" name="delete" id="delete" value="Cancel Event" onClick={handleCancelEvent}/>
             </form>
         </div>
