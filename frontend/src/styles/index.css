@@ -1,3 +1,4 @@
+/* Root */
 :root{
     --primary-background: #011627;
     --primary-text: #EEE5E9;
@@ -11,6 +12,7 @@
     font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
+/* Pages */
 .wrapper{
     display: flex;
     flex-direction: column;
@@ -52,14 +54,14 @@ input:focus{
     outline: none;
 }
 
-/*Footer*/
+/* Footer */
 footer{
     margin-top: 10em;
     padding: 1em;
     background-color: var(--primary-background);
 }
 
-/*Definition Classes*/
+/* Definition Classes */
 .hidden{
     display: none;
 }
@@ -68,7 +70,7 @@ footer{
     font-style: italic;
 }
 
-/*Error Popups*/
+/* Error Popups */
 .popup-overlay{
     position: absolute;
     background-color: var(--accent);
@@ -87,4 +89,37 @@ footer{
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+/* Lists */
+ul{
+    background-color: var(--accent);
+
+    list-style: none;
+    overflow-y: scroll;
+
+    height: 50vh;
+
+    padding: 0em;
+    border-radius: 1em;
+    
+    /*Hide scrollbars in IE, Edge, Firefox*/
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+/*Hide scrollbars in Chrome, Safari, Opera*/
+::-webkit-scrollbar{
+    display: none;
+}
+
+ul li{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 20vw;
+    min-width: 10em;
+
+    margin: 1.25em;
 }

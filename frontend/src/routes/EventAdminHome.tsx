@@ -5,6 +5,8 @@ import { Match } from "../types";
 
 import { CONTEXT_serverBaseUrl } from "../main";
 
+import "../styles/EventAdminHome.css";
+
 function EventAdminHome(): JSX.Element
 {
     const [round, setRound] = useState<number>(0);
@@ -36,25 +38,17 @@ function EventAdminHome(): JSX.Element
     return(
         <div className="wrapper eventAdminHome">
             <h1>Round: {round} / {maxRound}</h1>
-            <h2>Matches</h2>
-            <table>
-                <tr>
-                    <th>Player</th>
-                    <th>Wins</th>
-                    <th>vs.</th>
-                    <th>Wins</th>
-                    <th>Player</th>
-                </tr>
-                {matches.map((match) => (
-                    <tr>
-                        <td>{match.p1}</td>
-                        <td>{match.p1wins}</td>
-                        <td>-</td>
-                        <td>{match.p2wins}</td>
-                        <td>{match.p2}</td>
-                    </tr>
+            <ul>
+                {matches.map((match) => ( 
+                    <li key={match.p1 + match.p2}>
+                        <span key={match.p1 + match.p2 + "col_p1"}>{match.p1}</span>
+                        <span key={match.p1 + match.p2 + "col_p1wins"}>{match.p1wins}</span>
+                        <span key={match.p1 + match.p2 + "col_vs"}>-</span>
+                        <span key={match.p1 + match.p2 + "col_p2"}>{match.p2wins ? match.p2wins : 0}</span>
+                        <span key={match.p1 + match.p2 + "col_p2wins"}>{match.p2 ? match.p2 : "Bye"}</span>
+                    </li>
                 ))}
-            </table>
+            </ul>
             <form>
                 <input type="button" name="refresh" id="refresh" value="Refresh" onClick={handleRefreshMatches} />
                 <input type="button" name="next" id="next" value="Next Round" />
