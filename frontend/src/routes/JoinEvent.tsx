@@ -25,6 +25,10 @@ function JoinEvent(): JSX.Element
 
     // Attempt to join event
     const handleSubmitJoin = () => {
+
+        setNameError(false);
+        setCodeError(false);
+
         // Validate user input
         if (name == "")
         {
