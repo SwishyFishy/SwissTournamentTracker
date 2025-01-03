@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router";
-import Player from "../types";
+import { Player } from "../types";
 
 import { CONTEXT_serverBaseUrl } from "../main";
 
