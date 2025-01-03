@@ -119,7 +119,7 @@ class Tournament
         }
 
         this.getRounds = () => {
-            return {round: this.currentRound, maxRound: this.rounds}
+            return {currentRound: this.currentRound, maxRound: this.rounds}
         }
 
         this.getCurrentMatches = () => {
