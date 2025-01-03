@@ -377,7 +377,7 @@ class Tournament
             return false;
         }
 
-        return ["Round", this.currentMatches];
+        return ["Round", this.getCurrentMatches()];
     }
     // unmatchedParticipants: array<Object>
     // proposedPairs: array<Object>

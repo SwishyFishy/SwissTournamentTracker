@@ -124,6 +124,22 @@ app.get("/list/:event", (req, res) => {
     })
 })
 
+// Start the event
+app.get("/start/:event", (req, res) => {
+    const tournament = events.find((t) => t.code == req.params.event).tournament;
+    try
+    {
+        tournament.StartTournament();
+        res.status(200);
+        res.send("Started");
+    }
+    catch(Error)
+    {
+        res.status(409);
+        res.send("This tournament cannot be started");
+    }
+})
+
 // Get the record of the current matches
 app.get("/round/:event", (req, res) => {
     const tournament = events.find((t) => t.code == req.params.event).tournament;
