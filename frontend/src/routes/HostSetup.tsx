@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router";
+import Player from "../types";
 
 import { CONTEXT_serverBaseUrl } from "../main";
 
@@ -7,7 +8,7 @@ import '../styles/HostSetup.css';
 
 function HostSetup(): JSX.Element
 {
-    const [players, setPlayers] = useState<Array<{id: string, name: string}>>([]);
+    const [players, setPlayers] = useState<Array<Player>>([]);
     const [eventCode, setEventCode] = useState("");
     const serverUrl: string = useContext(CONTEXT_serverBaseUrl);
     const navigate = useNavigate();
