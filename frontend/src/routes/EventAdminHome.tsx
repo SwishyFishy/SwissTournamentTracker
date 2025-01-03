@@ -45,6 +45,7 @@ function EventAdminHome(): JSX.Element
                 else
                 {
                     // Navigate to tournament-over wrapup page
+                    console.log(response.status);
                 }
             })
             .catch((err) => {

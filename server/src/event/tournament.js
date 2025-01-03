@@ -119,7 +119,7 @@ class Tournament
         }
 
         this.getLeaderboard = () => {
-            
+
         }
 
         this.getRounds = () => {
@@ -128,6 +128,7 @@ class Tournament
 
         this.getCurrentMatches = () => {
             const matches = [];
+            console.log(typeof this.currentMatches);
             this.currentMatches.forEach((match) => {
                 matches.push({p1: match.p1name, p2: match.p2name, p1wins: match.p1wins, p2wins: match.p2wins})
             })
@@ -274,7 +275,7 @@ class Tournament
         this.__VerifyRunning();
 
         // Fail if the given pair of players do not have an ongoing match
-        const match = this.currentMatches.find((match) => match.p1name == player1 && match.p2name == player2);
+        const match = this.currentMatches.find((match) => (match.p1name == player1 && match.p2name == player2));
         if (match === undefined)
         {
             return false;
@@ -378,7 +379,7 @@ class Tournament
         this.currentMatches = this.__MatchBuilder(structuredClone(this.participants).filter((player) => this.matches[player.id] !== "DROP"))
         if (this.currentMatches === false)
         {
-            return false;
+            return ["Fail", this.participants];
         }
 
         return ["Round", this.getCurrentMatches()];

@@ -30,12 +30,7 @@ app.get("/create", (req, res) => {
 
 // Delete a tournament
 app.get("/delete/:event", (req, res) => {
-    const tournament = events.findIndex((t) => t.code == req.params.event);
-    if (tournament == -1)
-    {
-        res.status(400);
-        res.send("Tournament does not exist");
-    }
+    const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); }, "INDEX")
 
     // Delete the tournament
     events.splice(tournament, 1);
@@ -45,12 +40,7 @@ app.get("/delete/:event", (req, res) => {
 
 // Add a player to the tournament
 app.get("/join/:event", (req, res) => {
-    const tournament = events.find((t) => t.code == req.params.event).tournament;
-    if (tournament === undefined)
-    {
-        res.status(400);
-        res.send("Tournament does not exist");
-    }
+    const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); })
     const name = req.query.name;
 
     // Attempt to add player
@@ -76,12 +66,7 @@ app.get("/join/:event", (req, res) => {
 
 // Remove a player from the tournament
 app.get("/leave/:event", (req, res) => {
-    const tournament = events.find((t) => t.code == req.params.event).tournament;
-    if (tournament === undefined)
-    {
-        res.status(400);
-        res.send("Tournament does not exist");
-    }
+    const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); })
     const name = req.query.name;
 
     // Attempt to remove player
@@ -107,12 +92,7 @@ app.get("/leave/:event", (req, res) => {
 
 // Drop a player from the tournament
 app.get("/drop/:event", (req, res) => {
-    const tournament = events.find((t) => t.code == req.params.event).tournament;
-    if (tournament === undefined)
-    {
-        res.status(400);
-        res.send("Tournament does not exist");
-    }
+    const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); })
     const name = req.query.name;
 
     // Attempt to drop player
@@ -154,12 +134,7 @@ app.get("/list/:event", (req, res) => {
 
 // Start the event
 app.get("/start/:event", (req, res) => {
-    const tournament = events.find((t) => t.code == req.params.event).tournament;
-    if (tournament === undefined)
-    {
-        res.status(400);
-        res.send("Tournament does not exist");
-    }
+    const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); })
 
     // Start event
     try
@@ -177,12 +152,7 @@ app.get("/start/:event", (req, res) => {
 
 // Advance to the next round
 app.get("/advance/:event", (req, res) => {
-    const tournament = events.find((t) => t.code == req.params.event).tournament;
-    if (tournament === undefined)
-    {
-        res.status(400);
-        res.send("Tournament does not exist");
-    }
+    const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); })
 
     // Advance to the next round
     try
@@ -190,7 +160,7 @@ app.get("/advance/:event", (req, res) => {
         const result = tournament.NextRound();
         res.status(200);
         res.json({
-            status: result[0] == "Leaderboard" ? 'Over' : 'Continue'
+            status: result[0] == "Round" ? 'Continue' : 'Over'
         })
     }
     catch (Error)
@@ -202,12 +172,7 @@ app.get("/advance/:event", (req, res) => {
 
 // Get the record of the current matches
 app.get("/round/:event", (req, res) => {
-    const tournament = events.find((t) => t.code == req.params.event).tournament;
-    if (tournament === undefined)
-    {
-        res.status(400);
-        res.send("Tournament does not exist");
-    }
+    const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); })
 
     // Send matches record
     res.status(200);
@@ -230,3 +195,31 @@ app.listen(port, ipv4, () => {
     console.log(`Server started on port ${port}`);
     console.log(`${ipv4}:${port}`);
 });
+
+////////////////////
+
+// Utility Functions
+////////////////////
+
+function extractTournament(code, failResp, mode = "EVENT")
+{
+    let tournament; 
+    if (mode == "EVENT")
+    {
+        tournament = events.find((t) => t.code == code);
+        if (tournament === undefined)
+        {
+            failResp();
+        }
+    }
+    else if (mode == "INDEX")
+    {
+        tournament = events.findIndex((t) => t.code == code);
+        if (tournament === -1)
+        {
+            failResp();
+        }
+    }
+
+    return tournament.tournament;
+}
