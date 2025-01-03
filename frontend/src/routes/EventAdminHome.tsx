@@ -47,11 +47,11 @@ function EventAdminHome(): JSX.Element
                 </tr>
                 {matches.map((match) => (
                     <tr>
-                        <td>{match.p1.name}</td>
+                        <td>{match.p1}</td>
                         <td>{match.p1wins}</td>
                         <td>-</td>
                         <td>{match.p2wins}</td>
-                        <td>{match.p2.name}</td>
+                        <td>{match.p2}</td>
                     </tr>
                 ))}
             </table>

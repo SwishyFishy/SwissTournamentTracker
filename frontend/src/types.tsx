@@ -4,9 +4,8 @@ export type Player = {
     }
 
 export type Match = {
-    id: string,
-    p1: Player,
-    p2: Player,
+    p1: string,
+    p2: string,
     p1wins: number,
     p2wins: number
 }
