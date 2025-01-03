@@ -31,8 +31,14 @@ app.get("/create", (req, res) => {
 // Delete a tournament
 app.get("/delete/:event", (req, res) => {
     const tournament = events.findIndex((t) => t.code == req.params.event);
-    events.splice(tournament, 1);
+    if (tournament == -1)
+    {
+        res.status(400);
+        res.send("Tournament does not exist");
+    }
 
+    // Delete the tournament
+    events.splice(tournament, 1);
     res.status(200);
     res.send("Deleted");
 })
@@ -40,6 +46,11 @@ app.get("/delete/:event", (req, res) => {
 // Add a player to the tournament
 app.get("/join/:event", (req, res) => {
     const tournament = events.find((t) => t.code == req.params.event).tournament;
+    if (tournament === undefined)
+    {
+        res.status(400);
+        res.send("Tournament does not exist");
+    }
     const name = req.query.name;
 
     // Attempt to add player
@@ -66,6 +77,11 @@ app.get("/join/:event", (req, res) => {
 // Remove a player from the tournament
 app.get("/leave/:event", (req, res) => {
     const tournament = events.find((t) => t.code == req.params.event).tournament;
+    if (tournament === undefined)
+    {
+        res.status(400);
+        res.send("Tournament does not exist");
+    }
     const name = req.query.name;
 
     // Attempt to remove player
@@ -92,6 +108,11 @@ app.get("/leave/:event", (req, res) => {
 // Drop a player from the tournament
 app.get("/drop/:event", (req, res) => {
     const tournament = events.find((t) => t.code == req.params.event).tournament;
+    if (tournament === undefined)
+    {
+        res.status(400);
+        res.send("Tournament does not exist");
+    }
     const name = req.query.name;
 
     // Attempt to drop player
@@ -118,6 +139,13 @@ app.get("/drop/:event", (req, res) => {
 // Get the list of players in the tournament
 app.get("/list/:event", (req, res) => {
     const tournament = events.find((t) => t.code == req.params.event).tournament;
+    if (tournament === undefined)
+    {
+        res.status(400);
+        res.send("Tournament does not exist");
+    }
+
+    // Send player list
     res.status(200);
     res.json({
         players: tournament.getPlayers()
@@ -127,6 +155,13 @@ app.get("/list/:event", (req, res) => {
 // Start the event
 app.get("/start/:event", (req, res) => {
     const tournament = events.find((t) => t.code == req.params.event).tournament;
+    if (tournament === undefined)
+    {
+        res.status(400);
+        res.send("Tournament does not exist");
+    }
+
+    // Start event
     try
     {
         tournament.StartTournament();
@@ -143,6 +178,13 @@ app.get("/start/:event", (req, res) => {
 // Get the record of the current matches
 app.get("/round/:event", (req, res) => {
     const tournament = events.find((t) => t.code == req.params.event).tournament;
+    if (tournament === undefined)
+    {
+        res.status(400);
+        res.send("Tournament does not exist");
+    }
+
+    // Send matches record
     res.status(200);
     res.json({
         round: tournament.getRounds(),
