@@ -120,7 +120,17 @@ app.get("/list/:event", (req, res) => {
     const tournament = events.find((t) => t.code == req.params.event).tournament;
     res.status(200);
     res.json({
-        players: tournament.players()
+        players: tournament.getPlayers()
+    })
+})
+
+// Get the record of the current matches
+app.get("/round/:event", (req, res) => {
+    const tournament = events.find((t) => t.code == req.params.event).tournament;
+    res.status(200);
+    res.json({
+        round: tournament.getRounds(),
+        matches: tournament.getCurrentMatches() 
     })
 })
 

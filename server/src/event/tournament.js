@@ -109,12 +109,25 @@ class Tournament
         this.rounds = 0;
         this.currentRound = 0;
 
-        this.players = () => {
+        // Getters
+        this.getPlayers = () => {
             const players = [];
             this.participants.forEach((player) => {
                 players.push({id: String(player.id), name: player.name});
             })
             return players;
+        }
+
+        this.getRounds = () => {
+            return {round: this.currentRound, maxRound: this.rounds}
+        }
+
+        this.getCurrentMatches = () => {
+            const matches = [];
+            this.currentMatches.forEach((match) => {
+                matches.push({p1: match.p1name, p2: match.p2name, p1wins: match.p1wins, p2wins: match.p2wins})
+            })
+            return matches;
         }
     }
 
