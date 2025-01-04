@@ -182,6 +182,35 @@ app.get("/round/:event", (req, res) => {
     })
 })
 
+// Input a match score
+app.get("/report/:event", (req, res) => {
+    const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); })
+    const p1 = req.query.p1;
+    const p2 = req.query.p2;
+    const p1wins = req.query.p1wins;
+    const p2wins = req.query.p2wins;
+
+    // Report the match
+    try
+    {
+        if (tournament.ReportMatchResults(p1, p2, p1wins, p2wins))
+        {
+            res.status(200);
+            res.send("Reported");
+        }
+        else
+        {
+            res.status(400);
+            res.send("Match does not exist");
+        }
+    }
+    catch (Error)
+    {
+        res.status(409);
+        res.send("Tournament cannot accept match reports");
+    }
+})
+
 // Default
 app.use("*", (req, res) => {
     res.status(404);

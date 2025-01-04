@@ -128,7 +128,6 @@ class Tournament
 
         this.getCurrentMatches = () => {
             const matches = [];
-            console.log(typeof this.currentMatches);
             this.currentMatches.forEach((match) => {
                 matches.push({p1: match.p1name, p2: match.p2name, p1wins: match.p1wins, p2wins: match.p2wins})
             })
@@ -428,7 +427,7 @@ class Tournament
                     // Handle the bye
                     if (player.id == opponent.id)
                     {
-                        proposedPairs.push({p1id: player.id, p2id: player.id, p1name: player.name, p1wins: 2});
+                        proposedPairs.push({p1id: player.id, p1name: player.name,  p2id: player.id, p1wins: 2, p2wins: undefined});
                     }
                     else
                     {   

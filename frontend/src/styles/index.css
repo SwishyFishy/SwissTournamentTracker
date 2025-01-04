@@ -44,7 +44,7 @@ input[type="button"], input[type="submit"]{
 
     padding: .5em;
     border: .25em solid var(--highlight-text);
-    border-radius: 2em;;
+    border-radius: 2em;
     margin: 1em;
 
     cursor: pointer;

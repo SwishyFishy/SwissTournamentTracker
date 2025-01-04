@@ -55,6 +55,30 @@ function EventAdminHome(): JSX.Element
         advanceRound();
     }
 
+    // Edit player match scores
+    const handleEditMatch = (e: any) => {
+        const editMatch = async(e: any) => {
+            // Match the event target to a match in state
+            const eplayer: string = e.target.getAttribute('id');
+            const match: Match | undefined = matches.find((match) => match.p1 == eplayer || match.p2 == eplayer);
+
+            // Send a request to record a new round score for that match, with the clicked player's score incremented by 1 (mod 3);
+            // Result: Each score can be clicked to increment by 1, rolling over 0 -> 1 -> 2 -> 0
+            if (match !== undefined)
+            {
+                const p1wins = match.p1 == eplayer ? (match.p1wins + 1) % 3 : match.p1wins;
+                const p2wins = match.p2 == eplayer ? (match.p2wins + 1) % 3 : match.p2wins;
+                
+                await fetch(serverUrl + `/report/${eventCode}?p1=${match.p1}&p2=${match.p2}&p1wins=${p1wins}&p2wins=${[p2wins]}`)
+                .then(response => { if (response.ok){ handleRefreshMatches() } else { console.log(response) } })
+                .catch((err) => {
+                    console.log(err);
+                })
+            }
+        }
+        editMatch(e);
+    }
+
     // Load matches on component mount
     useEffect(() => handleRefreshMatches(), []);
 
@@ -65,10 +89,10 @@ function EventAdminHome(): JSX.Element
                 {matches.map((match) => ( 
                     <li key={match.p1 + match.p2}>
                         <span key={match.p1 + match.p2 + "col_p1"}>{match.p1}</span>
-                        <span key={match.p1 + match.p2 + "col_p1wins"}>{match.p1wins}</span>
+                        <span key={match.p1 + match.p2 + "col_p1wins"}>{match.p2wins !== undefined ? <input type="button" name="p1wins" id={match.p1} value={match.p1wins} onClick={handleEditMatch} /> : <span className="bye">2</span>}</span>
                         <span key={match.p1 + match.p2 + "col_vs"}>-</span>
-                        <span key={match.p1 + match.p2 + "col_p2"}>{match.p2wins ? match.p2wins : 0}</span>
-                        <span key={match.p1 + match.p2 + "col_p2wins"}>{match.p2 ? match.p2 : "Bye"}</span>
+                        <span key={match.p1 + match.p2 + "col_p2wins"}>{match.p2wins !== undefined ? <input type="button" name="p2wins" id={match.p2} value={match.p2wins} onClick={handleEditMatch} /> : <span className="bye">0</span>}</span>
+                        <span key={match.p1 + match.p2 + "col_p2"}>{match.p2 ? match.p2 : "Bye"}</span>
                     </li>
                 ))}
             </ul>
