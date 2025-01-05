@@ -43,6 +43,7 @@ function EventAdminHome(): JSX.Element
     // Advance to the next round
     const handleAdvanceRound = () => {
         const advanceRound = async() => {
+            // Get matches
             await fetch(serverUrl + `/advance/${eventCode}`)
             .then(response => response.json())
             .then(response => {
@@ -59,6 +60,9 @@ function EventAdminHome(): JSX.Element
             .catch((err) => {
                 console.log(err);
             })
+
+            // Reset this page
+            setStartRound(false);
         }
         advanceRound();
     }
@@ -107,8 +111,8 @@ function EventAdminHome(): JSX.Element
             </ul>
             <form>
                 <input type="button" name="refresh" id="refresh" value="Refresh" onClick={handleRefreshMatches} />
-                <input type="button" name="start" id="start" value="Start Round" onClick={handleStartRound} />
-                <input type="button" name="next" id="next" value="Next Round" onClick={handleAdvanceRound} />
+                <input type="button" name="start" id="start" value="Start Round" className={startRound ? "hidden" : ""} onClick={handleStartRound} />
+                <input type="button" name="next" id="next" value="Next Round" className={startRound ? "" : "hidden"} onClick={handleAdvanceRound} />
             </form>
         </div>
     );
