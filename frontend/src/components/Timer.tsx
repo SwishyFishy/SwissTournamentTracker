@@ -8,7 +8,7 @@ interface props_Timer
 function Timer({timeMinutes}: props_Timer)
 {
     const [currentTime, setCurrentTime] = useState<number>(Date.now());
-    const [targetTime, setTargetTime] = useState<number>(Date.now() + (timeMinutes * 60000));
+    const targetTime = useState<number>(Date.now() + (timeMinutes * 60000))[0];
     const [roundOver, setRoundOver] = useState<boolean>(false);
 
     // Create an interval that checks whether the time exceeds the target time, and updates the screen, every second
