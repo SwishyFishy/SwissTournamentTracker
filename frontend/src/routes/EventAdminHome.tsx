@@ -4,6 +4,7 @@ import { useLocation } from "react-router";
 import { Match } from "../types";
 
 import { CONTEXT_serverBaseUrl } from "../main";
+import Timer from "../components/Timer";
 
 import "../styles/EventAdminHome.css";
 
@@ -14,6 +15,7 @@ function EventAdminHome(): JSX.Element
     const [matches, setMatches] = useState<Array<Match>>([]);
     const serverUrl = useContext(CONTEXT_serverBaseUrl);
     const eventCode = useLocation().state.code;
+    const round_time: number = 50;
 
     // Get the current round match records
     const handleRefreshMatches = () => {
@@ -85,6 +87,7 @@ function EventAdminHome(): JSX.Element
     return(
         <div className="wrapper eventAdminHome">
             <h1>Round: {round} / {maxRound}</h1>
+            <Timer timeMinutes={round_time}/>
             <ul>
                 {matches.map((match) => ( 
                     <li key={match.p1 + match.p2}>
