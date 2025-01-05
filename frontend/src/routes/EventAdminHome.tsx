@@ -13,6 +13,7 @@ function EventAdminHome(): JSX.Element
     const [round, setRound] = useState<number>(0);
     const [maxRound, setMaxRound] = useState<number>(0);
     const [matches, setMatches] = useState<Array<Match>>([]);
+    const [startRound, setStartRound] = useState<boolean>(false);
     const serverUrl = useContext(CONTEXT_serverBaseUrl);
     const eventCode = useLocation().state.code;
     const round_time: number = 50;
@@ -32,6 +33,11 @@ function EventAdminHome(): JSX.Element
             })
         }
         getRound();
+    }
+
+    // Start the round timer
+    const handleStartRound = () => {
+        setStartRound(true);
     }
 
     // Advance to the next round
@@ -87,7 +93,7 @@ function EventAdminHome(): JSX.Element
     return(
         <div className="wrapper eventAdminHome">
             <h1>Round: {round} / {maxRound}</h1>
-            <Timer timeMinutes={round_time}/>
+            {startRound ? <Timer timeMinutes={round_time} /> : <p>Round not started</p>}
             <ul>
                 {matches.map((match) => ( 
                     <li key={match.p1 + match.p2}>
@@ -101,6 +107,7 @@ function EventAdminHome(): JSX.Element
             </ul>
             <form>
                 <input type="button" name="refresh" id="refresh" value="Refresh" onClick={handleRefreshMatches} />
+                <input type="button" name="start" id="start" value="Start Round" onClick={handleStartRound} />
                 <input type="button" name="next" id="next" value="Next Round" onClick={handleAdvanceRound} />
             </form>
         </div>

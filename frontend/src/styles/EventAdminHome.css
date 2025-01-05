@@ -10,7 +10,19 @@
     text-align: center;
 }
 
-.eventAdminHome li span input[type="button"], .eventAdminHome li span .bye{
+.eventAdminHome li span input[type="button"]{
+    width: 1.25em;
+    height: 1.5em;
+
+    text-align: center;
+
+    padding: 0em;
+    border: 0em;
+    border-radius: .25em;
+    margin: 0em;
+}
+
+.eventAdminHome li span .bye{
     width: 1.25em;
     height: 1.5em;
 
@@ -21,7 +33,6 @@
     border-radius: .25em;
     margin: 0em;
 
-    /* For the spans */
     display: inline-flex;
     background-color: var(--attention);
     font-size: larger;
