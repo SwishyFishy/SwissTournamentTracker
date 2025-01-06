@@ -38,7 +38,7 @@ app.get("/delete/:event", (req, res) => {
     res.send("Deleted");
 })
 
-// Add a player to the tournament
+// Add a player to a tournament
 app.get("/join/:event", (req, res) => {
     const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); })
     const name = req.query.name;
@@ -64,7 +64,7 @@ app.get("/join/:event", (req, res) => {
     }
 })
 
-// Remove a player from the tournament
+// Remove a player from a tournament
 app.get("/leave/:event", (req, res) => {
     const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); })
     const name = req.query.name;
@@ -90,7 +90,7 @@ app.get("/leave/:event", (req, res) => {
     }
 })
 
-// Drop a player from the tournament
+// Drop a player from a tournament
 app.get("/drop/:event", (req, res) => {
     const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); })
     const name = req.query.name;
@@ -116,7 +116,7 @@ app.get("/drop/:event", (req, res) => {
     }
 })
 
-// Get the list of players in the tournament
+// Get the list of players in a tournament
 app.get("/list/:event", (req, res) => {
     const tournament = events.find((t) => t.code == req.params.event).tournament;
     if (tournament === undefined)
@@ -132,7 +132,7 @@ app.get("/list/:event", (req, res) => {
     })
 })
 
-// Start the event
+// Start a tournament
 app.get("/start/:event", (req, res) => {
     const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); })
 
@@ -150,7 +150,7 @@ app.get("/start/:event", (req, res) => {
     }
 })
 
-// Advance to the next round
+// Advance to the next round of a tournament
 app.get("/advance/:event", (req, res) => {
     const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); })
 
@@ -170,7 +170,7 @@ app.get("/advance/:event", (req, res) => {
     }
 })
 
-// Get the record of the current matches
+// Get the record of the current matches of a tournament
 app.get("/round/:event", (req, res) => {
     const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); })
 
@@ -182,7 +182,17 @@ app.get("/round/:event", (req, res) => {
     })
 })
 
-// Input a match score
+// Get the leaderboard of a tournament
+app.get("/leaderboard/:event", (req, res) => {
+    const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); })
+
+    res.status(200);
+    res.json({
+        leaderboard: tournament.getLeaderboard()
+    });
+})
+
+// Input a match score for a tournament match
 app.get("/report/:event", (req, res) => {
     const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); })
     const p1 = req.query.p1;
