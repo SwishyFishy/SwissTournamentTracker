@@ -467,7 +467,7 @@ class Tournament
         this.running = false;
 
         this.__RankParticipants();
-        return ["Leaderboard", this.participants];
+        return ["Leaderboard", this.getLeaderboard()];
     }
 
     // Testing Methods
