@@ -7,6 +7,7 @@ import JoinEvent from "./JoinEvent";
 import EventParticipantLobby from "./EventParticipantLobby";
 import EventParticipantMatch from "./EventParticipantMatch";
 import EventParticipantPostmatch from "./EventParticipantPostmatch";
+import Leaderboard from "./Leaderboard";
 
 const routes = [
     {
@@ -41,6 +42,10 @@ const routes = [
             {
                 path: "/event/postmatch",
                 element: <EventParticipantPostmatch />
+            },
+            {
+                path: "/event/conclusion",
+                element: <Leaderboard />
             }
         ]
     }

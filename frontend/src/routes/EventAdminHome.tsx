@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 import { Match } from "../types";
 
@@ -17,6 +17,8 @@ function EventAdminHome(): JSX.Element
     const serverUrl = useContext(CONTEXT_serverBaseUrl);
     const eventCode = useLocation().state.code;
     const round_time: number = 50;
+
+    const navigate = useNavigate();
 
     // Get the current round match records
     const handleRefreshMatches = () => {
@@ -53,8 +55,7 @@ function EventAdminHome(): JSX.Element
                 }
                 else
                 {
-                    // Navigate to tournament-over wrapup page
-                    console.log(response.status);
+                    navigate("/event/conclusion");
                 }
             })
             .catch((err) => {
