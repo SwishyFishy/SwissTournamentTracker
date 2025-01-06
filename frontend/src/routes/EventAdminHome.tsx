@@ -55,7 +55,7 @@ function EventAdminHome(): JSX.Element
                 }
                 else
                 {
-                    navigate("/event/conclusion");
+                    navigate("/event/conclusion", {state: {code: eventCode}});
                 }
             })
             .catch((err) => {
