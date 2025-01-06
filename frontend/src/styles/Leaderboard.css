@@ -1,0 +1,23 @@
+.leaderboard ul{
+    display: flex;
+    flex-direction: column;
+
+    padding: 1em;
+}
+
+.leaderboard ul li{
+    display: grid;
+    grid-template-columns: 6em 3em 6em 5em 5em 5em;
+
+    text-align: left;
+
+    margin: .25em;
+}
+
+.leaderboard ul .headerRow{
+    color: var(--highlight-text);
+}
+
+.leaderboard ul li span{
+    padding: 0em 1em;
+}
