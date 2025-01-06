@@ -76,17 +76,17 @@ class Tournament
 
             if (wins > losses)
             {
-                this.mWins += 1;
+                this.mWins++;
             }
             else if (wins < losses)
             {
-                this.mLosses += 1;
+                this.mLosses++;
             }
             else
             {
-                this.mDraws += 1;
+                this.mDraws++;
             }
-            this.matches += 1;
+            this.matches++;
 
             this.opponents.push(opponent);
         }
