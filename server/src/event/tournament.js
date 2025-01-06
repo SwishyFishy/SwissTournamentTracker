@@ -119,7 +119,24 @@ class Tournament
         }
 
         this.getLeaderboard = () => {
+            this.__RankParticipants();
 
+            const leaderboard = [];
+            this.participants.forEach((player) => {
+                leaderboard.push({
+                    id: player.id,
+                    name: player.name,
+                    points: player.CalcPoints(),
+                    wins: player.mWins,
+                    losses: player.mLosses,
+                    draws: player.mDraws,
+                    omw: player.CalcOMW(),
+                    gw: player.CalcGW(),
+                    ogw: player.CalcOGW()
+                })
+            })
+
+            return leaderboard;
         }
 
         this.getRounds = () => {
