@@ -221,6 +221,14 @@ app.get("/report/:event", (req, res) => {
     }
 })
 
+// Debugging page
+app.get("/debug", (req, res) => {
+    res.status(200);
+    res.json({
+        events: events
+    })
+})
+
 // Default
 app.use("*", (req, res) => {
     res.status(404);
