@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 
+import '../styles/Timer.css';
+
 interface props_Timer
 {
     timeMinutes: number;

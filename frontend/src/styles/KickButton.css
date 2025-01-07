@@ -1,0 +1,11 @@
+.kickButton{
+    background-color: var(--attention);
+
+    font-size: small;
+    width: 1.5em;
+
+    padding: 0.15em;
+    border: none;
+    border-radius: .25em;
+    margin: 0em;
+}

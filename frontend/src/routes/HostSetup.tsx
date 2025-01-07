@@ -4,6 +4,8 @@ import { Player } from "../types";
 
 import { CONTEXT_serverBaseUrl } from "../main";
 
+import KickButton from "../components/KickButton";
+
 import '../styles/HostSetup.css';
 
 function HostSetup(): JSX.Element
@@ -12,19 +14,6 @@ function HostSetup(): JSX.Element
     const [eventCode, setEventCode] = useState("");
     const serverUrl: string = useContext(CONTEXT_serverBaseUrl);
     const navigate = useNavigate();
-
-    // Kick a player using the X button
-    const handleKickPlayer = (e: any) => {
-        const kick: string = e.currentTarget.parentElement.getAttribute('data-name');
-        const kickPlayer = async() => {
-            fetch(serverUrl + `/leave/${eventCode}?name=${kick}`)
-            .catch(err => {
-                console.log(err);
-            })
-        };
-        kickPlayer();
-        handleRefreshParticipants();        
-    }
 
     // Get and set the player list
     const handleRefreshParticipants = () => {
@@ -94,7 +83,7 @@ function HostSetup(): JSX.Element
             <h2>Players</h2>
             <ul>
                 {players.map((player) => (
-                    <li key={player.id} data-name={player.name}><span>{player.name}</span> <input type="button" name="kick" id="kick" value="X" onClick={handleKickPlayer} /></li>
+                    <li key={player.id}><span>{player.name}</span> <KickButton key={"kick" + player.id} player={player.name} eventCode={eventCode} callback={handleRefreshParticipants}/></li>
                 ))}
             </ul>
             <form>
