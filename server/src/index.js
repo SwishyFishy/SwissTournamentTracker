@@ -195,10 +195,10 @@ app.get("/leaderboard/:event", (req, res) => {
 // Input a match score for a tournament match
 app.get("/report/:event", (req, res) => {
     const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); })
-    const p1 = req.query.p1;
-    const p2 = req.query.p2;
-    const p1wins = req.query.p1wins;
-    const p2wins = req.query.p2wins;
+    const p1 = Number(req.query.p1);
+    const p2 = Number(req.query.p2);
+    const p1wins = Number(req.query.p1wins);
+    const p2wins = Number(req.query.p2wins);
 
     // Report the match
     try
@@ -225,7 +225,13 @@ app.get("/report/:event", (req, res) => {
 app.get("/debug", (req, res) => {
     res.status(200);
     res.json({
-        events: events
+        events: JSON.parse(JSON.stringify(events, (key, value) => {
+            if (key === 'opponents') 
+            { 
+                return '[opponents]' 
+            } 
+            return value
+        }))
     })
 })
 
