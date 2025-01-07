@@ -442,16 +442,18 @@ class Tournament
                     this.__MatchBuilder(unmatchedParticipants.toSpliced(opponentIndex, 1).toSpliced(0, 1), proposedPairs) !== false)     // Recursive case
                 {
                     // Handle the bye
-                    if (player.id == opponent.id)
+                    // Requiring that unmatchedParticipants be of odd length forces a maximum of 1 bye
+                    if (player.id == opponent.id && unmatchedParticipants.length % 2 == 1)
                     {
                         proposedPairs.push({p1id: player.id, p1name: player.name,  p2id: player.id, p1wins: 2, p2wins: undefined});
+                        return proposedPairs;
                     }
+                    // Handle a match
                     else
                     {   
                         proposedPairs.push({p1id: player.id, p1name: player.name, p2id: opponent.id, p2name: opponent.name, p1wins: 0, p2wins: 0});
+                        return proposedPairs;
                     }
-
-                    return proposedPairs;
                 }
             }
         }
