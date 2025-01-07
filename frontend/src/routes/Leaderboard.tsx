@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useLocation } from "react-router";
+import { useLocation, /*useNavigate*/ } from "react-router";
 
 import { PlayerStats } from "../types";
 
@@ -11,7 +11,8 @@ function Leaderboard()
 {
     const [results, setResults] = useState<Array<PlayerStats>>([]);    
     const serverURL: string = useContext(CONTEXT_serverBaseUrl);
-    const eventCode = useLocation().state.code;
+    const eventCode: string = useLocation().state.code;
+    /*const navigate = useNavigate();*/
 
     // Get leaderboard
     useEffect(() => {
@@ -25,6 +26,11 @@ function Leaderboard()
         }
         getLeaderboard();
     }, [])
+
+    // Return to homepage
+    /*const handleGoHome = () => {
+        navigate("/");
+    }*/
 
     return(
         <div className="wrapper leaderboard">
@@ -49,9 +55,9 @@ function Leaderboard()
                     </li>
                 ))}
             </ul>
-            <form>
-
-            </form>
+            {/*<form>
+                <input type="button" name="home" id="home" value="Home" onClick={handleGoHome} />
+            </form>*/}
         </div>
     );
 }   
