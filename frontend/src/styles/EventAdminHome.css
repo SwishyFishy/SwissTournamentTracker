@@ -1,12 +1,12 @@
 .eventAdminHome li{
     display: grid;
-    grid-template-columns: 30fr 15fr 10fr 15fr 30fr;
+    grid-template-columns: 5fr 25fr 15fr 10fr 15fr 25fr 5fr;
 }
 
-.eventAdminHome li span:first-child, .eventAdminHome li span:nth-child(2){
+.eventAdminHome li span:nth-child(2), .eventAdminHome li span:nth-child(3){
     text-align: right;
 }
-.eventAdminHome li span:nth-child(3){
+.eventAdminHome li span:nth-child(4){
     text-align: center;
 }
 

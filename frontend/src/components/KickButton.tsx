@@ -8,7 +8,7 @@ interface props_KickButton
 {
     player: string,
     eventCode: string,
-    callback: Function | undefined
+    callback: Function | null
 }
 
 function KickButton({player, eventCode, callback}: props_KickButton): JSX.Element
@@ -18,14 +18,23 @@ function KickButton({player, eventCode, callback}: props_KickButton): JSX.Elemen
     // Kick a player using the X button
     const handleKickPlayer = () => {
         const kickPlayer = async() => {
-            fetch(serverUrl + `/leave/${eventCode}?name=${player}`)
+            await fetch(serverUrl + `/leave/${eventCode}?name=${player}`)
+            .then(response => {
+                if (response.status == 409)
+                {
+                    fetch(serverUrl + `/drop/${eventCode}?name=${player}`)
+                    .catch((err) => {
+                        console.log(err);
+                    })
+                }
+            })
             .catch(err => {
                 console.log(err);
             })
         };
         kickPlayer();
 
-        if (callback !== undefined) 
+        if (callback !== null) 
         {
             callback();        
         }
