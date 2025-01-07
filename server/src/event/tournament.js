@@ -97,9 +97,6 @@ class Tournament
     constructor(participants = [])
     {
         this.participants = [];
-        participants.forEach((player) => {
-            this.participants.push(new this.__Participant(player));
-        });
 
         this.hasStarted = false;
         this.running = false;
@@ -108,6 +105,11 @@ class Tournament
         this.currentMatches = [];
         this.rounds = 0;
         this.currentRound = 0;
+
+        // Add passed players
+        participants.forEach((player) => {
+            this.AddParticipant(player);
+        });
 
         // Getters
         this.getPlayers = () => {
@@ -217,9 +219,9 @@ class Tournament
     // participant: string
     AddParticipant(participant)
     {
-        // Fail if the event has started or if the participant is already registered or if the participant has not provided a name
+        // Fail if the event has started or if the participant is already registered or if the participant has not provided a name / named themselves 'bye'
         this.__VerifyNotStarted();
-        if (participant == "" || this.participants.findIndex((player) => player.name == participant) > -1)
+        if (participant == "" || participant.toLowerCase() == "bye" || this.participants.findIndex((player) => player.name.toLowerCase() == participant.toLowerCase()) > -1)
         {
             return false;
         }
