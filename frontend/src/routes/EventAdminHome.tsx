@@ -2,7 +2,6 @@ import { useState, useEffect, useContext } from "react";
 import { useLocation, useNavigate } from "react-router";
 
 import { Match } from "../types";
-
 import { CONTEXT_serverBaseUrl } from "../main";
 import Timer from "../components/Timer";
 

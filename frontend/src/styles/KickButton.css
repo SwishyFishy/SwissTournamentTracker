@@ -1,4 +1,4 @@
-.kickButton{
+input[type="button"].kickButton{
     background-color: var(--attention);
 
     font-size: small;

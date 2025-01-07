@@ -1,9 +1,8 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router";
+
 import { Player } from "../types";
-
 import { CONTEXT_serverBaseUrl } from "../main";
-
 import KickButton from "../components/KickButton";
 
 import '../styles/HostSetup.css';
