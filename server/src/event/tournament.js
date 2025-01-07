@@ -449,7 +449,7 @@ class Tournament
                         return proposedPairs;
                     }
                     // Handle a match
-                    else
+                    else if (player.id != opponent.id)
                     {   
                         proposedPairs.push({p1id: player.id, p1name: player.name, p2id: opponent.id, p2name: opponent.name, p1wins: 0, p2wins: 0});
                         return proposedPairs;
