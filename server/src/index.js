@@ -246,7 +246,7 @@ app.use("*", (req, res) => {
 // Listen on port
 app.listen(port, ipv4, () => {
     console.log(`Server started on port ${port}`);
-    console.log(`${ipv4}:${port}`);
+    console.log(`${ipv4}:${port}/debug`);
 });
 
 ////////////////////
