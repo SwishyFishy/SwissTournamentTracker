@@ -11,7 +11,6 @@ const Tournament = require("./event/tournament.js");
 const ShortUniqueId = require("short-unique-id");
 const codegen = new ShortUniqueId({length: 8, dictionary: 'alphanum_lower'});
 
-// Create tournament
 const events = [];
 
 ///////////////////
@@ -21,7 +20,7 @@ const events = [];
 // Create a new tournament
 app.get("/create", (req, res) => {
     const code = codegen.rnd();
-    events.push({code: code, tournament: new Tournament});
+    events.push({code: code, tournament: new Tournament, clients: []});
     res.status(200);
     res.json({
         code: code
@@ -176,10 +175,7 @@ app.get("/round/:event", (req, res) => {
 
     // Send matches record
     res.status(200);
-    res.json({
-        round: tournament.getRounds(),
-        matches: tournament.getCurrentMatches() 
-    })
+    res.json(compileTournamentData(tournament, true, true, false));
 })
 
 // Get the leaderboard of a tournament
@@ -187,9 +183,7 @@ app.get("/leaderboard/:event", (req, res) => {
     const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); })
 
     res.status(200);
-    res.json({
-        leaderboard: tournament.getLeaderboard()
-    });
+    res.json(compileTournamentData(tournament, false, false, true));
 })
 
 // Input a match score for a tournament match
@@ -219,6 +213,30 @@ app.get("/report/:event", (req, res) => {
         res.status(409);
         res.send("Tournament cannot accept match reports");
     }
+})
+
+// Append a client to a list of open connections automatically updated when the tournament data changes
+app.get("/subscribe/:event", (req, res) => {
+    const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); }, "OBJECT")
+    
+    // Create the connection and send the current data
+    res.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Connection': 'keep-alive',
+    });
+    res.write(compileTournamentData(tournament));
+
+    // Save this client
+    const id = Date.now();
+    tournament.clients.push({
+        id: id,
+        res
+    })
+
+    // Create a callback to remove this client when the client closes the connection
+    req.on('close', () => {
+        tournament.clients = tournament.clients.filter((client) => client.id !== id)
+    })
 })
 
 // Debugging page
@@ -254,25 +272,71 @@ app.listen(port, ipv4, () => {
 // Utility Functions
 ////////////////////
 
+/**
+ * Get the tournament code from the url, or call failResp if no such tournament exists 
+ * 
+ * @param   mode    'EVENT' => returns the tournament, 'INDEX' => returns the index of the tournament in events[], 'OBJECT' => returns the tournament object
+*/ 
 function extractTournament(code, failResp, mode = "EVENT")
 {
-    let tournament; 
     if (mode == "EVENT")
     {
-        tournament = events.find((t) => t.code == code);
+        const tournament = events.find((t) => t.code == code);
         if (tournament === undefined)
         {
             failResp();
         }
+
+        return tournament.tournament;
     }
     else if (mode == "INDEX")
     {
-        tournament = events.findIndex((t) => t.code == code);
+        const tournament = events.findIndex((t) => t.code == code);
         if (tournament === -1)
         {
             failResp();
         }
+
+        return tournament;
+    }
+    else if (mode == "OBJECT")
+    {
+        const tournament = events.find((t) => t.code == code);
+        if (tournament === undefined)
+        {
+            failResp();
+        } 
+
+        return tournament;
+    }
+}
+
+// Compile all of the requested tournament data into a single json object
+function compileTournamentData(tournament, r = true, m = true, l = true)
+{
+    const data = {};
+
+    if (r)
+    {
+        data.rounds = tournament.getRounds();
+    }
+    
+    if (m)
+    {
+        data.matches = tournament.getCurrentMatches();
     }
 
-    return tournament.tournament;
+    if (l)
+    {
+        data.leaderboard = tournament.getLeaderboard();
+    }
+
+    return(data);
+}
+
+function updateSubscribers(tournament)
+{
+    tournament.clients.forEach((client) => {
+        client.res.write(compileTournamentData)
+;    })
 }
