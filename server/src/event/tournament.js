@@ -146,6 +146,11 @@ class Tournament
         }
 
         this.getCurrentMatches = () => {
+            if (this.currentMatches === false)
+            {
+                return null;
+            }
+            
             const matches = [];
             this.currentMatches.forEach((match) => {
                 matches.push({p1: match.p1name, p2: match.p2name, p1wins: match.p1wins, p2wins: match.p2wins})
