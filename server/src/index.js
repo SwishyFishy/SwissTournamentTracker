@@ -334,9 +334,10 @@ function compileTournamentData(tournament, r = true, m = true, l = true)
     return(data);
 }
 
-function updateSubscribers(tournament)
+// Forward the most up-to-date tournament data to each client
+function updateSubscribers(tournament, r = true, m = true, l = true)
 {
     tournament.clients.forEach((client) => {
-        client.res.write(compileTournamentData)
-;    })
+        client.res.write(compileTournamentData(tournament.tournament, r, m, l))
+    })
 }
