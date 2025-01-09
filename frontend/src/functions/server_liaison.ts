@@ -2,7 +2,7 @@ import { useContext } from "react"
 
 import { CONTEXT_serverBaseUrl } from "../main"
 
-function CreateConnection(storeData: Function)
+function CreateConnection(callbackFn: Function)
 {
     const serverUrl: string = useContext(CONTEXT_serverBaseUrl);
 
@@ -10,7 +10,7 @@ function CreateConnection(storeData: Function)
     const events: EventSource = new EventSource(serverUrl + `/subscribe`);
     events.onmessage = (e) => {
         const data = JSON.parse(e.data);
-        storeData(data);
+        callbackFn(data);
     }
 }
 
