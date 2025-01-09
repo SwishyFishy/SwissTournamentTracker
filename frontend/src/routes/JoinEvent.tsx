@@ -46,7 +46,7 @@ function JoinEvent(): JSX.Element
                 .then(response => {
                     if (response.ok)
                     {
-                        navigate("/join/event");
+                        navigate("/join/event", {state: {code: code}});
                     }
                     else if (response.status == 400)
                     {
