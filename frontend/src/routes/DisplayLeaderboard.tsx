@@ -1,15 +1,15 @@
 import { useContext, useEffect, useState } from "react";
 import { useLocation, /*useNavigate*/ } from "react-router";
 
-import { PlayerStats } from "../types";
+import { Leaderboard } from "../types";
 
 import { CONTEXT_serverBaseUrl } from "../main";
 
 import '../styles/Leaderboard.css';
 
-function Leaderboard() 
+function DisplayLeaderboard() 
 {
-    const [results, setResults] = useState<Array<PlayerStats>>([]);    
+    const [results, setResults] = useState<Leaderboard>([]);    
     const serverURL: string = useContext(CONTEXT_serverBaseUrl);
     const eventCode: string = useLocation().state.code;
     /*const navigate = useNavigate();*/
@@ -62,4 +62,4 @@ function Leaderboard()
     );
 }   
 
-export default Leaderboard;
+export default DisplayLeaderboard;

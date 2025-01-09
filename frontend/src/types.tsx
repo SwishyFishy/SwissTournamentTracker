@@ -19,3 +19,17 @@ export type Match = {
     p1wins: number,
     p2wins: number
 }
+
+export type Rounds = {
+    currentRound: number,
+    maxRound: number
+}
+
+export type Leaderboard = Array<PlayerStats>;
+
+export type SubscribedData = {
+    rounds: Rounds | null,
+    matches: Array<Match> | null,
+    leaderboard: Leaderboard | null,
+    status: string | null
+}

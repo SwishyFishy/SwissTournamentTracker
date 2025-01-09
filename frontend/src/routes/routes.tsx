@@ -7,7 +7,7 @@ import JoinEvent from "./JoinEvent";
 import EventParticipantLobby from "./EventParticipantLobby";
 import EventParticipantMatch from "./EventParticipantMatch";
 import EventParticipantPostmatch from "./EventParticipantPostmatch";
-import Leaderboard from "./Leaderboard";
+import DisplayLeaderboard from "./DisplayLeaderboard";
 
 const routes = [
     {
@@ -45,7 +45,7 @@ const routes = [
             },
             {
                 path: "/event/conclusion",
-                element: <Leaderboard />
+                element: <DisplayLeaderboard />
             }
         ]
     }
