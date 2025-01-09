@@ -331,6 +331,8 @@ function compileTournamentData(tournament, r = true, m = true, l = true)
         data.leaderboard = tournament.getLeaderboard();
     }
 
+    data.status = tournament.getStatus();
+
     return(data);
 }
 

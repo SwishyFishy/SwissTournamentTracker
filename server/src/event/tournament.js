@@ -112,6 +112,10 @@ class Tournament
         });
 
         // Getters
+        this.getStatus = () => {
+            return this.hasStarted ? (this.running ? "running" : "over") : "pending"; 
+        }
+
         this.getPlayers = () => {
             const players = [];
             this.participants.forEach((player) => {
@@ -150,7 +154,7 @@ class Tournament
             {
                 return null;
             }
-            
+
             const matches = [];
             this.currentMatches.forEach((match) => {
                 matches.push({p1: match.p1name, p2: match.p2name, p1wins: match.p1wins, p2wins: match.p2wins})
