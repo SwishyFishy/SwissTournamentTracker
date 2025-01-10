@@ -29,7 +29,7 @@ app.get("/create", (req, res) => {
 
 // Delete a tournament
 app.get("/delete/:event", (req, res) => {
-    const tournamentIndex = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); }, "INDEX")
+    const tournamentIndex = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); }, "INDEX")
 
     // Delete the tournament
     events.splice(tournamentIndex, 1);
@@ -39,7 +39,7 @@ app.get("/delete/:event", (req, res) => {
 
 // Add a player to a tournament
 app.get("/join/:event", (req, res) => {
-    const tournamentObj = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); }, "OBJECT");
+    const tournamentObj = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); }, "OBJECT");
     const tournament = tournamentObj.tournament;
     const name = req.query.name;
 
@@ -68,7 +68,7 @@ app.get("/join/:event", (req, res) => {
 
 // Remove a player from a tournament
 app.get("/leave/:event", (req, res) => {
-    const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); })
+    const tournament = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); })
     const name = req.query.name;
 
     // Attempt to remove player
@@ -94,7 +94,7 @@ app.get("/leave/:event", (req, res) => {
 
 // Drop a player from a tournament
 app.get("/drop/:event", (req, res) => {
-    const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); })
+    const tournament = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); })
     const name = req.query.name;
 
     // Attempt to drop player
@@ -120,7 +120,7 @@ app.get("/drop/:event", (req, res) => {
 
 // Get the list of players in a tournament
 app.get("/list/:event", (req, res) => {
-    const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); })
+    const tournament = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); })
 
     // Send player list
     res.status(200);
@@ -131,7 +131,7 @@ app.get("/list/:event", (req, res) => {
 
 // Start a tournament
 app.get("/start/:event", (req, res) => {
-    const tournamentObj = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); }, "OBJECT")
+    const tournamentObj = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); }, "OBJECT")
     const tournament = tournamentObj.tournament;
 
     // Start event
@@ -152,7 +152,7 @@ app.get("/start/:event", (req, res) => {
 
 // Advance to the next round of a tournament
 app.get("/advance/:event", (req, res) => {
-    const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); })
+    const tournament = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); })
 
     // Advance to the next round
     try
@@ -172,7 +172,7 @@ app.get("/advance/:event", (req, res) => {
 
 // Get the record of the current matches of a tournament
 app.get("/round/:event", (req, res) => {
-    const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); })
+    const tournament = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); })
 
     // Send matches record
     res.status(200);
@@ -181,7 +181,7 @@ app.get("/round/:event", (req, res) => {
 
 // Get the leaderboard of a tournament
 app.get("/leaderboard/:event", (req, res) => {
-    const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); })
+    const tournament = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); })
 
     res.status(200);
     res.json(compileTournamentData(tournament, false, false, true));
@@ -189,7 +189,7 @@ app.get("/leaderboard/:event", (req, res) => {
 
 // Input a match score for a tournament match
 app.get("/report/:event", (req, res) => {
-    const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); })
+    const tournament = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); })
     const p1 = Number(req.query.p1);
     const p2 = Number(req.query.p2);
     const p1wins = Number(req.query.p1wins);
@@ -218,7 +218,7 @@ app.get("/report/:event", (req, res) => {
 
 // Append a client to a list of open connections automatically updated when the tournament data changes
 app.get("/subscribe/:event", (req, res) => {
-    const tournamentObj = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); }, "OBJECT")
+    const tournamentObj = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); }, "OBJECT")
     
     // Create the connection
     res.writeHead(200, {
@@ -233,7 +233,7 @@ app.get("/subscribe/:event", (req, res) => {
         res
     })
 
-    // Send current data, since this endpoint is only access by a new player joining the event
+    // Send current data
     updateSubscribers(tournamentObj);
 
     // Create a callback to remove this client when the client closes the connection
