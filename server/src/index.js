@@ -29,10 +29,10 @@ app.get("/create", (req, res) => {
 
 // Delete a tournament
 app.get("/delete/:event", (req, res) => {
-    const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); }, "INDEX")
+    const tournamentIndex = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); }, "INDEX")
 
     // Delete the tournament
-    events.splice(tournament, 1);
+    events.splice(tournamentIndex, 1);
     res.status(200);
     res.send("Deleted");
 })
@@ -117,12 +117,7 @@ app.get("/drop/:event", (req, res) => {
 
 // Get the list of players in a tournament
 app.get("/list/:event", (req, res) => {
-    const tournament = events.find((t) => t.code == req.params.event).tournament;
-    if (tournament === undefined)
-    {
-        res.status(400);
-        res.send("Tournament does not exist");
-    }
+    const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); })
 
     // Send player list
     res.status(200);
@@ -217,25 +212,27 @@ app.get("/report/:event", (req, res) => {
 
 // Append a client to a list of open connections automatically updated when the tournament data changes
 app.get("/subscribe/:event", (req, res) => {
-    const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); }, "OBJECT")
+    const tournamentObj = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); }, "OBJECT")
     
-    // Create the connection and send the current data
+    // Create the connection
     res.writeHead(200, {
         'Content-Type': 'text/event-stream',
         'Connection': 'keep-alive',
     });
-    res.write(compileTournamentData(tournament.tournament));
 
     // Save this client
     const id = Date.now();
-    tournament.clients.push({
+    tournamentObj.clients.push({
         id: id,
         res
     })
 
+    // Send current data, since this endpoint is only access by a new player joining the event
+    updateSubscribers(tournamentObj);
+
     // Create a callback to remove this client when the client closes the connection
     req.on('close', () => {
-        tournament.clients = tournament.clients.filter((client) => client.id !== id)
+        tournamentObj.clients = tournamentObj.clients.filter((client) => client.id !== id)
     })
 })
 
@@ -337,9 +334,9 @@ function compileTournamentData(tournament, r = true, m = true, l = true)
 }
 
 // Forward the most up-to-date tournament data to each client
-function updateSubscribers(tournament, r = true, m = true, l = true)
+function updateSubscribers(tournamentObj, r = true, m = true, l = true)
 {
-    tournament.clients.forEach((client) => {
-        client.res.write(compileTournamentData(tournament.tournament, r, m, l))
+    tournamentObj.clients.forEach((client) => {
+        client.res.write(JSON.stringify(compileTournamentData(tournamentObj.tournament, r, m, l)));
     })
 }
