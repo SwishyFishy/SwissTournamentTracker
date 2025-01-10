@@ -10,6 +10,7 @@ app.use(cors());
 const Tournament = require("./event/tournament.js");
 const ShortUniqueId = require("short-unique-id");
 const codegen = new ShortUniqueId({length: 8, dictionary: 'alphanum_lower'});
+const SSE = require('express-sse');
 
 const events = [];
 
@@ -138,7 +139,6 @@ app.get("/start/:event", (req, res) => {
     try
     {
         tournament.StartTournament();
-        updateSubscribers(tournamentObj);
 
         res.status(200);
         res.send("Started");
@@ -176,7 +176,7 @@ app.get("/round/:event", (req, res) => {
 
     // Send matches record
     res.status(200);
-    res.json(compileTournamentData(tournament, true, true, false));
+    res.json(compileTournamentData(tournament));
 })
 
 // Get the leaderboard of a tournament
@@ -184,7 +184,7 @@ app.get("/leaderboard/:event", (req, res) => {
     const tournament = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); })
 
     res.status(200);
-    res.json(compileTournamentData(tournament, false, false, true));
+    res.json(compileTournamentData());
 })
 
 // Input a match score for a tournament match
@@ -219,28 +219,9 @@ app.get("/report/:event", (req, res) => {
 // Append a client to a list of open connections automatically updated when the tournament data changes
 app.get("/subscribe/:event", (req, res) => {
     const tournamentObj = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); }, "OBJECT")
-    
-    // Create the connection
-    res.writeHead(200, {
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive',
-    });
-
-    // Save this client
-    const id = Date.now();
-    tournamentObj.clients.push({
-        id: id,
-        res
-    })
-
-    // Send current data
-    updateSubscribers(tournamentObj);
-
-    // Create a callback to remove this client when the client closes the connection
-    req.on('close', () => {
-        tournamentObj.clients = tournamentObj.clients.filter((client) => client.id !== id)
-    })
+    const sse = new SSE([compileTournamentData(tournamentObj.tournament)]);
+    sse.init(req, res);
+    tournamentObj.clients.push(sse);
 })
 
 // Debugging page
@@ -320,13 +301,18 @@ function extractTournament(code, failResp, mode = "EVENT")
 }
 
 // Compile all of the requested tournament data into a single json object
-function compileTournamentData(tournament, r = true, m = true, l = true, s = true)
+function compileTournamentData(tournament, r = true, p = true, m = true, l = true, s = true)
 {
     const data = {};
 
     if (r)
     {
         data.rounds = tournament.getRounds();
+    }
+
+    if (p)
+    {
+        data.players = tournament.getPlayers();
     }
     
     if (m)
@@ -348,10 +334,16 @@ function compileTournamentData(tournament, r = true, m = true, l = true, s = tru
 }
 
 // Forward the most up-to-date tournament data to each client
-function updateSubscribers(tournamentObj, r = true, m = true, l = true, s = true)
+function updateSubscribers(tournamentObj, r = true, p = true, m = true, l = true, s = true)
 {
-    tournamentObj.clients.forEach((client) => {
-        console.log(client.res);
-        client.res.write(JSON.stringify(compileTournamentData(tournamentObj.tournament, r, m, l, s)));
-    })
+    try
+    {
+        tournamentObj.clients.forEach((client) => {
+            client.send(compileTournamentData(tournamentObj.tournament));
+        })
+    }
+    catch (Error)
+    {
+        console.log(Error);
+    }
 }
