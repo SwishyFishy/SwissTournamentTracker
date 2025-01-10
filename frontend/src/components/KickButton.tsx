@@ -42,7 +42,7 @@ function KickButton({player, eventCode, callback}: props_KickButton): JSX.Elemen
     }
 
     return(
-        <input type="button" name={"kick" + player} id={"kick" + player} className="kickButton" value="X" onClick={handleKickPlayer} />
+        <input key={"kick" + player} type="button" name={"kick" + player} id={"kick" + player} className="kickButton" value="X" onClick={handleKickPlayer} />
     );
 }
 
