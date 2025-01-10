@@ -70,7 +70,7 @@ function HostSetup(): JSX.Element
             .then(response => response.json())
             .then(response => {
                 setEventCode(response.code)
-                
+
                 // Create the connection to the server
                 CreateConnection(serverUrl, response.code, (data: any) => {
                     setPlayers(data.players);

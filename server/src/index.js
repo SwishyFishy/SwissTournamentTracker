@@ -223,6 +223,7 @@ app.get("/subscribe/:event", (req, res) => {
     // Create the connection
     res.writeHead(200, {
         'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
         'Connection': 'keep-alive',
     });
 
@@ -350,6 +351,7 @@ function compileTournamentData(tournament, r = true, m = true, l = true, s = tru
 function updateSubscribers(tournamentObj, r = true, m = true, l = true, s = true)
 {
     tournamentObj.clients.forEach((client) => {
+        console.log(client.res);
         client.res.write(JSON.stringify(compileTournamentData(tournamentObj.tournament, r, m, l, s)));
     })
 }
