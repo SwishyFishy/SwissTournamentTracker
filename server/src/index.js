@@ -224,7 +224,7 @@ app.get("/subscribe/:event", (req, res) => {
         'Content-Type': 'text/event-stream',
         'Connection': 'keep-alive',
     });
-    res.write(compileTournamentData(tournament));
+    res.write(compileTournamentData(tournament.tournament));
 
     // Save this client
     const id = Date.now();
