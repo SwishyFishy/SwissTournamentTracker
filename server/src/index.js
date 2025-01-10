@@ -39,7 +39,8 @@ app.get("/delete/:event", (req, res) => {
 
 // Add a player to a tournament
 app.get("/join/:event", (req, res) => {
-    const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); })
+    const tournamentObj = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); }, "OBJECT");
+    const tournament = tournamentObj.tournament;
     const name = req.query.name;
 
     // Attempt to add player
@@ -47,6 +48,8 @@ app.get("/join/:event", (req, res) => {
     {
         if (tournament.AddParticipant(name))
         {
+            updateSubscribers(tournamentObj);
+
             res.status(200);
             res.send("Added");
         }
@@ -128,12 +131,15 @@ app.get("/list/:event", (req, res) => {
 
 // Start a tournament
 app.get("/start/:event", (req, res) => {
-    const tournament = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); })
+    const tournamentObj = extractTournament(req.params.event, () => { res.status(400); res.send("Tournament does not exist"); }, "OBJECT")
+    const tournament = tournamentObj.tournament;
 
     // Start event
     try
     {
         tournament.StartTournament();
+        updateSubscribers(tournamentObj);
+
         res.status(200);
         res.send("Started");
     }
@@ -243,9 +249,13 @@ app.get("/debug", (req, res) => {
         events: JSON.parse(JSON.stringify(events, (key, value) => {
             if (key === 'opponents') 
             { 
-                return '[opponents]' 
-            } 
-            return value
+                return '[opponents]'; 
+            }
+            else if (key === 'clients')
+            {
+                return '[clients]';
+            }
+            return value;
         }))
     })
 })
@@ -309,7 +319,7 @@ function extractTournament(code, failResp, mode = "EVENT")
 }
 
 // Compile all of the requested tournament data into a single json object
-function compileTournamentData(tournament, r = true, m = true, l = true)
+function compileTournamentData(tournament, r = true, m = true, l = true, s = true)
 {
     const data = {};
 
@@ -328,15 +338,18 @@ function compileTournamentData(tournament, r = true, m = true, l = true)
         data.leaderboard = tournament.getLeaderboard();
     }
 
-    data.status = tournament.getStatus();
+    if (s)
+    {
+        data.status = tournament.getStatus();
+    }
 
     return(data);
 }
 
 // Forward the most up-to-date tournament data to each client
-function updateSubscribers(tournamentObj, r = true, m = true, l = true)
+function updateSubscribers(tournamentObj, r = true, m = true, l = true, s = true)
 {
     tournamentObj.clients.forEach((client) => {
-        client.res.write(JSON.stringify(compileTournamentData(tournamentObj.tournament, r, m, l)));
+        client.res.write(JSON.stringify(compileTournamentData(tournamentObj.tournament, r, m, l, s)));
     })
 }

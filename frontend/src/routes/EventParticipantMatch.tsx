@@ -1,7 +1,9 @@
+import { useLocation } from "react-router";
+
 function EventParticipantMatch(): JSX.Element
 {
     return(
-        <p>EventParticipantMatch page</p>
+        <p>{useLocation().state.player}</p>
     );
 }
 

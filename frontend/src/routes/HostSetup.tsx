@@ -5,6 +5,8 @@ import { Player } from "../types";
 import { CONTEXT_serverBaseUrl } from "../main";
 import KickButton from "../components/KickButton";
 
+import CreateConnection from "../functions/server_liaison";
+
 import '../styles/HostSetup.css';
 
 function HostSetup(): JSX.Element
@@ -66,7 +68,13 @@ function HostSetup(): JSX.Element
         const createTournament = async() => {
             await fetch(serverUrl + "/create")
             .then(response => response.json())
-            .then(response => setEventCode(response.code))
+            .then(response => {
+                setEventCode(response.code)
+                
+                // Create the connection to the server
+                CreateConnection(serverUrl, response.code, (data: any) => {
+                    setPlayers(data.players);
+                })})
             .catch(err => {
                 console.log(err);
                 navigate("/", {state: {error: true, emsg: "The tournament could not be created"}});

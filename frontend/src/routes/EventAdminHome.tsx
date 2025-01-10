@@ -26,8 +26,8 @@ function EventAdminHome(): JSX.Element
             await fetch(serverUrl + `/round/${eventCode}`)
             .then(response => response.json())
             .then(response => {
-                setRound(response.round.currentRound);
-                setMaxRound(response.round.maxRound);
+                setRound(response.rounds.currentRound);
+                setMaxRound(response.rounds.maxRound);
                 setMatches(response.matches);
             })
             .catch((err) => {
