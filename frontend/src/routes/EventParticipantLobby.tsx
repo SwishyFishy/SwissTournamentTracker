@@ -13,11 +13,16 @@ function EventParticipantLobby(): JSX.Element
     const player = useLocation().state.player;
     const navigate = useNavigate();
 
-    // Invoke server_liaison to connect on load
+    // Invoke server_liaison to connect on loadrs
     useEffect(() => CreateConnection(serverUrl, eventCode, (data: SubscribedData) => {
         if (data.status == "running")
         {
-            return navigate("/event/pairing", {state: {code: eventCode, player: player}});
+            return navigate("/event/pairing", {state: {
+                code: eventCode, 
+                player: player, 
+                match: data.matches?.filter((match) => {
+                    match.p1 == player || match.p2 == player
+            })}});
         }
     }), []);
 
