@@ -7,13 +7,15 @@ function EventParticipantLobby(): JSX.Element
 {
     const eventDetails = useContext(CONTEXT_eventDetails);
     const navigate = useNavigate();
-    const player = useLocation().state.player;
+    const location = useLocation();
+    const player = location.state.player;
+    const eventCode = location.state.code;
 
     // Check if the event has started and redirect whenever the event details change
     useEffect(() => {
         if (eventDetails.status == "running")
         {
-            navigate("/event/pairing", {state: {player: player}});
+            navigate("/event/pairing", {state: {code: eventCode, player: player}});
         }
     }, [eventDetails])
 

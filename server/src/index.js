@@ -190,7 +190,8 @@ app.get("/leaderboard/:event", (req, res) => {
 
 // Input a match score for a tournament match
 app.get("/report/:event", (req, res) => {
-    const tournament = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); })
+    const tournamentObj = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); }, "OBJECT")
+    const tournament = tournamentObj.tournament;
     const p1 = req.query.p1;
     const p2 = req.query.p2;
     const p1wins = Number(req.query.p1wins);
@@ -201,6 +202,8 @@ app.get("/report/:event", (req, res) => {
     {
         if (tournament.ReportMatchResults(p1, p2, p1wins, p2wins))
         {
+            updateSubscribers(tournamentObj);
+            
             res.status(200);
             res.send("Reported");
         }
