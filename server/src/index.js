@@ -139,6 +139,7 @@ app.get("/start/:event", (req, res) => {
     try
     {
         tournament.StartTournament();
+        updateSubscribers(tournamentObj);
 
         res.status(200);
         res.send("Started");
