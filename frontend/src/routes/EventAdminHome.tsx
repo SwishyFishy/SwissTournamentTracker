@@ -1,41 +1,27 @@
 import { useState, useEffect, useContext } from "react";
 import { useLocation, useNavigate } from "react-router";
 
-import { Match } from "../types";
-import { CONTEXT_serverBaseUrl } from "../main";
 import Timer from "../components/Timer";
 import KickButton from "../components/KickButton";
 
+import { CONTEXT_serverBaseUrl } from "../main";
+import { Match, SubscribedData } from "../types";
+
 import "../styles/EventAdminHome.css";
+import CreateConnection from "../functions/server_liaison";
 
 function EventAdminHome(): JSX.Element
 {
-    const [round, setRound] = useState<number>(0);
-    const [maxRound, setMaxRound] = useState<number>(0);
-    const [matches, setMatches] = useState<Array<Match>>([]);
-    const [startRound, setStartRound] = useState<boolean>(false);
-    const serverUrl = useContext(CONTEXT_serverBaseUrl);
-    const eventCode = useLocation().state.code;
-    const round_time: number = 50;
-
+    const location = useLocation();
     const navigate = useNavigate();
 
-    // Get the current round match records
-    const handleRefreshMatches = () => {
-        const getRound = async() => {
-            await fetch(serverUrl + `/round/${eventCode}`)
-            .then(response => response.json())
-            .then(response => {
-                setRound(response.rounds.currentRound);
-                setMaxRound(response.rounds.maxRound);
-                setMatches(response.matches);
-            })
-            .catch((err) => {
-                console.log(err);
-            })
-        }
-        getRound();
-    }
+    const serverUrl = useContext(CONTEXT_serverBaseUrl);
+    const eventCode = location.state.code;
+
+    const [eventDetails, setEventDetails] = useState<SubscribedData>();
+
+    const [startRound, setStartRound] = useState<boolean>(false);
+    const round_time: number = 50;
 
     // Start the round timer
     const handleStartRound = () => {
@@ -45,15 +31,10 @@ function EventAdminHome(): JSX.Element
     // Advance to the next round
     const handleAdvanceRound = () => {
         const advanceRound = async() => {
-            // Get matches
             await fetch(serverUrl + `/advance/${eventCode}`)
             .then(response => response.json())
             .then(response => {
-                if (response.status == 'Continue')
-                {
-                    handleRefreshMatches();
-                }
-                else
+                if (response.status == 'over')
                 {
                     navigate("/event/conclusion", {state: {code: eventCode}});
                 }
@@ -73,34 +54,38 @@ function EventAdminHome(): JSX.Element
         const editMatch = async(e: any) => {
             // Match the event target to a match in state
             const eplayer: string = e.target.getAttribute('id');
-            const match: Match | undefined = matches.find((match) => match.p1 == eplayer || match.p2 == eplayer);
+            const match: Match = eventDetails!.matches!.find((match) => match.p1 == eplayer || match.p2 == eplayer)!;
 
             // Send a request to record a new round score for that match, with the clicked player's score incremented by 1 (mod 3);
             // Result: Each score can be clicked to increment by 1, rolling over 0 -> 1 -> 2 -> 0
-            if (match !== undefined)
-            {
-                const p1wins = match.p1 == eplayer ? (match.p1wins + 1) % 3 : match.p1wins;
-                const p2wins = match.p2 == eplayer ? (match.p2wins + 1) % 3 : match.p2wins;
-                
-                await fetch(serverUrl + `/report/${eventCode}?p1=${match.p1}&p2=${match.p2}&p1wins=${p1wins}&p2wins=${[p2wins]}`)
-                .then(response => { if (response.ok){ handleRefreshMatches() } else { console.log(response) } })
-                .catch((err) => {
-                    console.log(err);
-                })
-            }
+            const p1wins = match.p1 == eplayer ? (match.p1wins + 1) % 3 : match.p1wins;
+            const p2wins = match.p2 == eplayer ? (match.p2wins + 1) % 3 : match.p2wins;
+            
+            await fetch(serverUrl + `/report/${eventCode}?p1=${match.p1}&p2=${match.p2}&p1wins=${p1wins}&p2wins=${[p2wins]}`)
+            .then(response => { 
+                if (!response.ok) 
+                { 
+                    console.log(response) 
+                } 
+            })
+            .catch((err) => {
+                console.log(err);
+            })
         }
         editMatch(e);
     }
 
-    // Load matches on component mount
-    useEffect(() => handleRefreshMatches(), []);
+    // Connect to the server on load
+    useEffect(() => CreateConnection(serverUrl, eventCode, (data: SubscribedData) => {
+        setEventDetails(data)
+    }), []);
 
     return(
         <div className="wrapper eventAdminHome">
-            <h1>Round: {round} / {maxRound}</h1>
+            <h1>Round: {eventDetails?.rounds?.currentRound} / {eventDetails?.rounds?.maxRound}</h1>
             {startRound ? <Timer timeMinutes={round_time} /> : <p>Round not started</p>}
             <ul>
-                {matches.map((match) => ( 
+                {eventDetails?.matches?.map((match) => ( 
                     <li key={match.p1 + match.p2}>
                         <KickButton key={match.p1 + "kick"} player={match.p1} eventCode={eventCode} callback={null} />
                         <span key={match.p1 + match.p2 + "col_p1"}>{match.p1}</span>
@@ -113,7 +98,6 @@ function EventAdminHome(): JSX.Element
                 ))}
             </ul>
             <form>
-                <input type="button" name="refresh" id="refresh" value="Refresh" onClick={handleRefreshMatches} />
                 <input type="button" name="start" id="start" value="Start Round" className={startRound ? "hidden" : ""} onClick={handleStartRound} />
                 <input type="button" name="next" id="next" value="Next Round" className={startRound ? "" : "hidden"} onClick={handleAdvanceRound} />
             </form>

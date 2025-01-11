@@ -153,12 +153,15 @@ app.get("/start/:event", (req, res) => {
 
 // Advance to the next round of a tournament
 app.get("/advance/:event", (req, res) => {
-    const tournament = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); })
+    const tournamentObj = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); }, "OBJECT")
+    const tournament = tournamentObj.tournament;
 
     // Advance to the next round
     try
     {
         const result = tournament.NextRound();
+        updateSubscribers();
+
         res.status(200);
         res.json({
             status: result[0] == "Round" ? 'Continue' : 'Over'
@@ -203,7 +206,7 @@ app.get("/report/:event", (req, res) => {
         if (tournament.ReportMatchResults(p1, p2, p1wins, p2wins))
         {
             updateSubscribers(tournamentObj);
-            
+
             res.status(200);
             res.send("Reported");
         }
