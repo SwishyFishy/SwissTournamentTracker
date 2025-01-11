@@ -20,6 +20,7 @@ function EventParticipantLobby(): JSX.Element
             navigate("/event/pairing", {state: {
                 code: eventCode, 
                 player: player, 
+                rounds: data.rounds?.currentRound,
                 match: data.matches?.find((match) => match.p1 == player || match.p2 == player)
             }});
         }

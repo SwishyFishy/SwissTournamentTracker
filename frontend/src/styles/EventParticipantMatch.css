@@ -1,0 +1,16 @@
+#eventParticipantMatch h1{
+    margin: .25em 0em .75em 0em;
+}
+
+#eventParticipantMatch form.playerPairings{
+    display: grid;
+    grid-template-columns: 50fr 50fr;
+}
+
+#eventParticipantMatch form.playerPairings > input[type="button"]{
+    grid-column: 1 / span 2;
+
+    width: 15em;
+
+    margin: 2em auto;
+}

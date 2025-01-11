@@ -1,3 +1,5 @@
+import '../styles/MatchPanel.css';
+
 interface props_MatchPanel
 {
     player: string
@@ -23,7 +25,7 @@ function MatchPanel({player, wins, callbackFn}: props_MatchPanel)
     }
 
     return(
-        <div className="matchPanel">
+        <div id="matchPanel">
             <h1>{player}</h1>
             <input type="button" name="increment" id="increment" value="▵" onClick={handleIncrementScore} />
             <span>{wins}</span>
