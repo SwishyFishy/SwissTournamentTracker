@@ -157,7 +157,7 @@ class Tournament
 
             const matches = [];
             this.currentMatches.forEach((match) => {
-                matches.push({p1: match.p1name, p2: match.p2name, p1wins: match.p1wins, p2wins: match.p2wins})
+                matches.push({p1: match.p1name, p2: match.p2name, p1wins: match.p1wins, p2wins: match.p2wins, reported: match.reported})
             })
             return matches;
         }
@@ -315,6 +315,7 @@ class Tournament
 
         match.p1wins = p1wins;
         match.p2wins = p2wins;
+        match.reported = true;
 
         return true;
     }
@@ -456,13 +457,13 @@ class Tournament
                     // Requiring that unmatchedParticipants be of odd length forces a maximum of 1 bye
                     if (player.id == opponent.id && unmatchedParticipants.length % 2 == 1)
                     {
-                        proposedPairs.push({p1id: player.id, p1name: player.name,  p2id: player.id, p1wins: 2, p2wins: undefined});
+                        proposedPairs.push({p1id: player.id, p1name: player.name,  p2id: player.id, p1wins: 2, p2wins: undefined, reported: true});
                         return proposedPairs;
                     }
                     // Handle a match
                     else if (player.id != opponent.id)
                     {   
-                        proposedPairs.push({p1id: player.id, p1name: player.name, p2id: opponent.id, p2name: opponent.name, p1wins: 0, p2wins: 0});
+                        proposedPairs.push({p1id: player.id, p1name: player.name, p2id: opponent.id, p2name: opponent.name, p1wins: 0, p2wins: 0, reported: false});
                         return proposedPairs;
                     }
                 }
