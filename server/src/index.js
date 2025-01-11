@@ -191,8 +191,8 @@ app.get("/leaderboard/:event", (req, res) => {
 // Input a match score for a tournament match
 app.get("/report/:event", (req, res) => {
     const tournament = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); })
-    const p1 = Number(req.query.p1);
-    const p2 = Number(req.query.p2);
+    const p1 = req.query.p1;
+    const p2 = req.query.p2;
     const p1wins = Number(req.query.p1wins);
     const p2wins = Number(req.query.p2wins);
 
