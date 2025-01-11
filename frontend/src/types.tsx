@@ -28,8 +28,9 @@ export type Rounds = {
 export type Leaderboard = Array<PlayerStats>;
 
 export type SubscribedData = {
-    rounds: Rounds | null,
-    matches: Array<Match> | null,
-    leaderboard: Leaderboard | null,
-    status: string | null
+    rounds: Rounds | undefined,
+    matches: Array<Match> | undefined,
+    players: Array<Player> | undefined,
+    leaderboard: Leaderboard | undefined,
+    status: string | undefined
 }

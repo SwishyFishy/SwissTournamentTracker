@@ -4,6 +4,7 @@ import Home from "./Home";
 import HostSetup from "./HostSetup";
 import EventAdminHome from "./EventAdminHome";
 import JoinEvent from "./JoinEvent";
+import EventSubscriber from "./EventSubscriber";
 import EventParticipantLobby from "./EventParticipantLobby";
 import EventParticipantMatch from "./EventParticipantMatch";
 import EventParticipantPostmatch from "./EventParticipantPostmatch";
@@ -32,16 +33,22 @@ const routes = [
                 element: <JoinEvent />
             },
             {
-                path: "/join/event",
-                element: <EventParticipantLobby />
-            },
-            {
-                path: "/event/pairing",
-                element: <EventParticipantMatch />
-            },
-            {
-                path: "/event/postmatch",
-                element: <EventParticipantPostmatch />
+                path: "/event",
+                element: <EventSubscriber />,
+                children: [
+                    {
+                        path: "/event/lobby",
+                        element: <EventParticipantLobby />
+                    },
+                    {
+                        path: "/event/pairing",
+                        element: <EventParticipantMatch />
+                    },
+                    {
+                        path: "/event/postmatch",
+                        element: <EventParticipantPostmatch />
+                    }
+                ]
             },
             {
                 path: "/event/conclusion",

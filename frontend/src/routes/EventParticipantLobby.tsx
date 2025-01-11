@@ -1,30 +1,21 @@
 import { useEffect, useContext } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 
-import { CONTEXT_serverBaseUrl } from "../main";
-
-import CreateConnection from "../functions/server_liaison";
-import { SubscribedData } from "../types";
+import { CONTEXT_eventDetails } from "./EventSubscriber";
 
 function EventParticipantLobby(): JSX.Element
 {
-    const serverUrl = useContext(CONTEXT_serverBaseUrl);
-    const eventCode = useLocation().state.code;
-    const player = useLocation().state.player;
+    const eventDetails = useContext(CONTEXT_eventDetails);
     const navigate = useNavigate();
+    const player = useLocation().state.player;
 
-    // Invoke server_liaison to connect on loadrs
-    useEffect(() => CreateConnection(serverUrl, eventCode, (data: SubscribedData) => {
-        if (data.status == "running")
+    // Check if the event has started and redirect whenever the event details change
+    useEffect(() => {
+        if (eventDetails.status == "running")
         {
-            navigate("/event/pairing", {state: {
-                code: eventCode, 
-                player: player, 
-                rounds: data.rounds?.currentRound,
-                match: data.matches?.find((match) => match.p1 == player || match.p2 == player)
-            }});
+            navigate("/event/pairing", {state: {player: player}});
         }
-    }), []);
+    }, [eventDetails])
 
     return(
         <div className="wrapper eventParticipantLobby">
