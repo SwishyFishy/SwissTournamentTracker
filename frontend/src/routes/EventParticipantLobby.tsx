@@ -17,12 +17,11 @@ function EventParticipantLobby(): JSX.Element
     useEffect(() => CreateConnection(serverUrl, eventCode, (data: SubscribedData) => {
         if (data.status == "running")
         {
-            return navigate("/event/pairing", {state: {
+            navigate("/event/pairing", {state: {
                 code: eventCode, 
                 player: player, 
-                match: data.matches?.filter((match) => {
-                    match.p1 == player || match.p2 == player
-            })}});
+                match: data.matches?.find((match) => match.p1 == player || match.p2 == player)
+            }});
         }
     }), []);
 
