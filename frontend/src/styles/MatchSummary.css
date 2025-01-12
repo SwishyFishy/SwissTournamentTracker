@@ -6,3 +6,8 @@
 #matchSummary span{
     padding: .25em;
 }
+
+#matchSummary span.player{
+    font-size: 1.2em;
+    color: var(--highlight-text);
+}

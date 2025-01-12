@@ -12,7 +12,7 @@ function MatchSummary({match}: props_MatchSummary)
     const p1WinsMatch: boolean = match.p1wins > match.p2wins;
     let winner: string, result: string, other: string, score: string;
 
-    if (match.p1 == match.p2)
+    if (match.p2)
     {
         winner = match.p1;
         result = "bye";
@@ -29,9 +29,9 @@ function MatchSummary({match}: props_MatchSummary)
 
     return(
         <div id="matchSummary">    
-            <span className="centered">{winner}</span>
+            <span className="centered player">{winner}</span>
             <span className="centered">{result}</span>
-            <span className="centered">{other}</span>
+            <span className="centered player">{other}</span>
             <span className="centered">{score}</span>
         </div>
     );
