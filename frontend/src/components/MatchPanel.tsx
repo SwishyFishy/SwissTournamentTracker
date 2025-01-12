@@ -11,14 +11,14 @@ function MatchPanel({player, wins, callbackFn}: props_MatchPanel)
 {
     // Button functionality
     const handleIncrementScore = () => {
-        if (wins <= 2)
+        if (wins < 2)
         {
             callbackFn(wins + 1);
         }
     }
 
     const handleDecrementScore = () => {
-        if (wins >= 0)
+        if (wins > 0)
         {
             callbackFn(wins - 1);
         }
