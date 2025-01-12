@@ -16,7 +16,7 @@ function EventSubscriber()
 
     // Invoke server_liaison to connect on load
     useEffect(() => CreateConnection(serverUrl, eventCode, (data: SubscribedData) => {
-        setDetails(data);
+        setDetails({...data});
     }), []);
 
     return (

@@ -50,6 +50,7 @@ function EventParticipantMatch(): JSX.Element
 
     // Monitor for match submission from either player, then redirect to postmatch page
     useEffect(() => {
+        const match: Match = eventDetails.matches!.find((match) => match.p1 == player || match.p2 == player)!
         if (match.reported)
         {
             navigate("/event/postmatch", {state: {code: eventCode, player: player}});

@@ -160,7 +160,7 @@ app.get("/advance/:event", (req, res) => {
     try
     {
         const result = tournament.NextRound();
-        updateSubscribers();
+        updateSubscribers(tournamentObj);
 
         res.status(200);
         res.json({
@@ -345,7 +345,9 @@ function updateSubscribers(tournamentObj, r = true, p = true, m = true, l = true
 {
     try
     {
+        console.log("\nUpdating");
         tournamentObj.clients.forEach((client) => {
+            console.log("Client");
             client.send(compileTournamentData(tournamentObj.tournament));
         })
     }

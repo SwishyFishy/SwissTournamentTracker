@@ -77,7 +77,7 @@ function EventAdminHome(): JSX.Element
 
     // Connect to the server on load
     useEffect(() => CreateConnection(serverUrl, eventCode, (data: SubscribedData) => {
-        setEventDetails(data)
+        setEventDetails({...data})
     }), []);
 
     return(
