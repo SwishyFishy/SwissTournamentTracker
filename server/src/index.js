@@ -194,7 +194,7 @@ app.get("/leaderboard/:event", (req, res) => {
     const tournament = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); });
 
     res.status(200);
-    res.json(compileTournamentData());
+    res.json(compileTournamentData(tournament, false, false, false, true, false));
 })
 
 // Input a match score for a tournament match
