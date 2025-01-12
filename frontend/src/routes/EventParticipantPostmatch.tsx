@@ -18,7 +18,7 @@ function EventParticipantPostmatch(): JSX.Element
 
     const round: number = useState(eventDetails.rounds!.currentRound)[0];
 
-    // Monitor for the round to update, then redirect to pairings
+    // Monitor for the round to update, then redirect to pairings or event conclusion
     useEffect(() => {
         if (round < eventDetails?.rounds?.currentRound!)
         {
