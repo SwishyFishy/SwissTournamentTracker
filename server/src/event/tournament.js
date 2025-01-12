@@ -113,7 +113,21 @@ class Tournament
 
         // Getters
         this.getStatus = () => {
-            return this.hasStarted ? (this.running ? "running" : "over") : "pending"; 
+            if (this.hasStarted)
+            {
+                if (this.running && this.currentMatches !== false)
+                {
+                    return "running";
+                }
+                else
+                {
+                    return "over";
+                }
+            }
+            else
+            {
+                return "pending";
+            }
         }
 
         this.getPlayers = () => {
