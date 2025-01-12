@@ -29,10 +29,10 @@ function MatchSummary({match}: props_MatchSummary)
 
     return(
         <div id="matchSummary">    
-            <span>{winner}</span>
-            <span>{result}</span>
-            <span>{other}</span>
-            <span>{score}</span>
+            <span className="centered">{winner}</span>
+            <span className="centered">{result}</span>
+            <span className="centered">{other}</span>
+            <span className="centered">{score}</span>
         </div>
     );
 }

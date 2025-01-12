@@ -2,3 +2,7 @@
     display: flex;
     flex-direction: column;
 }
+
+#matchSummary span{
+    padding: .25em;
+}
