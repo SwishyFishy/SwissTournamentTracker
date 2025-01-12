@@ -4,23 +4,23 @@ interface props_MatchPanel
 {
     player: string
     wins: number
-    callbackFn: Function
+    setScore: Function
 }
 
-function MatchPanel({player, wins, callbackFn}: props_MatchPanel)
+function MatchPanel({player, wins, setScore}: props_MatchPanel)
 {
     // Button functionality
     const handleIncrementScore = () => {
         if (wins < 2)
         {
-            callbackFn(wins + 1);
+            setScore(wins + 1);
         }
     }
 
     const handleDecrementScore = () => {
         if (wins > 0)
         {
-            callbackFn(wins - 1);
+            setScore(wins - 1);
         }
     }
 

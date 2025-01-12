@@ -67,8 +67,8 @@ function EventParticipantMatch(): JSX.Element
         <div className="wrapper" id="eventParticipantMatch">
             <h1>Round {round}</h1>
             <form className="playerPairings">
-                <MatchPanel player={match.p1} wins={p1Score} callbackFn={setp1Score} />
-                <MatchPanel player={match.p2} wins={p2Score} callbackFn={setp2Score} />
+                <MatchPanel player={match.p1} wins={p1Score} setScore={setp1Score} />
+                <MatchPanel player={match.p2} wins={p2Score} setScore={setp2Score} />
                 <input type="button" name="submit" id="submit" value="Submit Match Score" onClick={handleSubmitScore} />
             </form>
         </div>
