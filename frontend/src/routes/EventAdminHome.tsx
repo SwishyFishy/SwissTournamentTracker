@@ -23,32 +23,6 @@ function EventAdminHome(): JSX.Element
     const [startRound, setStartRound] = useState<boolean>(false);
     const round_time: number = 50;
 
-    // Start the round timer
-    const handleStartRound = () => {
-        setStartRound(true);
-    }
-
-    // Advance to the next round
-    const handleAdvanceRound = () => {
-        const advanceRound = async() => {
-            await fetch(serverUrl + `/advance/${eventCode}`)
-            .then(response => response.json())
-            .then(response => {
-                if (response.status == 'over')
-                {
-                    navigate("/event/conclusion", {state: {code: eventCode}});
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            })
-
-            // Reset this page
-            setStartRound(false);
-        }
-        advanceRound();
-    }
-
     // Edit player match scores
     const handleEditMatch = (e: any) => {
         const editMatch = async(e: any) => {
@@ -73,6 +47,32 @@ function EventAdminHome(): JSX.Element
             })
         }
         editMatch(e);
+    }
+
+    // Start the round timer
+    const handleStartRound = () => {
+        setStartRound(true);
+    }
+    
+    // Advance to the next round
+    const handleAdvanceRound = () => {
+        const advanceRound = async() => {
+            await fetch(serverUrl + `/advance/${eventCode}`)
+            .then(response => response.json())
+            .then(response => {
+                if (response.status == 'over')
+                {
+                    navigate("/event/conclusion", {state: {code: eventCode}});
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+
+            // Reset this page
+            setStartRound(false);
+        }
+        advanceRound();
     }
 
     // Connect to the server on load
