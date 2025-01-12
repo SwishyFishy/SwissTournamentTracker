@@ -1,0 +1,8 @@
+#eventParticipantPostmatch{
+    display: flex;
+    flex-direction: column;
+}
+
+#eventParticipantPostmatch span{
+    word-wrap: normal;
+}

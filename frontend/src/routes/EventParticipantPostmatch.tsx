@@ -5,6 +5,8 @@ import { CONTEXT_eventDetails } from "./EventSubscriber";
 
 import { Match } from "../types";
 
+import '../styles/EventParticipantPostmatch.css';
+
 function EventParticipantPostmatch(): JSX.Element
 {
     const eventDetails = useContext(CONTEXT_eventDetails);
@@ -39,6 +41,7 @@ function EventParticipantPostmatch(): JSX.Element
             <span>{match.p1wins != match.p2wins ? "defeats" : "draws"}</span>
             <span>{match.p1wins <= match.p2wins ? match.p1 : match.p2}</span>
             <span>{match.p1wins > match.p2wins ? match.p1wins : match.p2wins} - {match.p1wins <= match.p2wins ? match.p1wins : match.p2wins}</span>
+            <span className="italics">If there is an issue with this score, please contact the event administrator as soon as possible.</span>
         </div>
     );
 }

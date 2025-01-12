@@ -27,18 +27,25 @@ function EventParticipantMatch(): JSX.Element
 
     // Score submission
     const handleSubmitScore = () => {
-        fetch(serverUrl + `/report/${eventCode}?p1=${match.p1}&p2=${match.p2}&p1wins=${p1Score}&p2wins=${p2Score}`)
-        .then(response => { 
-            if (!response.ok) 
-            { 
-                console.log(response);
-                setp1Score(0);
-                setp2Score(0);
-            }
-        })
-        .catch((err) => {
-            console.log(err);
-        })
+        const submitScore = async() => {
+            await fetch(serverUrl + `/report/${eventCode}?p1=${match.p1}&p2=${match.p2}&p1wins=${p1Score}&p2wins=${p2Score}`)
+            .then(response => { 
+                if (response.ok) 
+                { 
+                    navigate("/event/postmatch", {state: {code: eventCode, player: player}});
+                }
+                else
+                {
+                    console.log(response);
+                    setp1Score(0);
+                    setp2Score(0);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        }
+        submitScore();
     }
 
     // Monitor for match submission from either player, then redirect to postmatch page
