@@ -1,6 +1,7 @@
 export type Player = {
     id: string,
     name: string
+    dropped: boolean;
 }
 
 export type PlayerStats = Player & {

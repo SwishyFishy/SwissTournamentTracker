@@ -10,6 +10,8 @@ class Tournament
             // Data members
             this.id = 0;
             this.name = name;
+            this.dropped = false;
+
             this.opponents = [];
             this.mWins = 0;
             this.mLosses = 0;
@@ -133,7 +135,7 @@ class Tournament
         this.getPlayers = () => {
             const players = [];
             this.participants.forEach((player) => {
-                players.push({id: String(player.id), name: player.name});
+                players.push({id: String(player.id), name: player.name, dropped: player.dropped});
             })
             return players;
         }
@@ -291,6 +293,7 @@ class Tournament
         }
         else
         {
+            found.dropped = true;
             found = found.id;
         }
 

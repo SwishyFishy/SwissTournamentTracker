@@ -88,11 +88,11 @@ function EventAdminHome(): JSX.Element
                 {eventDetails?.matches?.map((match) => ( 
                     <li key={match.p1 + match.p2}>
                         <KickButton key={match.p1 + "kick"} player={match.p1} eventCode={eventCode} />
-                        <span key={match.p1 + match.p2 + "col_p1"}>{match.p1}</span>
+                        <span key={match.p1 + match.p2 + "col_p1"} className={eventDetails.players?.find((player) => player.name == match.p1)!.dropped ? "dropped" : ""}>{match.p1}</span>
                         <span key={match.p1 + match.p2 + "col_p1wins"}>{match.p2wins !== undefined ? <input type="button" name="p1wins" id={match.p1} value={match.p1wins} onClick={handleEditMatch} /> : <span className="bye">2</span>}</span>
                         <span key={match.p1 + match.p2 + "col_vs"}>-</span>
                         <span key={match.p1 + match.p2 + "col_p2wins"}>{match.p2wins !== undefined ? <input type="button" name="p2wins" id={match.p2} value={match.p2wins} onClick={handleEditMatch} /> : <span className="bye">0</span>}</span>
-                        <span key={match.p1 + match.p2 + "col_p2"}>{match.p2 ? match.p2 : "Bye"}</span>
+                        <span key={match.p1 + match.p2 + "col_p2"} className={(match.p2 && eventDetails.players?.find((player) => player.name == match.p2)!.dropped) ? "dropped" : ""}>{match.p2 ? match.p2 : "Bye"}</span>
                         <KickButton key={match.p2 + "kick"} player={match.p2} eventCode={eventCode} />
                     </li>
                 ))}

@@ -74,6 +74,10 @@ footer{
     text-align: center;
 }
 
+.dropped{
+    color: var(--attention);
+}
+
 /* Error Popups */
 .popup-overlay{
     position: absolute;
