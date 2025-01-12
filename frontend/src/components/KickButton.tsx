@@ -8,10 +8,9 @@ interface props_KickButton
 {
     player: string,
     eventCode: string,
-    callback: Function | null
 }
 
-function KickButton({player, eventCode, callback}: props_KickButton): JSX.Element
+function KickButton({player, eventCode}: props_KickButton): JSX.Element
 {
     const serverUrl = useContext(CONTEXT_serverBaseUrl);
     
@@ -34,11 +33,6 @@ function KickButton({player, eventCode, callback}: props_KickButton): JSX.Elemen
             })
         };
         kickPlayer();
-
-        if (callback !== null) 
-        {
-            callback();        
-        }
     }
 
     return(

@@ -16,21 +16,6 @@ function HostSetup(): JSX.Element
     const serverUrl: string = useContext(CONTEXT_serverBaseUrl);
     const navigate = useNavigate();
 
-    // Get and set the player list
-    const handleRefreshParticipants = () => {
-        const getPlayers = async() => {
-            await fetch(serverUrl + `/list/${eventCode}`)
-            .then(response => response.json())
-            .then(response => setPlayers(response.players))
-            .catch(err => {
-                console.log(err);
-                setPlayers([{id: '0', name: 'Network Error - unable to fetch player list'}])
-            })
-        };
-
-        getPlayers();
-    };
-
     // Start this event
     const handleStartEvent = () => {
         const startEvent = async() => {
@@ -73,7 +58,7 @@ function HostSetup(): JSX.Element
 
                 // Create the connection to the server
                 CreateConnection(serverUrl, response.code, (data: any) => {
-                    setPlayers(data.players);
+                    setPlayers({...data.players});
                 })})
             .catch(err => {
                 console.log(err);
@@ -90,11 +75,10 @@ function HostSetup(): JSX.Element
             <h2>Players</h2>
             <ul>
                 {players.map((player) => (
-                    <li key={player.id}><span key={player.id + player.name}>{player.name}</span> <KickButton key={"kick" + player.id} player={player.name} eventCode={eventCode} callback={handleRefreshParticipants}/></li>
+                    <li key={player.id}><span key={player.id + player.name}>{player.name}</span> <KickButton key={"kick" + player.id} player={player.name} eventCode={eventCode} /></li>
                 ))}
             </ul>
             <form>
-                <input type="button" name="refresh" id="refresh" value="Refresh" onClick={handleRefreshParticipants} />
                 <input type="button" name="start" id="start" value="Start Event" onClick={handleStartEvent} />
                 <input type="button" name="delete" id="delete" value="Cancel Event" onClick={handleCancelEvent}/>
             </form>
