@@ -69,7 +69,8 @@ app.get("/join/:event", (req, res) => {
 
 // Remove a player from a tournament
 app.get("/leave/:event", (req, res) => {
-    const tournament = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); });
+    const tournamentObj = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); }, "OBJECT");
+    const tournament = tournamentObj.tournament
     const name = req.query.name;
 
     // Attempt to remove player
@@ -77,6 +78,8 @@ app.get("/leave/:event", (req, res) => {
     {
         if (tournament.RemoveParticipant(name))
         {
+            updateSubscribers(tournamentObj);
+
             res.status(200);
             res.send("Removed");
         }
@@ -95,7 +98,8 @@ app.get("/leave/:event", (req, res) => {
 
 // Drop a player from a tournament
 app.get("/drop/:event", (req, res) => {
-    const tournament = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); });
+    const tournamentObj = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); }, "OBJECT");
+    const tournament = tournamentObj.tournament;
     const name = req.query.name;
 
     // Attempt to drop player
@@ -103,6 +107,8 @@ app.get("/drop/:event", (req, res) => {
     {
         if (tournament.DropParticipant(name))
         {
+            updateSubscribers(tournamentObj);
+
             res.status(200);
             res.send("Dropped");
         }

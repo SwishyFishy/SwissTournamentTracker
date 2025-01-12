@@ -58,7 +58,14 @@ function HostSetup(): JSX.Element
 
                 // Create the connection to the server
                 CreateConnection(serverUrl, response.code, (data: any) => {
-                    setPlayers({...data.players});
+                    if (data.players !== undefined)
+                    {
+                        setPlayers(data.players);
+                    }
+                    else
+                    {
+                        setPlayers([]);
+                    }
                 })})
             .catch(err => {
                 console.log(err);
