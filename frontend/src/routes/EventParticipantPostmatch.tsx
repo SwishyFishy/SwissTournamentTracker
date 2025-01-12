@@ -1,11 +1,10 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate, useLocation } from "react-router";
 
+import MatchSummary from "../components/MatchSummary";
 import { CONTEXT_eventDetails } from "./EventSubscriber";
 
 import { Match } from "../types";
-
-import '../styles/EventParticipantPostmatch.css';
 
 function EventParticipantPostmatch(): JSX.Element
 {
@@ -37,11 +36,8 @@ function EventParticipantPostmatch(): JSX.Element
     return(
         <div className="wrapper" id="eventParticipantPostmatch">
             <h1>Round {round}</h1>
-            <span>{match.p1wins > match.p2wins ? match.p1 : match.p2}</span>
-            <span>{match.p1wins != match.p2wins ? "defeats" : "draws"}</span>
-            <span>{match.p1wins <= match.p2wins ? match.p1 : match.p2}</span>
-            <span>{match.p1wins > match.p2wins ? match.p1wins : match.p2wins} - {match.p1wins <= match.p2wins ? match.p1wins : match.p2wins}</span>
-            <span className="italics">If there is an issue with this score, please contact the event administrator as soon as possible.</span>
+            <MatchSummary match={match}/>
+            <span className="italics centered">If there is an issue with this score, please contact the event administrator as soon as possible.</span>
         </div>
     );
 }

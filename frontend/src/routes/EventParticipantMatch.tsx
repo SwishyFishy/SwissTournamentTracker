@@ -25,6 +25,12 @@ function EventParticipantMatch(): JSX.Element
     const [p1Score, setp1Score] = useState<number>(match.p1wins);
     const [p2Score, setp2Score] = useState<number>(match.p2wins);
 
+    // Immediately forward the player to the postmatch page if they have the bye
+    if (match.p1 == match.p2)
+    {
+        navigate("/event/postmatch", {state: {code: eventCode, player: player}});
+    }
+
     // Score submission
     const handleSubmitScore = () => {
         const submitScore = async() => {
