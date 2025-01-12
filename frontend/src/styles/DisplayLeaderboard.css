@@ -1,11 +1,11 @@
-.leaderboard ul{
+#displayLeaderboard ul{
     display: flex;
     flex-direction: column;
 
     padding: 1em;
 }
 
-.leaderboard ul li{
+#displayLeaderboard ul li{
     display: grid;
     grid-template-columns: 6em 3em 6em 5em 5em 5em;
 
@@ -14,10 +14,14 @@
     margin: .25em;
 }
 
-.leaderboard ul .headerRow{
+#displayLeaderboard ul .headerRow{
     color: var(--highlight-text);
 }
 
-.leaderboard ul li span{
+#displayLeaderboard ul li span{
     padding: 0em 1em;
+}
+
+#displayLeaderboard .highlight{
+    color: var(--highlight-text);
 }

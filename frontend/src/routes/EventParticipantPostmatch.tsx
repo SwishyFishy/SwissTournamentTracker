@@ -28,7 +28,7 @@ function EventParticipantPostmatch(): JSX.Element
             }
             else 
             {
-                navigate("/event/conclusion");
+                navigate("/event/conclusion", {state: {code: eventCode, player: player}});
             }
         }
     }, [eventDetails])

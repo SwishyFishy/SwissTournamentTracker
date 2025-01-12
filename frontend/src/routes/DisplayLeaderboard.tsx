@@ -1,18 +1,20 @@
 import { useContext, useEffect, useState } from "react";
-import { useLocation, /*useNavigate*/ } from "react-router";
+import { useLocation } from "react-router";
 
 import { Leaderboard } from "../types";
 
 import { CONTEXT_serverBaseUrl } from "../main";
 
-import '../styles/Leaderboard.css';
+import '../styles/DisplayLeaderboard.css';
 
 function DisplayLeaderboard() 
 {
-    const [results, setResults] = useState<Leaderboard>([]);    
+    const [results, setResults] = useState<Leaderboard>([]);  
+
     const serverURL: string = useContext(CONTEXT_serverBaseUrl);
-    const eventCode: string = useLocation().state.code;
-    /*const navigate = useNavigate();*/
+    const location = useLocation();
+    const eventCode: string = location.state.code;
+    const player: string = location.state.player;
 
     // Get leaderboard
     useEffect(() => {
@@ -27,13 +29,8 @@ function DisplayLeaderboard()
         getLeaderboard();
     }, [])
 
-    // Return to homepage
-    /*const handleGoHome = () => {
-        navigate("/");
-    }*/
-
     return(
-        <div className="wrapper leaderboard">
+        <div className="wrapper" id="displayLeaderboard">
             <h1>Results: </h1>
             <ul>
                 <li className="headerRow">
@@ -46,7 +43,7 @@ function DisplayLeaderboard()
                 </li>
                 {results.map((result) => ( 
                     <li key={result.id}>
-                        <span>{result.name}</span>
+                        <span className={result.name == player ? "highlight" : ""}>{result.name}</span>
                         <span>{result.points}</span>
                         <span>{result.wins} - {result.losses} - {result.draws}</span>
                         <span>{result.omw.toFixed(3)}</span>
@@ -55,9 +52,6 @@ function DisplayLeaderboard()
                     </li>
                 ))}
             </ul>
-            {/*<form>
-                <input type="button" name="home" id="home" value="Home" onClick={handleGoHome} />
-            </form>*/}
         </div>
     );
 }   

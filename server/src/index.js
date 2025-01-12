@@ -170,7 +170,7 @@ app.get("/advance/:event", (req, res) => {
 
         res.status(200);
         res.json({
-            status: result[0] == "Round" ? 'Continue' : 'Over'
+            status: result[0] == "Round" ? 'continue' : 'over'
         })
     }
     catch (Error)

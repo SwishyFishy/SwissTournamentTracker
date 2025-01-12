@@ -62,7 +62,7 @@ function EventAdminHome(): JSX.Element
             .then(response => {
                 if (response.status == 'over')
                 {
-                    navigate("/event/conclusion", {state: {code: eventCode}});
+                    navigate("/event/conclusion", {state: {code: eventCode, player: ""}});
                 }
             })
             .catch((err) => {
