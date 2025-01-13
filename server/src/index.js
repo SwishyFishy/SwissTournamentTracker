@@ -20,6 +20,7 @@ const events = [];
 
 // Create a new tournament
 app.get("/create", (req, res) => {
+    console.log("Received request at CREATE");
     const code = codegen.rnd();
     events.push({code: code, tournament: new Tournament, clients: []});
     res.status(200);
@@ -30,6 +31,7 @@ app.get("/create", (req, res) => {
 
 // Delete a tournament
 app.get("/delete/:event", (req, res) => {
+    console.log("Received request at DELETE");
     const tournamentIndex = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); }, "INDEX");
 
     // Delete the tournament
@@ -40,6 +42,7 @@ app.get("/delete/:event", (req, res) => {
 
 // Add a player to a tournament
 app.get("/join/:event", (req, res) => {
+    console.log(`Received request at JOIN => name: ${req.query.name}`);
     const tournamentObj = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); }, "OBJECT");
     const tournament = tournamentObj.tournament;
     const name = req.query.name;
@@ -69,6 +72,7 @@ app.get("/join/:event", (req, res) => {
 
 // Remove a player from a tournament
 app.get("/leave/:event", (req, res) => {
+    console.log(`Received request at LEAVE => name: ${req.query.name}`);
     const tournamentObj = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); }, "OBJECT");
     const tournament = tournamentObj.tournament
     const name = req.query.name;
@@ -98,6 +102,7 @@ app.get("/leave/:event", (req, res) => {
 
 // Drop a player from a tournament
 app.get("/drop/:event", (req, res) => {
+    console.log(`Received request at DROP => name: ${req.query.name}`);
     const tournamentObj = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); }, "OBJECT");
     const tournament = tournamentObj.tournament;
     const name = req.query.name;
@@ -129,6 +134,7 @@ app.get("/drop/:event", (req, res) => {
 
 // Get the list of players in a tournament
 app.get("/list/:event", (req, res) => {
+    console.log("Received request at LIST");
     const tournament = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); });
 
     // Send player list
@@ -140,6 +146,7 @@ app.get("/list/:event", (req, res) => {
 
 // Start a tournament
 app.get("/start/:event", (req, res) => {
+    console.log("Received request at START");
     const tournamentObj = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); }, "OBJECT");
     const tournament = tournamentObj.tournament;
 
@@ -161,6 +168,7 @@ app.get("/start/:event", (req, res) => {
 
 // Advance to the next round of a tournament
 app.get("/advance/:event", (req, res) => {
+    console.log("Received request at ADVANCE");
     const tournamentObj = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); }, "OBJECT");
     const tournament = tournamentObj.tournament;
 
@@ -184,6 +192,7 @@ app.get("/advance/:event", (req, res) => {
 
 // Get the record of the current matches of a tournament
 app.get("/round/:event", (req, res) => {
+    console.log("Received request at ROUND");
     const tournament = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); });
 
     // Send matches record
@@ -193,6 +202,7 @@ app.get("/round/:event", (req, res) => {
 
 // Get the leaderboard of a tournament
 app.get("/leaderboard/:event", (req, res) => {
+    console.log("Received request at LEADERBOARD");
     const tournament = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); });
 
     res.status(200);
@@ -201,6 +211,7 @@ app.get("/leaderboard/:event", (req, res) => {
 
 // Input a match score for a tournament match
 app.get("/report/:event", (req, res) => {
+    console.log(`Received request at REPORT => p1: ${req.query.p1}, p2: ${req.query.p2}, p1wins: ${req.query.p1wins}, p2wins: ${req.query.p2wins}`);
     const tournamentObj = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); }, "OBJECT");
     const tournament = tournamentObj.tournament;
     const p1 = req.query.p1;
@@ -233,6 +244,7 @@ app.get("/report/:event", (req, res) => {
 
 // Append a client to a list of open connections automatically updated when the tournament data changes
 app.get("/subscribe/:event", (req, res) => {
+    console.log(`Received request at SUBSCRIBE from \"${req.query.name}\"`);
     const tournamentObj = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); }, "OBJECT");
     const clientName = req.query.name; 
     const sse = new SSE([compileTournamentData(tournamentObj.tournament)]);
@@ -242,6 +254,7 @@ app.get("/subscribe/:event", (req, res) => {
 
 // Broadcast a message from one client to all clients
 app.get("/broadcast/:event", (req, res) => {
+    console.log(`Received request at BROADCAST => message: ${req.query.message}`);
     const tournamentObj = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); }, "OBJECT");
     const msg = req.query.message;
     updateSubscribers(tournamentObj, msg);
@@ -326,6 +339,7 @@ function extractTournament(code, failResp, mode = "EVENT")
 // Compile all of the requested tournament data into a single json object
 function compileTournamentData(tournament)
 {
+    console.log("Compiling tournament data...");
     const data = {
         rounds: tournament.getRounds(),
         players: tournament.getPlayers(),
@@ -333,6 +347,7 @@ function compileTournamentData(tournament)
         leaderboard: tournament.getLeaderboard(),
         status: tournament.getStatus()
     };
+    console.log("Tournament data compiled");
     
     return(data);
 }
@@ -342,10 +357,13 @@ function updateSubscribers(tournamentObj, msg = "")
 {
     try
     {
+        const data = compileTournamentData(tournamentObj.tournament)
+        data.message = msg;
+
         tournamentObj.clients.forEach((client) => {
-            const data = compileTournamentData(tournamentObj.tournament)
-            data.message = msg;
+            console.log(`Updating subscriber: ${client.clientname}...`);
             client.sse.send(data);
+            console.log(`${client.clientName} updated`);
         })
     }
     catch (Error)
