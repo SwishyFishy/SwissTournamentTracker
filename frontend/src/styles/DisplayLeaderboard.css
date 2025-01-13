@@ -2,6 +2,9 @@
     display: flex;
     flex-direction: column;
 
+    min-width: 20em;
+    max-width: 80vw;
+
     padding: 1em;
 }
 
@@ -16,6 +19,8 @@
 
 #displayLeaderboard ul .headerRow{
     color: var(--highlight-text);
+    font-weight: bold;
+    text-decoration: underline;
 }
 
 #displayLeaderboard ul li span{

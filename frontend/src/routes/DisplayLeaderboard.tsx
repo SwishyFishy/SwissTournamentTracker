@@ -46,12 +46,13 @@ function DisplayLeaderboard()
                         <span className={result.name == player ? "highlight" : ""}>{result.name}</span>
                         <span>{result.points}</span>
                         <span>{result.wins} - {result.losses} - {result.draws}</span>
-                        <span>{result.omw.toFixed(3)}</span>
-                        <span>{result.gw.toFixed(3)}</span>
-                        <span>{result.ogw.toFixed(3)}</span>
+                        <span>{result.omw.toFixed(2)}%</span>
+                        <span>{result.gw.toFixed(2)}%</span>
+                        <span>{result.ogw.toFixed(2)}%</span>
                     </li>
                 ))}
             </ul>
+            <span className="italics">Scroll for more details</span>
         </div>
     );
 }   
