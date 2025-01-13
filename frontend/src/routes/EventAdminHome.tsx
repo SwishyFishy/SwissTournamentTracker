@@ -99,7 +99,7 @@ function EventAdminHome(): JSX.Element
             </ul>
             <form>
                 <input type="button" name="start" id="start" value="Start Round" className={startRound ? "hidden" : ""} onClick={handleStartRound} />
-                <input type="button" name="next" id="next" value={eventDetails!.rounds!.currentRound < eventDetails!.rounds!.maxRound ? "Next Round" : "End Tournament"} className={startRound ? "" : "hidden"} onClick={handleAdvanceRound} />
+                <input type="button" name="next" id="next" value={eventDetails === undefined || eventDetails!.rounds!.currentRound < eventDetails!.rounds!.maxRound ? "Next Round" : "End Tournament"} className={startRound ? "" : "hidden"} onClick={handleAdvanceRound} />
             </form>
         </div>
     );
