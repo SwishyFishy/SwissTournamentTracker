@@ -23,7 +23,7 @@ function HostSetup(): JSX.Element
             .then(response => {
                 if (response.ok)
                 {
-                    navigate("/host/event", {state: {code: eventCode}} )
+                    navigate(`/host/${eventCode}`);
                 }
                 else
                 {

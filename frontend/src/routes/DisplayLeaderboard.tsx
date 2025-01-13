@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useLocation } from "react-router";
+import { useParams, useSearchParams } from "react-router";
 
 import { Leaderboard } from "../types";
 
@@ -12,9 +12,10 @@ function DisplayLeaderboard()
     const [results, setResults] = useState<Leaderboard>([]);  
 
     const serverURL: string = useContext(CONTEXT_serverBaseUrl);
-    const location = useLocation();
-    const eventCode: string = location.state.code;
-    const player: string = location.state.player;
+
+    let {eventCode} = useParams();
+    eventCode = eventCode!;
+    const player: string = useSearchParams()[0].get("player")!;
 
     // Get leaderboard
     useEffect(() => {

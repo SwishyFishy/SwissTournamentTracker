@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 import Timer from "../components/Timer";
 import KickButton from "../components/KickButton";
@@ -12,11 +12,11 @@ import CreateConnection from "../functions/server_liaison";
 
 function EventAdminHome(): JSX.Element
 {
-    const location = useLocation();
     const navigate = useNavigate();
+    let {eventCode} = useParams();
+    eventCode = eventCode!;
 
     const serverUrl = useContext(CONTEXT_serverBaseUrl);
-    const eventCode = location.state.code;
 
     const [eventDetails, setEventDetails] = useState<SubscribedData>();
 
@@ -62,7 +62,7 @@ function EventAdminHome(): JSX.Element
             .then(response => {
                 if (response.status == 'over')
                 {
-                    navigate("/event/conclusion", {state: {code: eventCode, player: ""}});
+                    navigate(`/${eventCode}/conclusion?player=`);
                 }
             })
             .catch((err) => {
