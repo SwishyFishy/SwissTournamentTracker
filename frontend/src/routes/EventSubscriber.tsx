@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext, createContext } from "react";
-import { useLocation, Outlet } from "react-router";
+import { useParams, Outlet } from "react-router";
 
 import { SubscribedData } from "../types";
 import { CONTEXT_serverBaseUrl } from "../main";
@@ -12,7 +12,7 @@ function EventSubscriber()
 {
     const [details, setDetails] = useState<SubscribedData>(init);
     const serverUrl = useContext(CONTEXT_serverBaseUrl);
-    const eventCode = useLocation().state.code;
+    const {eventCode} = useParams() as {eventCode: string};
 
     // Invoke server_liaison to connect on load
     useEffect(() => CreateConnection(serverUrl, eventCode, (data: SubscribedData) => {

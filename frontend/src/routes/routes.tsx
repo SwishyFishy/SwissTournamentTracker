@@ -25,7 +25,7 @@ const routes = [
                 element: <HostSetup />
             },
             {
-                path: "/host/:event",
+                path: "/host/:eventCode",
                 element: <EventAdminHome />
             },
             {
@@ -33,25 +33,25 @@ const routes = [
                 element: <JoinEvent />
             },
             {
-                path: "/:event",
+                path: "/:eventCode",
                 element: <EventSubscriber />,
                 children: [
                     {
-                        path: "/:event/lobby",
+                        path: "/:eventCode/lobby",
                         element: <EventParticipantLobby />
                     },
                     {
-                        path: "/:event/pairing",
+                        path: "/:eventCode/pairing",
                         element: <EventParticipantMatch />
                     },
                     {
-                        path: "/:event/postmatch",
+                        path: "/:eventCode/postmatch",
                         element: <EventParticipantPostmatch />
                     }
                 ]
             },
             {
-                path: "/:event/conclusion",
+                path: "/:eventCode/conclusion",
                 element: <DisplayLeaderboard />
             }
         ]
