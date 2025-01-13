@@ -27,7 +27,7 @@ function Timer({timeMinutes}: props_Timer): JSX.Element
     }, [])
 
     return(
-        <p className={roundOver ? "red" : ((targetTime - currentTime) / 60000 < warningTime ? "green" : "yellow")}>
+        <p className={roundOver ? "red" : ((targetTime - currentTime) / 60000 <= warningTime ? "yellow" : "green")}>
             {Math.floor((targetTime - currentTime) / 60000)}:{(Math.floor((targetTime - currentTime) / 1000) % 60).toLocaleString('en-US', {minimumIntegerDigits: 2})}
         </p>
     );
