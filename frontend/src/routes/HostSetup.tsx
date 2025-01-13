@@ -57,16 +57,19 @@ function HostSetup(): JSX.Element
                 setEventCode(response.code)
 
                 // Create the connection to the server
-                CreateConnection(serverUrl, response.code, (data: any) => {
-                    if (data.players !== undefined)
-                    {
-                        setPlayers(data.players);
-                    }
-                    else
-                    {
-                        setPlayers([]);
-                    }
-                })})
+                CreateConnection(serverUrl, response.code, 
+                    (data: any) => {
+                        if (data.players !== undefined)
+                        {
+                            setPlayers(data.players);
+                        }
+                        else
+                        {
+                            setPlayers([]);
+                        }
+                    },
+                    () => {return false; }
+                )})
             .catch(err => {
                 console.log(err);
                 navigate("/", {state: {error: true, emsg: "The tournament could not be created"}});
