@@ -7,7 +7,7 @@ import { CONTEXT_serverBaseUrl } from "../main";
 
 import '../styles/DisplayLeaderboard.css';
 
-function DisplayLeaderboard() 
+function DisplayLeaderboard(): JSX.Element
 {
     const [results, setResults] = useState<Leaderboard>([]);  
 

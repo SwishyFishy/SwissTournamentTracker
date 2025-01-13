@@ -7,7 +7,7 @@ interface props_MatchSummary
     match: Match
 }
 
-function MatchSummary({match}: props_MatchSummary)
+function MatchSummary({match}: props_MatchSummary): JSX.Element
 {
     const p1WinsMatch: boolean = match.p1wins > match.p2wins;
     let winner: string, result: string, other: string, score: string;

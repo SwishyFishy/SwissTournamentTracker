@@ -8,7 +8,7 @@ import CreateConnection from "../functions/server_liaison";
 const init: SubscribedData = {rounds: undefined, matches: undefined, players: undefined, leaderboard: undefined, status: undefined};
 export const CONTEXT_eventDetails: React.Context<SubscribedData> = createContext(init);
 
-function EventSubscriber()
+function EventSubscriber(): JSX.Element
 {
     const [details, setDetails] = useState<SubscribedData>(init);
     const serverUrl = useContext(CONTEXT_serverBaseUrl);

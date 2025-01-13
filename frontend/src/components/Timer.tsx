@@ -7,7 +7,7 @@ interface props_Timer
     timeMinutes: number;
 }
 
-function Timer({timeMinutes}: props_Timer)
+function Timer({timeMinutes}: props_Timer): JSX.Element
 {
     const [currentTime, setCurrentTime] = useState<number>(Date.now());
     const targetTime = useState<number>(Date.now() + (timeMinutes * 60000))[0];

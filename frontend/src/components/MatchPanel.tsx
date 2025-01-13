@@ -7,7 +7,7 @@ interface props_MatchPanel
     setScore: Function
 }
 
-function MatchPanel({player, wins, setScore}: props_MatchPanel)
+function MatchPanel({player, wins, setScore}: props_MatchPanel): JSX.Element
 {
     // Button functionality
     const handleIncrementScore = () => {
