@@ -244,12 +244,13 @@ app.get("/report/:event", (req, res) => {
 
 // Append a client to a list of open connections automatically updated when the tournament data changes
 app.get("/subscribe/:event", (req, res) => {
-    console.log(`Received request at SUBSCRIBE from \"${req.query.name}\"`);
+    console.log(`Received request at SUBSCRIBE => name: ${req.query.name}...`);
     const tournamentObj = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); }, "OBJECT");
     const clientName = req.query.name; 
     const sse = new SSE([compileTournamentData(tournamentObj.tournament)]);
     sse.init(req, res);
     tournamentObj.clients.push({clientName: clientName, sse: sse});
+    console.log(`${clientName} subscribed`)
 })
 
 // Broadcast a message from one client to all clients
