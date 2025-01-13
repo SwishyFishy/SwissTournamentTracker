@@ -2,9 +2,9 @@ import { useState, useEffect, useContext } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 
 import MatchPanel from "../components/MatchPanel";
+
 import { CONTEXT_serverBaseUrl } from "../main";
 import { CONTEXT_eventDetails } from "./EventSubscriber";
-
 import { Match } from "../types";
 
 import '../styles/EventParticipantMatch.css';
