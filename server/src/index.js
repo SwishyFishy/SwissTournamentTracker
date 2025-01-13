@@ -82,6 +82,7 @@ app.get("/leave/:event", (req, res) => {
     {
         if (tournament.RemoveParticipant(name))
         {
+            tournamentObj.clients.splice(tournamentObj.clients.findIndex((client) => client.clientName == name), 1);
             updateSubscribers(tournamentObj);
 
             res.status(200);
@@ -356,13 +357,14 @@ function compileTournamentData(tournament)
 // Forward the most up-to-date tournament data to each client
 function updateSubscribers(tournamentObj, msg = "")
 {
+    console.log("\n---Updating Subscribers---");
     try
     {
         const data = compileTournamentData(tournamentObj.tournament)
         data.message = msg;
 
         tournamentObj.clients.forEach((client) => {
-            console.log(`Updating subscriber: ${client.clientname}...`);
+            console.log(`Updating subscriber: ${client.clientName}...`);
             client.sse.send(data);
             console.log(`${client.clientName} updated`);
         })
@@ -371,4 +373,5 @@ function updateSubscribers(tournamentObj, msg = "")
     {
         console.log(Error);
     }
+    console.log("---Subscribers Updated---\n");
 }
