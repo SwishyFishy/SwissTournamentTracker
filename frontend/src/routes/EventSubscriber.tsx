@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext, createContext } from "react";
-import { useParams, Outlet } from "react-router";
+import { Outlet, useParams, useSearchParams } from "react-router";
 
 import { SubscribedData } from "../types";
 import { CONTEXT_serverBaseUrl } from "../main";
@@ -13,11 +13,13 @@ function EventSubscriber(): JSX.Element
     const [details, setDetails] = useState<SubscribedData>(init);
     const serverUrl = useContext(CONTEXT_serverBaseUrl);
     const {eventCode} = useParams() as {eventCode: string};
+    const player: string = useSearchParams()[0].get("player")!;
 
     // Invoke server_liaison to connect on load
-    useEffect(() => CreateConnection(serverUrl, eventCode, (data: SubscribedData) => {
-        setDetails({...data});
-    }), []);
+    useEffect(() => CreateConnection(serverUrl, eventCode, 
+        (data: SubscribedData) => { setDetails({...data});}, 
+        (data: SubscribedData) => { return data.players !== undefined && data.players!.find((p: any) => p.name == player && p.dropped) !== undefined}
+    ), []);
 
     return (
         <CONTEXT_eventDetails.Provider value={details}>
