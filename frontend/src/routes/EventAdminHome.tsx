@@ -76,7 +76,8 @@ function EventAdminHome(): JSX.Element
     }
 
     // Connect to the server on load
-    useEffect(() => CreateConnection(serverUrl, eventCode, 
+    // Admin page uses the name "bye" because it is not allowed for players
+    useEffect(() => CreateConnection(serverUrl, eventCode, "bye",
         (data: SubscribedData) => { setEventDetails({...data}) },
         () => {return false}
     ), []);

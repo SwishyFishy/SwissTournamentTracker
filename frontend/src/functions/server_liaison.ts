@@ -1,8 +1,8 @@
 // Create an event handler that calls the given callback function when messages are received from the /subscribe endpoint
-function CreateConnection(serverUrl: string, eventCode: string, callbackFn: Function, closeCondition: Function)
+function CreateConnection(serverUrl: string, eventCode: string, name: string, callbackFn: Function, closeCondition: Function)
 {
     // Create an EventSource object to listen to the server
-    const events: EventSource = new EventSource(serverUrl + `/subscribe/${eventCode}`);
+    const events: EventSource = new EventSource(serverUrl + `/subscribe/${eventCode}?name=${name}`);
 
     // When a message is recieved:
     //  Parse the data

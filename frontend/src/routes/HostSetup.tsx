@@ -57,7 +57,8 @@ function HostSetup(): JSX.Element
                 setEventCode(response.code)
 
                 // Create the connection to the server
-                CreateConnection(serverUrl, response.code, 
+                // Use the name "" because it is not allowed for players
+                CreateConnection(serverUrl, response.code, "",
                     (data: any) => {
                         if (data.players !== undefined)
                         {

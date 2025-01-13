@@ -16,7 +16,7 @@ function EventSubscriber(): JSX.Element
     const player: string = useSearchParams()[0].get("player")!;
 
     // Invoke server_liaison to connect on load
-    useEffect(() => CreateConnection(serverUrl, eventCode, 
+    useEffect(() => CreateConnection(serverUrl, eventCode, player,
         (data: SubscribedData) => { setDetails({...data});}, 
         (data: SubscribedData) => { return data !== undefined && data.players !== undefined && data.players.find((p: any) => p.name == player && p.dropped) !== undefined}
     ), []);
