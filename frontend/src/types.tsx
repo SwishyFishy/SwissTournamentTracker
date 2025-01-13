@@ -35,4 +35,5 @@ export type SubscribedData = {
     players: Array<Player> | undefined,
     leaderboard: Leaderboard | undefined,
     status: string | undefined
+    message: string | undefined
 }

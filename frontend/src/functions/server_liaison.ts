@@ -4,6 +4,7 @@ function CreateConnection(serverUrl: string, eventCode: string, callbackFn: Func
     const events: EventSource = new EventSource(serverUrl + `/subscribe/${eventCode}`);
     events.onmessage = (e) => {
         const data = JSON.parse(e.data);
+        console.log(data);
         callbackFn(data);
     }
 }

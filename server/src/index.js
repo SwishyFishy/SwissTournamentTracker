@@ -237,6 +237,13 @@ app.get("/subscribe/:event", (req, res) => {
     tournamentObj.clients.push(sse);
 })
 
+// Broadcast a message from one clientn to all clients
+app.get("/broadcast/:event", (req, res) => {
+    const tournamentObj = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); }, "OBJECT");
+    const msg = req.query.message;
+    updateSubscribers(tournamentObj, msg);
+})
+
 // Debugging page
 app.get("/debug", (req, res) => {
     res.status(200);
@@ -314,45 +321,28 @@ function extractTournament(code, failResp, mode = "EVENT")
 }
 
 // Compile all of the requested tournament data into a single json object
-function compileTournamentData(tournament, r = true, p = true, m = true, l = true, s = true)
+function compileTournamentData(tournament)
 {
-    const data = {};
-
-    if (r)
-    {
-        data.rounds = tournament.getRounds();
-    }
-
-    if (p)
-    {
-        data.players = tournament.getPlayers();
-    }
+    const data = {
+        rounds: tournament.getRounds(),
+        players: tournament.getPlayers(),
+        matches: tournament.getCurrentMatches(),
+        leaderboard: tournament.getLeaderboard(),
+        status: tournament.getStatus()
+    };
     
-    if (m)
-    {
-        data.matches = tournament.getCurrentMatches();
-    }
-
-    if (l)
-    {
-        data.leaderboard = tournament.getLeaderboard();
-    }
-
-    if (s)
-    {
-        data.status = tournament.getStatus();
-    }
-
     return(data);
 }
 
 // Forward the most up-to-date tournament data to each client
-function updateSubscribers(tournamentObj, r = true, p = true, m = true, l = true, s = true)
+function updateSubscribers(tournamentObj, msg = "")
 {
     try
     {
         tournamentObj.clients.forEach((client) => {
-            client.send(compileTournamentData(tournamentObj.tournament));
+            const data = compileTournamentData(tournamentObj.tournament)
+            data.message = msg;
+            client.send(data);
         })
     }
     catch (Error)

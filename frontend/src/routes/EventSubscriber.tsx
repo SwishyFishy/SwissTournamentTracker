@@ -5,7 +5,7 @@ import { SubscribedData } from "../types";
 import { CONTEXT_serverBaseUrl } from "../main";
 import CreateConnection from "../functions/server_liaison";
 
-const init: SubscribedData = {rounds: undefined, matches: undefined, players: undefined, leaderboard: undefined, status: undefined};
+const init: SubscribedData = {rounds: undefined, matches: undefined, players: undefined, leaderboard: undefined, status: undefined, message: undefined};
 export const CONTEXT_eventDetails: React.Context<SubscribedData> = createContext(init);
 
 function EventSubscriber(): JSX.Element

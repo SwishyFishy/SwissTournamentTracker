@@ -50,6 +50,7 @@ function EventAdminHome(): JSX.Element
 
     // Start the round timer
     const handleStartRound = () => {
+        fetch(serverUrl + `/broadcast/${eventCode}?message=round_start`);
         setStartRound(true);
     }
     

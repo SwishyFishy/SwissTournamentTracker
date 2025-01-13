@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 
 import MatchPanel from "../components/MatchPanel";
+import Timer from "../components/Timer";
 
 import { CONTEXT_serverBaseUrl } from "../main";
 import { CONTEXT_eventDetails } from "./EventSubscriber";
@@ -11,6 +12,9 @@ import '../styles/EventParticipantMatch.css';
 
 function EventParticipantMatch(): JSX.Element
 {
+    const [startRound, setStartRound] = useState<boolean>(false);
+    const round_time: number = 50;
+
     const serverUrl = useContext(CONTEXT_serverBaseUrl);
     const eventDetails = useContext(CONTEXT_eventDetails);
 
@@ -54,8 +58,14 @@ function EventParticipantMatch(): JSX.Element
         submitScore();
     }
 
+    // Monitor for the message broadcast that the round has started
     // Monitor for match submission from either player, then redirect to postmatch page
     useEffect(() => {
+        if (eventDetails.message == "round_start")
+        {
+            setStartRound(true);
+        }
+
         const match: Match = eventDetails.matches!.find((match) => match.p1 == player || match.p2 == player)!
         if (match.reported)
         {
@@ -66,6 +76,7 @@ function EventParticipantMatch(): JSX.Element
     return(
         <div className="wrapper" id="eventParticipantMatch">
             <h1>Round {round}</h1>
+            {startRound ? <Timer timeMinutes={round_time} /> : <p>Round not started</p>}
             <form className="playerPairings">
                 <MatchPanel player={match.p1} wins={p1Score} setScore={setp1Score} />
                 <MatchPanel player={match.p2} wins={p2Score} setScore={setp2Score} />
