@@ -13,8 +13,7 @@ function DisplayLeaderboard()
 
     const serverURL: string = useContext(CONTEXT_serverBaseUrl);
 
-    let {eventCode} = useParams();
-    eventCode = eventCode!;
+    const {eventCode} = useParams() as {eventCode: string};
     const player: string = useSearchParams()[0].get("player")!;
 
     // Get leaderboard

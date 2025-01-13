@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { useNavigate, useLocation } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
 
 import MatchSummary from "../components/MatchSummary";
 import { CONTEXT_eventDetails } from "./EventSubscriber";
@@ -9,14 +9,12 @@ import { Match } from "../types";
 function EventParticipantPostmatch(): JSX.Element
 {
     const eventDetails = useContext(CONTEXT_eventDetails);
-
-    const location = useLocation();
-    const navigate = useNavigate();
-    const eventCode: string = location.state.code;
-    const player: string = location.state.player;
+    const {eventCode} = useParams() as {eventCode: string};
+    const player: string = useSearchParams()[0].get("player")!;
     const match: Match = eventDetails.matches!.find((match) => match.p1 == player || match.p2 == player)!;
-
     const round: number = useState(eventDetails.rounds!.currentRound)[0];
+
+    const navigate = useNavigate();
 
     // Monitor for the round to update, then redirect to pairings or event conclusion
     useEffect(() => {
@@ -24,11 +22,11 @@ function EventParticipantPostmatch(): JSX.Element
         {
             if(eventDetails.status == "running") 
             {
-                navigate("/event/pairing", {state: {code: eventCode, player: player}});
+                navigate(`/${eventCode}/pairing?player=${player}`);
             }
             else 
             {
-                navigate("/event/conclusion", {state: {code: eventCode, player: player}});
+                navigate(`/${eventCode}/conclusion?player=${player}`);
             }
         }
     }, [eventDetails])

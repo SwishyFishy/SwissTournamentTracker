@@ -46,7 +46,7 @@ function JoinEvent(): JSX.Element
                 .then(response => {
                     if (response.ok)
                     {
-                        navigate("/event/lobby", {state: {code: code, player: name}});
+                        navigate(`/${code}/lobby?player=${name}`);
                     }
                     else if (response.status == 400)
                     {

@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { useNavigate, useLocation } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
 
 import MatchPanel from "../components/MatchPanel";
 import { CONTEXT_serverBaseUrl } from "../main";
@@ -14,10 +14,10 @@ function EventParticipantMatch(): JSX.Element
     const serverUrl = useContext(CONTEXT_serverBaseUrl);
     const eventDetails = useContext(CONTEXT_eventDetails);
 
-    const location = useLocation();
+    const {eventCode} = useParams() as {eventCode: string};
+    const player: string = useSearchParams()[0].get("player")!;
+    
     const navigate = useNavigate();
-    const eventCode = location.state.code;
-    const player = location.state.player;
 
     // Should probably fix my types such that I don't need to use the ! non-null, non-undefined assertion
     const match: Match = eventDetails.matches!.find((match) => match.p1 == player || match.p2 == player)!;
@@ -28,7 +28,7 @@ function EventParticipantMatch(): JSX.Element
     // Immediately forward the player to the postmatch page if they have the bye
     if (match.p1 == match.p2)
     {
-        navigate("/event/postmatch", {state: {code: eventCode, player: player}});
+        navigate(`/${eventCode}/postmatch?player=${player}`);
     }
 
     // Score submission
@@ -38,7 +38,7 @@ function EventParticipantMatch(): JSX.Element
             .then(response => { 
                 if (response.ok) 
                 { 
-                    navigate("/event/postmatch", {state: {code: eventCode, player: player}});
+                    navigate(`/${eventCode}/postmatch?player=${player}`);
                 }
                 else
                 {
@@ -59,7 +59,7 @@ function EventParticipantMatch(): JSX.Element
         const match: Match = eventDetails.matches!.find((match) => match.p1 == player || match.p2 == player)!
         if (match.reported)
         {
-            navigate("/event/postmatch", {state: {code: eventCode, player: player}});
+            navigate(`/${eventCode}/postmatch?player=${player}`);
         }
     }, [eventDetails])
 

@@ -13,8 +13,7 @@ import CreateConnection from "../functions/server_liaison";
 function EventAdminHome(): JSX.Element
 {
     const navigate = useNavigate();
-    let {eventCode} = useParams();
-    eventCode = eventCode!;
+    const {eventCode} = useParams() as {eventCode: string};
 
     const serverUrl = useContext(CONTEXT_serverBaseUrl);
 

@@ -1,21 +1,21 @@
 import { useEffect, useContext } from "react";
-import { useNavigate, useLocation } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
 
 import { CONTEXT_eventDetails } from "./EventSubscriber";
 
 function EventParticipantLobby(): JSX.Element
 {
     const eventDetails = useContext(CONTEXT_eventDetails);
+    const {eventCode} = useParams() as {eventCode: string};
+    const player: string = useSearchParams()[0].get("player")!;
+
     const navigate = useNavigate();
-    const location = useLocation();
-    const player = location.state.player;
-    const eventCode = location.state.code;
 
     // Check if the event has started and redirect whenever the event details change
     useEffect(() => {
         if (eventDetails.status == "running")
         {
-            navigate("/event/pairing", {state: {code: eventCode, player: player}});
+            navigate(`/${eventCode}/pairing?player=${player}`);
         }
     }, [eventDetails])
 
