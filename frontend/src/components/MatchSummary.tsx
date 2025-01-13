@@ -14,17 +14,17 @@ function MatchSummary({match}: props_MatchSummary)
 
     if (match.p2)
     {
+        winner = p1WinsMatch ? match.p1 : match.p2;
+        result = match.p1wins != match.p2wins ? "defeats" : "draws";
+        other = p1WinsMatch ? match.p2 : match.p1;
+        score = `${Math.max(match.p1wins, match.p2wins)} - ${Math.min(match.p1wins, match.p2wins)}`;
+    }
+    else
+    { 
         winner = match.p1;
         result = "bye";
         other = "";
         score = "2 - 0";
-    }
-    else
-    {
-        winner = p1WinsMatch ? match.p1 : match.p2;
-        result = match.p1wins != match.p2wins ? "defeats" : "draws";
-        other = p1WinsMatch ? match.p2 : match.p1;
-        score = `${Math.max(match.p1wins, match.p2wins)} - ${Math.min(match.p1wins, match.p2wins)}`; 
     }
 
     return(
