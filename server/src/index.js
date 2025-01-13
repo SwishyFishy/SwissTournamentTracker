@@ -107,6 +107,8 @@ app.get("/drop/:event", (req, res) => {
     {
         if (tournament.DropParticipant(name))
         {
+            // Remove the player as a client
+            tournamentObj.clients.splice(tournamentObj.clients.findIndex((client) => client.clientName == name), 1);
             updateSubscribers(tournamentObj);
 
             res.status(200);
@@ -232,12 +234,13 @@ app.get("/report/:event", (req, res) => {
 // Append a client to a list of open connections automatically updated when the tournament data changes
 app.get("/subscribe/:event", (req, res) => {
     const tournamentObj = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); }, "OBJECT");
+    const clientName = req.query.name; 
     const sse = new SSE([compileTournamentData(tournamentObj.tournament)]);
     sse.init(req, res);
-    tournamentObj.clients.push(sse);
+    tournamentObj.clients.push({clientName: clientName, sse: sse});
 })
 
-// Broadcast a message from one clientn to all clients
+// Broadcast a message from one client to all clients
 app.get("/broadcast/:event", (req, res) => {
     const tournamentObj = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); }, "OBJECT");
     const msg = req.query.message;
@@ -342,7 +345,7 @@ function updateSubscribers(tournamentObj, msg = "")
         tournamentObj.clients.forEach((client) => {
             const data = compileTournamentData(tournamentObj.tournament)
             data.message = msg;
-            client.send(data);
+            client.sse.send(data);
         })
     }
     catch (Error)
