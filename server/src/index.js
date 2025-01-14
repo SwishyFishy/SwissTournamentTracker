@@ -369,7 +369,7 @@ function updateSubscribers(tournamentObj, msg = "")
 
         tournamentObj.clients.forEach((client) => {
             console.log(`Updating subscriber: ${client.clientName}...`);
-            client.sse.send(data);
+            console.log(client.sse.send(data));
             console.log(`${client.clientName} updated`);
         })
     }
