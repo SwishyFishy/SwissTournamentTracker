@@ -198,7 +198,9 @@ app.get("/round/:event", (req, res) => {
 
     // Send matches record
     res.status(200);
-    res.json(compileTournamentData(tournament));
+    res.json({
+        rounds: tournament.getRounds()
+    });
 })
 
 // Get the leaderboard of a tournament
@@ -207,7 +209,9 @@ app.get("/leaderboard/:event", (req, res) => {
     const tournament = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); });
 
     res.status(200);
-    res.json(compileTournamentData(tournament, false, false, false, true, false));
+    res.json({
+        leaderboard: tournament.getLeaderboard()
+    });
 })
 
 // Input a match score for a tournament match
