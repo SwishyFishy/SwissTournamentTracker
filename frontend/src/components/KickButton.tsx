@@ -17,22 +17,19 @@ function KickButton({player, eventCode}: props_KickButton): JSX.Element
     // Kick a player using the X button
     // Attempt to remove the playuer from the tournament - if the resposne code is 409, then the tournament has started, and the player must be dropped instead
     const handleKickPlayer = () => {
-        const kickPlayer = async() => {
-            await fetch(serverUrl + `/leave/${eventCode}?name=${player}`)
-            .then(response => {
-                if (response.status == 409)
-                {
-                    fetch(serverUrl + `/drop/${eventCode}?name=${player}`)
-                    .catch((err) => {
-                        console.log(err);
-                    })
-                }
-            })
-            .catch(err => {
-                console.log(err);
-            })
-        };
-        kickPlayer();
+        fetch(serverUrl + `/leave/${eventCode}?name=${player}`)
+        .then(response => {
+            if (response.status == 409)
+            {
+                fetch(serverUrl + `/drop/${eventCode}?name=${player}`)
+                .catch((err) => {
+                    console.log(err);
+                })
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        })
     }
 
     return(

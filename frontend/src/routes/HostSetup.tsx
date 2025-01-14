@@ -19,23 +19,20 @@ function HostSetup(): JSX.Element
 
     // Start this event
     const handleStartEvent = () => {
-        const startEvent = () => {
-            fetch(serverUrl + `/start/${eventCode}`)
-            .then(response => {
-                if (response.ok)
-                {
-                    navigate(`/host/${eventCode}`);
-                }
-                else
-                {
-                    throw new Error;
-                }
-            })
-            .catch((err) =>{
-                console.log(err);
-            })
-        }
-        startEvent();
+        fetch(serverUrl + `/start/${eventCode}`)
+        .then(response => {
+            if (response.ok)
+            {
+                navigate(`/host/${eventCode}`);
+            }
+            else
+            {
+                throw new Error;
+            }
+        })
+        .catch((err) =>{
+            console.log(err);
+        })
     }
 
     // Cancel this event
