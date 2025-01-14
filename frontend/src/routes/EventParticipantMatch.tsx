@@ -37,25 +37,22 @@ function EventParticipantMatch(): JSX.Element
 
     // Score submission
     const handleSubmitScore = () => {
-        const submitScore = async() => {
-            await fetch(serverUrl + `/report/${eventCode}?p1=${match.p1}&p2=${match.p2}&p1wins=${p1Score}&p2wins=${p2Score}`)
-            .then(response => { 
-                if (response.ok) 
-                { 
-                    navigate(`/${eventCode}/postmatch?player=${player}`);
-                }
-                else
-                {
-                    console.log(response);
-                    setp1Score(0);
-                    setp2Score(0);
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            })
-        }
-        submitScore();
+        fetch(serverUrl + `/report/${eventCode}?p1=${match.p1}&p2=${match.p2}&p1wins=${p1Score}&p2wins=${p2Score}`)
+        .then(response => { 
+            if (response.ok) 
+            { 
+                navigate(`/${eventCode}/postmatch?player=${player}`);
+            }
+            else
+            {
+                console.log(response);
+                setp1Score(0);
+                setp2Score(0);
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+        })
     }
 
     // Monitor for the message broadcast that the round has started

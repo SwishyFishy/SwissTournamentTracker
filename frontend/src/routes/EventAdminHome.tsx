@@ -24,28 +24,25 @@ function EventAdminHome(): JSX.Element
 
     // Edit player match scores
     const handleEditMatch = (e: any) => {
-        const editMatch = async(e: any) => {
-            // Match the event target to a match in state
-            const eplayer: string = e.target.getAttribute('id');
-            const match: Match = eventDetails!.matches!.find((match) => match.p1 == eplayer || match.p2 == eplayer)!;
-
-            // Send a request to record a new round score for that match, with the clicked player's score incremented by 1 (mod 3);
-            // Result: Each score can be clicked to increment by 1, rolling over 0 -> 1 -> 2 -> 0
-            const p1wins = match.p1 == eplayer ? (match.p1wins + 1) % 3 : match.p1wins;
-            const p2wins = match.p2 == eplayer ? (match.p2wins + 1) % 3 : match.p2wins;
-            
-            await fetch(serverUrl + `/report/${eventCode}?p1=${match.p1}&p2=${match.p2}&p1wins=${p1wins}&p2wins=${[p2wins]}`)
-            .then(response => { 
-                if (!response.ok) 
-                { 
-                    console.log(response) 
-                } 
-            })
-            .catch((err) => {
-                console.log(err);
-            })
-        }
-        editMatch(e);
+        // Match the event target to a match in state
+        const eplayer: string = e.target.getAttribute('id');
+        const match: Match = eventDetails!.matches!.find((match) => match.p1 == eplayer || match.p2 == eplayer)!;
+        
+        // Send a request to record a new round score for that match, with the clicked player's score incremented by 1 (mod 3);
+        // Result: Each score can be clicked to increment by 1, rolling over 0 -> 1 -> 2 -> 0
+        const p1wins = match.p1 == eplayer ? (match.p1wins + 1) % 3 : match.p1wins;
+        const p2wins = match.p2 == eplayer ? (match.p2wins + 1) % 3 : match.p2wins;
+        
+        fetch(serverUrl + `/report/${eventCode}?p1=${match.p1}&p2=${match.p2}&p1wins=${p1wins}&p2wins=${[p2wins]}`)
+        .then(response => { 
+            if (!response.ok) 
+            { 
+                console.log(response) 
+            } 
+        })
+        .catch((err) => {
+            console.log(err);
+        })
     }
 
     // Start the round timer

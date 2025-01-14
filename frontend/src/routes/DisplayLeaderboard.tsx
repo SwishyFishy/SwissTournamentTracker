@@ -18,15 +18,12 @@ function DisplayLeaderboard(): JSX.Element
 
     // Get leaderboard
     useEffect(() => {
-        const getLeaderboard = async() => {
-            await fetch(serverURL + `/leaderboard/${eventCode}`)
-            .then(response => response.json())
-            .then(response => setResults(response.leaderboard))
-            .catch((err) => {
-                console.log(err);
-            })
-        }
-        getLeaderboard();
+        fetch(serverURL + `/leaderboard/${eventCode}`)
+        .then(response => response.json())
+        .then(response => setResults(response.leaderboard))
+        .catch((err) => {
+            console.log(err);
+        })
     }, [])
 
     return(

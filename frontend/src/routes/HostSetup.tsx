@@ -13,13 +13,14 @@ function HostSetup(): JSX.Element
 {
     const [players, setPlayers] = useState<Array<Player>>([]);
     const [eventCode, setEventCode] = useState("");
+
     const serverUrl: string = useContext(CONTEXT_serverBaseUrl);
     const navigate = useNavigate();
 
     // Start this event
     const handleStartEvent = () => {
-        const startEvent = async() => {
-            await fetch(serverUrl + `/start/${eventCode}`)
+        const startEvent = () => {
+            fetch(serverUrl + `/start/${eventCode}`)
             .then(response => {
                 if (response.ok)
                 {
@@ -39,45 +40,38 @@ function HostSetup(): JSX.Element
 
     // Cancel this event
     const handleCancelEvent = () => {
-        const deleteEvent = async() => {
-            fetch(serverUrl + `/delete/${eventCode}`);
-            navigate("/");
-        };
-
-        deleteEvent();
+        fetch(serverUrl + `/delete/${eventCode}`)
+        .catch((err) => {
+            console.log(err);
+        })
+        navigate("/");
     }
 
     // Connect to server on load to receive push events when a player joins
     useEffect(() => {
-        // Create and link to a tournament on the server
-        const createTournament = async() => {
-            await fetch(serverUrl + "/create")
-            .then(response => response.json())
-            .then(response => {
-                setEventCode(response.code)
-
-                // Create the connection to the server
-                // Use the name "" because it is not allowed for players
-                CreateConnection(serverUrl, response.code, "",
-                    (data: any) => {
-                        if (data.players !== undefined)
-                        {
-                            setPlayers(data.players);
-                        }
-                        else
-                        {
-                            setPlayers([]);
-                        }
-                    },
-                    () => {return false; }
-                )})
-            .catch(err => {
-                console.log(err);
-                navigate("/", {state: {error: true, emsg: "The tournament could not be created"}});
-            })
-        };
-
-        createTournament();
+        fetch(serverUrl + "/create")
+        .then(response => response.json())
+        .then(response => {
+            setEventCode(response.code)
+            // Create the connection to the server
+            // Use the name "" because it is not allowed for players
+            CreateConnection(serverUrl, response.code, "",
+                (data: any) => {
+                    if (data.players !== undefined)
+                    {
+                        setPlayers(data.players);
+                    }
+                    else
+                    {
+                        setPlayers([]);
+                    }
+                },
+                () => { return false; }
+            )})
+        .catch(err => {
+            console.log(err);
+            navigate("/", {state: {error: true, emsg: "The tournament could not be created"}});
+        })
     }, []);
 
     return(

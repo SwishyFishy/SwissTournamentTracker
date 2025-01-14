@@ -41,28 +41,25 @@ function JoinEvent(): JSX.Element
         // Attempt to enter a tournament with the in-form code
         else
         {
-            const joinTournament = async() => {
-                await fetch(serverUrl + `/join/${code}?name=${name}`)
-                .then(response => {
-                    if (response.ok)
-                    {
-                        navigate(`/${code}/lobby?player=${name}`);
-                    }
-                    else if (response.status == 400)
-                    {
-                        setNameError(true);
-                    }
-                    else
-                    {
-                        setCodeError(true);
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                    navigate("/", {state: {error: true, emsg: "Network Error"}});
-                })}
-            joinTournament();
-        }
+            fetch(serverUrl + `/join/${code}?name=${name}`)
+            .then(response => {
+                if (response.ok)
+                {
+                    navigate(`/${code}/lobby?player=${name}`);
+                }
+                else if (response.status == 400)
+                {
+                    setNameError(true);
+                }
+                else
+                {
+                    setCodeError(true);
+                }
+            })
+            .catch(err => {
+                console.log(err);
+                navigate("/", {state: {error: true, emsg: "Network Error"}});
+            })}
     };
 
     const handleCancelJoin = () => {
