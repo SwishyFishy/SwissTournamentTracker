@@ -95,7 +95,7 @@ function EventAdminHome(): JSX.Element
                         <span key={match.p1 + match.p2 + "col_vs"}>-</span>
                         <span key={match.p1 + match.p2 + "col_p2wins"}>{match.p2wins !== undefined ? <input type="button" name="p2wins" id={match.p2} value={match.p2wins} onClick={handleEditMatch} /> : <span className="bye">0</span>}</span>
                         <span key={match.p1 + match.p2 + "col_p2"} className={(match.p2 && eventDetails.players?.find((player) => player.name == match.p2)!.dropped) ? "dropped" : ""}>{match.p2 ? match.p2 : "Bye"}</span>
-                        <KickButton key={match.p2 + "kick"} player={match.p2} eventCode={eventCode} />
+                        {match.p2 ? <KickButton key={match.p2 + "kick"} player={match.p2} eventCode={eventCode} /> : <span></span>}
                     </li>
                 ))}
             </ul>
