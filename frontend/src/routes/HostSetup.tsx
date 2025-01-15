@@ -19,8 +19,11 @@ function HostSetup(): JSX.Element
 
     // Start this event
     const handleStartEvent = () => {
+        console.log("Event registered");
         fetch(serverUrl + `/start/${eventCode}`)
         .then(response => {
+            console.log("fetch executed");
+            console.log(response);
             if (response.ok)
             {
                 navigate(`/host/${eventCode}`);
