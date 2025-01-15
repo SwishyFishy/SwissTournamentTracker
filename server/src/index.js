@@ -361,7 +361,7 @@ function compileTournamentData(tournament)
 // Forward the most up-to-date tournament data to each client
 function updateSubscribers(tournamentObj, msg = "")
 {
-    console.log("\n---Updating Subscribers---");
+    console.log(`\n---Updating ${tournamentObj.clients.length} Subscribers---`);
     try
     {
         const data = compileTournamentData(tournamentObj.tournament)
