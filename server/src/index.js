@@ -254,7 +254,7 @@ app.get("/subscribe/:event", (req, res) => {
     const clientName = req.query.name; 
     const sse = new SSE([compileTournamentData(tournamentObj.tournament)]);
     sse.init(req, res);
-    tournamentObj.clients.push({clientName: clientName, sse: sse});
+    tournamentObj.clients.push({clientName: clientName, sse: sse, drop: false});
     console.log(`${clientName} subscribed`)
 })
 
@@ -369,7 +369,10 @@ function updateSubscribers(tournamentObj, msg = "")
 
         tournamentObj.clients.forEach((client) => {
             console.log(`Updating subscriber: ${client.clientName}...`);
-            console.log(client.sse.send(data));
+            if(!client.sse.send(data))
+            {
+                client.drop = true;
+            }
             console.log(`${client.clientName} updated`);
         })
     }
@@ -378,4 +381,7 @@ function updateSubscribers(tournamentObj, msg = "")
         console.log(Error);
     }
     console.log("---Subscribers Updated---\n");
+    
+    tournamentObj.clients = tournamentObj.clients.filter((client) => client.drop == false);
+    console.log("--Dicsonnected Clients Dropped");
 }
