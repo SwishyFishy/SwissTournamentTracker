@@ -76,7 +76,12 @@ function EventAdminHome(): JSX.Element
     // Admin page uses the name "bye" because it is not allowed for players
     useEffect(() => CreateConnection(serverUrl, eventCode, "bye",
         (data: SubscribedData) => { setEventDetails({...data}) },
-        () => {return false}
+        (data: SubscribedData) => {
+            if (data.status == "over")
+            {
+                return true;
+            }        
+        }
     ), []);
 
     return(
