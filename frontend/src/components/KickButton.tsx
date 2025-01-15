@@ -33,7 +33,7 @@ function KickButton({player, eventCode}: props_KickButton): JSX.Element
     }
 
     return(
-        <input key={"kick" + player} type="button" name={"kick" + player} id={"kick" + player} className="kickButton" value="X" onClick={handleKickPlayer} />
+        <input type="button" name={"kick" + player} id={"kick" + player} className="kickButton" value="X" onClick={handleKickPlayer} />
     );
 }
 

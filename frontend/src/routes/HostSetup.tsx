@@ -80,7 +80,7 @@ function HostSetup(): JSX.Element
             <h2>Players</h2>
             <ul>
                 {players.map((player) => (
-                    <li key={player.id}><span key={player.id + player.name}>{player.name}</span> <KickButton key={"kick" + player.id} player={player.name} eventCode={eventCode} /></li>
+                    <li><span>{player.name}</span> <KickButton player={player.name} eventCode={eventCode} /></li>
                 ))}
             </ul>
             <form>
