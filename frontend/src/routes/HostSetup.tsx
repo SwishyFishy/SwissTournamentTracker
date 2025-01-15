@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router";
 
-import { Player } from "../types";
+import { Player, SubscribedData } from "../types";
 import { CONTEXT_serverBaseUrl } from "../main";
 import KickButton from "../components/KickButton";
 
@@ -56,7 +56,7 @@ function HostSetup(): JSX.Element
             // Create the connection to the server
             // Use the name "" because it is not allowed for players
             CreateConnection(serverUrl, response.code, "",
-                (data: any) => {
+                (data: SubscribedData) => {
                     if (data.players !== undefined)
                     {
                         setPlayers(data.players);
@@ -66,7 +66,12 @@ function HostSetup(): JSX.Element
                         setPlayers([]);
                     }
                 },
-                () => { return false; }
+                (data: SubscribedData) => {
+                    if (data.status != "pending")
+                    {
+                        return true;
+                    }
+                }
             )})
         .catch(err => {
             console.log(err);

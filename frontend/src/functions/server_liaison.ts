@@ -12,7 +12,7 @@ function CreateConnection(serverUrl: string, eventCode: string, name: string, ca
         const data = JSON.parse(e.data);
         console.log(data);
 
-        if (closeCondition())
+        if (closeCondition(data))
         {
             events.close();
         }
