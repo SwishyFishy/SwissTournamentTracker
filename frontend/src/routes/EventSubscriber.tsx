@@ -2,8 +2,8 @@ import { useState, useEffect, useContext, createContext } from "react";
 import { Outlet, useParams, useSearchParams } from "react-router";
 
 import { SubscribedData } from "../types";
+import ServerConnection from "../functions/server_liaison";
 import { CONTEXT_serverBaseUrl } from "../main";
-import CreateConnection from "../functions/server_liaison";
 
 const init: SubscribedData = {rounds: undefined, matches: undefined, players: undefined, leaderboard: undefined, status: undefined, message: undefined};
 export const CONTEXT_eventDetails: React.Context<SubscribedData> = createContext(init);
@@ -14,12 +14,18 @@ function EventSubscriber(): JSX.Element
     const serverUrl = useContext(CONTEXT_serverBaseUrl);
     const {eventCode} = useParams() as {eventCode: string};
     const player: string = useSearchParams()[0].get("player")!;
+    let connection: ServerConnection;
 
     // Invoke server_liaison to connect on load
-    useEffect(() => CreateConnection(serverUrl, eventCode, player,
-        (data: SubscribedData) => { setDetails({...data});}, 
-        (data: SubscribedData) => { return (data !== undefined && data.players !== undefined && data.players.find((p: any) => p.name == player && p.dropped) !== undefined) || data.status=="over"}
-    ), []);
+    useEffect(() => {
+        connection = new ServerConnection(serverUrl, eventCode, (data: SubscribedData) => { 
+            setDetails({...data});
+            if (data.status == "over" || data.players!.find((p) => p.name == player && p.dropped))
+            {
+                connection.disconnect();
+            }
+        });
+    }, []);
 
     return (
         <CONTEXT_eventDetails.Provider value={details}>
