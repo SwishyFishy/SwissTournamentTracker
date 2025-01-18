@@ -11,6 +11,7 @@ app.use(cors());
 const { Server } = require("socket.io");
 const {ipv4, port} = require("./private.js");
 
+// Get modules for tournament object
 const Tournament = require("./event/tournament.js");
 const ShortUniqueId = require("short-unique-id");
 const codegen = new ShortUniqueId({length: 8, dictionary: 'alphanum_lower'});
@@ -25,7 +26,28 @@ const events = [];
 app.get("/create", (req, res) => {
     console.log("Received request at CREATE");
     const code = codegen.rnd();
+
+    // Socket logic
     const io = new Server(server);
+    io.on("connection", (socket) => {
+        console.log(`Client connected on socket ${socket.id}`);
+
+        // Forward admin broadcasts to other connected clients
+        socket.on("admin_broadcast", (data) => {
+            socket.broadcast.emit("message", {...compileTournamentData(), message: data});
+        });
+
+        // Push tournament data to clients on change
+        socket.on("update_tournament", () => {
+            socket.broadcast.emit("message", compileTournamentData());
+        });
+
+        // Close the connection
+        socket.on("close", () => {
+            socket.disconnect();
+        });
+    });
+
     events.push({code: code, tournament: new Tournament, socket: io});
     res.status(200);
     res.json({
@@ -266,7 +288,7 @@ app.use("*", (req, res) => {
 ///////////////////
 
 // Listen on port
-app.listen(port, ipv4, () => {
+server.listen(port, ipv4, () => {
     console.log(`Server started on port ${port}`);
     console.log(`${ipv4}:${port}/debug`);
 });
