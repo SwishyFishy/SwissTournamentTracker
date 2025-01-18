@@ -1,24 +1,28 @@
-// Create an event handler that calls the given callback function when messages are received from the /subscribe endpoint
-function CreateConnection(serverUrl: string, eventCode: string, name: string, callbackFn: Function, closeCondition: Function)
+import io from "socket.io-client";
+
+import { SubscribedData } from "../types";
+
+class ServerConnection
 {
-    // Create an EventSource object to listen to the server
-    const events: EventSource = new EventSource(serverUrl + `/subscribe/${eventCode}?name=${name}`);
+    // Data members
+    __socket: SocketIOClient.Socket;
 
-    // When a message is recieved:
-    //  Parse the data
-    //  Check whether the closeCondition is true, and if so, close this connection
-    //  Use the data
-    events.onmessage = (e) => {
-        const data = JSON.parse(e.data);
-        console.log(data);
+    // Constructor
+    constructor(serverUrl: string, eventCode: string, callbackFn: Function)
+    {
+        this.__socket = io.connect(`${serverUrl}/${eventCode}`);
 
-        if (closeCondition(data))
-        {
-            events.close();
-        }
+        this.__socket.on("receive_message", (data: SubscribedData) => {
+            callbackFn(data);
+        })
+    }
 
-        callbackFn(data);
+    // Public methods
+    // Close the connection
+    disconnect(): void
+    {
+        this.__socket.emit("close");
     }
 }
 
-export default CreateConnection;
+export default ServerConnection;
