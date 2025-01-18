@@ -2,15 +2,21 @@
 const express = require("express");
 const app = express();
 
-// Get required modules
-const {ipv4, port} = require("./private.js");
+// Get network modules
+const http = require('http');
+const { Server } = require("socket.io");
 const cors = require("cors");
 app.use(cors());
+const {ipv4, port} = require("./private.js");
 
 const Tournament = require("./event/tournament.js");
 const ShortUniqueId = require("short-unique-id");
 const codegen = new ShortUniqueId({length: 8, dictionary: 'alphanum_lower'});
-const SSE = require('express-sse');
+
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {origin: `http://${ipv4}:${port}`, methods: ["GET"]}
+});
 
 const events = [];
 
@@ -22,7 +28,7 @@ const events = [];
 app.get("/create", (req, res) => {
     console.log("Received request at CREATE");
     const code = codegen.rnd();
-    events.push({code: code, tournament: new Tournament, clients: []});
+    events.push({code: code, tournament: new Tournament});
     res.status(200);
     res.json({
         code: code
@@ -247,25 +253,6 @@ app.get("/report/:event", (req, res) => {
     }
 })
 
-// Append a client to a list of open connections automatically updated when the tournament data changes
-app.get("/subscribe/:event", (req, res) => {
-    console.log(`Received request at SUBSCRIBE => name: ${req.query.name}...`);
-    const tournamentObj = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); }, "OBJECT");
-    const clientName = req.query.name; 
-    const sse = new SSE([compileTournamentData(tournamentObj.tournament)]);
-    sse.init(req, res);
-    tournamentObj.clients.push({clientName: clientName, sse: sse, drop: false});
-    console.log(`${clientName} subscribed`)
-})
-
-// Broadcast a message from one client to all clients
-app.get("/broadcast/:event", (req, res) => {
-    console.log(`Received request at BROADCAST => message: ${req.query.message}`);
-    const tournamentObj = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); }, "OBJECT");
-    const msg = req.query.message;
-    updateSubscribers(tournamentObj, msg);
-})
-
 // Debugging page
 app.get("/debug", (req, res) => {
     res.status(200);
@@ -356,32 +343,4 @@ function compileTournamentData(tournament)
     console.log("Tournament data compiled");
     
     return(data);
-}
-
-// Forward the most up-to-date tournament data to each client
-function updateSubscribers(tournamentObj, msg = "")
-{
-    console.log(`\n---Updating ${tournamentObj.clients.length} Subscribers---`);
-    try
-    {
-        const data = compileTournamentData(tournamentObj.tournament)
-        data.message = msg;
-
-        tournamentObj.clients.forEach((client) => {
-            console.log(`Updating subscriber: ${client.clientName}...`);
-            if(!client.sse.send(data))
-            {
-                client.drop = true;
-            }
-            console.log(`${client.clientName} updated`);
-        })
-    }
-    catch (Error)
-    {
-        console.log(Error);
-    }
-    console.log("---Subscribers Updated---\n");
-    
-    tournamentObj.clients = tournamentObj.clients.filter((client) => client.drop == false);
-    console.log("--Dicsonnected Clients Dropped");
 }
