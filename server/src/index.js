@@ -4,19 +4,16 @@ const app = express();
 
 // Get network modules
 const http = require('http');
-const { Server } = require("socket.io");
+const server = http.createServer(app);
 const cors = require("cors");
 app.use(cors());
+
+const { Server } = require("socket.io");
 const {ipv4, port} = require("./private.js");
 
 const Tournament = require("./event/tournament.js");
 const ShortUniqueId = require("short-unique-id");
 const codegen = new ShortUniqueId({length: 8, dictionary: 'alphanum_lower'});
-
-const server = http.createServer(app);
-const io = new Server(server, {
-    cors: {origin: `http://${ipv4}:${port}`, methods: ["GET"]}
-});
 
 const events = [];
 
@@ -28,7 +25,10 @@ const events = [];
 app.get("/create", (req, res) => {
     console.log("Received request at CREATE");
     const code = codegen.rnd();
-    events.push({code: code, tournament: new Tournament});
+    const io = new Server(server, {
+        cors: {origin: `${ipv4}:${port}/${code}`, methods: ["GET"]}
+    });
+    events.push({code: code, tournament: new Tournament, socket: io});
     res.status(200);
     res.json({
         code: code
