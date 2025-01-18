@@ -5,7 +5,7 @@ import { Player, SubscribedData } from "../types";
 import { CONTEXT_serverBaseUrl } from "../main";
 import KickButton from "../components/KickButton";
 
-import CreateConnection from "../functions/server_liaison";
+import ServerConnection from "../functions/server_liaison";
 
 import '../styles/HostSetup.css';
 
@@ -13,6 +13,7 @@ function HostSetup(): JSX.Element
 {
     const [players, setPlayers] = useState<Array<Player>>([]);
     const [eventCode, setEventCode] = useState("");
+    let connection: ServerConnection;
 
     const serverUrl: string = useContext(CONTEXT_serverBaseUrl);
     const navigate = useNavigate();
@@ -21,17 +22,9 @@ function HostSetup(): JSX.Element
     const handleStartEvent = () => {
         console.log("Event registered");
         fetch(serverUrl + `/start/${eventCode}`)
-        .then(response => {
-            console.log("fetch executed");
-            console.log(response);
-            if (response.ok)
-            {
-                navigate(`/host/${eventCode}`);
-            }
-            else
-            {
-                throw new Error;
-            }
+        .then(() => {
+            connection.disconnect();
+            navigate(`/host/${eventCode}`);
         })
         .catch((err) =>{
             console.log(err);
@@ -41,10 +34,13 @@ function HostSetup(): JSX.Element
     // Cancel this event
     const handleCancelEvent = () => {
         fetch(serverUrl + `/delete/${eventCode}`)
+        .then(() => {
+            connection.disconnect();
+            navigate("/");
+        })
         .catch((err) => {
             console.log(err);
         })
-        navigate("/");
     }
 
     // Connect to server on load to receive push events when a player joins
@@ -53,26 +49,10 @@ function HostSetup(): JSX.Element
         .then(response => response.json())
         .then(response => {
             setEventCode(response.code)
-            // Create the connection to the server
-            // Use the name "" because it is not allowed for players
-            CreateConnection(serverUrl, response.code, "",
-                (data: SubscribedData) => {
-                    if (data.players !== undefined)
-                    {
-                        setPlayers(data.players);
-                    }
-                    else
-                    {
-                        setPlayers([]);
-                    }
-                },
-                (data: SubscribedData) => {
-                    if (data.status != "pending")
-                    {
-                        return true;
-                    }
-                }
-            )})
+            connection = new ServerConnection(serverUrl, response.code, (data: SubscribedData) => {
+                data.players !== undefined ? setPlayers(data.players) : setPlayers([]);
+            });
+        })
         .catch(err => {
             console.log(err);
             navigate("/", {state: {error: true, emsg: "The tournament could not be created"}});
