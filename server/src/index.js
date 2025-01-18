@@ -34,12 +34,12 @@ app.get("/create", (req, res) => {
 
         // Forward admin broadcasts to other connected clients
         socket.on("admin_broadcast", (data) => {
-            socket.broadcast.emit("message", {...compileTournamentData(), message: data});
+            socket.broadcast.emit("message", {...compileTournamentData(events.find((tournament) => tournament.code == code)), message: data});
         });
 
         // Push tournament data to clients on change
-        socket.on("update_tournament", () => {
-            socket.broadcast.emit("message", compileTournamentData());
+        socket.on("update", () => {
+            socket.broadcast.emit("message", compileTournamentData(events.find((tournament) => tournament.code == code)));
         });
 
         // Close the connection
