@@ -33,13 +33,13 @@ app.get("/create", (req, res) => {
         console.log(`Client connected on socket ${socket.id}`);
 
         // Forward admin broadcasts to other connected clients
-        socket.on("admin_broadcast", (data) => {
-            socket.broadcast.emit("message", {...compileTournamentData(events.find((tournament) => tournament.code == code)), message: data});
+        socket.on("broadcast", (data) => {
+            socket.broadcast.emit("message", tournamentReport(code, data));
         });
 
         // Push tournament data to clients on change
         socket.on("update", () => {
-            socket.broadcast.emit("message", compileTournamentData(events.find((tournament) => tournament.code == code)));
+            socket.broadcast.emit("message", tournamentReport(code, ""));
         });
 
         // Close the connection
@@ -351,4 +351,10 @@ function compileTournamentData(tournament)
     console.log("Tournament data compiled");
     
     return(data);
+}
+
+// A wrapper around compileTournamentData for more readable socket code
+function tournamentReport(code, message)
+{
+    return {...compileTournamentData(events.find((tournament) => tournament.code == code)), message: message}
 }

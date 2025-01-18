@@ -6,21 +6,21 @@ import KickButton from "../components/KickButton";
 
 import { CONTEXT_serverBaseUrl } from "../main";
 import { Match, SubscribedData } from "../types";
+import ServerConnection from "../functions/server_liaison";
 
 import "../styles/EventAdminHome.css";
-import CreateConnection from "../functions/server_liaison";
 
 function EventAdminHome(): JSX.Element
 {
     const navigate = useNavigate();
+    const serverUrl = useContext(CONTEXT_serverBaseUrl);
     const {eventCode} = useParams() as {eventCode: string};
 
-    const serverUrl = useContext(CONTEXT_serverBaseUrl);
-
     const [eventDetails, setEventDetails] = useState<SubscribedData>();
-
     const [startRound, setStartRound] = useState<boolean>(false);
     const round_time: number = 50;
+
+    let connection: ServerConnection;
 
     // Edit player match scores
     const handleEditMatch = (e: any) => {
@@ -47,42 +47,37 @@ function EventAdminHome(): JSX.Element
 
     // Start the round timer
     const handleStartRound = () => {
-        fetch(serverUrl + `/broadcast/${eventCode}?message=round_start`);
-        setStartRound(true);
+        connection.broadcast("round_start");
     }
     
     // Advance to the next round
     const handleAdvanceRound = () => {
-        const advanceRound = async() => {
-            await fetch(serverUrl + `/advance/${eventCode}`)
-            .then(response => response.json())
-            .then(response => {
-                if (response.status == 'over')
-                {
-                    navigate(`/${eventCode}/conclusion?player=`);
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            })
+        fetch(serverUrl + `/advance/${eventCode}`)
+        .then(response => response.json())
+        .then(response => {
+            if (response.status == 'over')
+            {
+                connection.disconnect();
+                navigate(`/${eventCode}/conclusion?player=`);
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+        })
 
-            // Reset this page
-            setStartRound(false);
-        }
-        advanceRound();
+        setStartRound(false);
     }
 
     // Connect to the server on load
-    // Admin page uses the name "bye" because it is not allowed for players
-    useEffect(() => CreateConnection(serverUrl, eventCode, "bye",
-        (data: SubscribedData) => { setEventDetails({...data}) },
-        (data: SubscribedData) => {
-            if (data.status == "over")
+    useEffect(() => {
+        connection = new ServerConnection(serverUrl, eventCode, (data: SubscribedData) => { 
+            setEventDetails({...data}) 
+            if (data.message == "round_start")
             {
-                return true;
-            }        
-        }
-    ), []);
+                setStartRound(true);
+            }
+        }      
+    )}, []);
 
     return(
         <div className="wrapper eventAdminHome">

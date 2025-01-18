@@ -18,6 +18,12 @@ class ServerConnection
     }
 
     // Public methods
+    // Tell the server to broadcast a message
+    broadcast(msg: string): void
+    {
+        this.__socket.emit("broadcast", msg)
+    }
+
     // Tell the server to close the connection
     disconnect(): void
     {
