@@ -56,8 +56,6 @@ app.get("/join/:event", (req, res) => {
     {
         if (tournament.AddParticipant(name))
         {
-            updateSubscribers(tournamentObj);
-
             res.status(200);
             res.send("Added");
         }
@@ -87,8 +85,6 @@ app.get("/leave/:event", (req, res) => {
         if (tournament.RemoveParticipant(name))
         {
             tournamentObj.clients.splice(tournamentObj.clients.findIndex((client) => client.clientName == name), 1);
-            updateSubscribers(tournamentObj);
-
             res.status(200);
             res.send("Removed");
         }
@@ -119,8 +115,6 @@ app.get("/drop/:event", (req, res) => {
         {
             // Remove the player as a client
             tournamentObj.clients.splice(tournamentObj.clients.findIndex((client) => client.clientName == name), 1);
-            updateSubscribers(tournamentObj);
-
             res.status(200);
             res.send("Dropped");
         }
@@ -159,8 +153,6 @@ app.get("/start/:event", (req, res) => {
     try
     {
         tournament.StartTournament();
-        updateSubscribers(tournamentObj);
-
         res.status(200);
         res.send("Started");
     }
@@ -181,8 +173,6 @@ app.get("/advance/:event", (req, res) => {
     try
     {
         const result = tournament.NextRound();
-        updateSubscribers(tournamentObj);
-
         res.status(200);
         res.json({
             status: result[0] == "Round" ? 'continue' : 'over'
@@ -233,8 +223,6 @@ app.get("/report/:event", (req, res) => {
     {
         if (tournament.ReportMatchResults(p1, p2, p1wins, p2wins))
         {
-            updateSubscribers(tournamentObj);
-
             res.status(200);
             res.send("Reported");
         }
