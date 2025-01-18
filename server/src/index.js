@@ -28,7 +28,7 @@ app.get("/create", (req, res) => {
     const code = codegen.rnd();
 
     // Socket logic
-    const io = new Server(server);
+    const io = new Server(server).of(code);
     io.on("connection", (socket) => {
         console.log(`Client connected on socket ${socket.id}`);
 

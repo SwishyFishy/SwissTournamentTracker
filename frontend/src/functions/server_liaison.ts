@@ -10,18 +10,24 @@ class ServerConnection
     // Constructor
     constructor(serverUrl: string, eventCode: string, callbackFn: Function)
     {
-        this.__socket = io.connect(`${serverUrl}/${eventCode}`);
+        this.__socket = io(`${serverUrl}/${eventCode}`);
 
-        this.__socket.on("receive_message", (data: SubscribedData) => {
+        this.__socket.on("message", (data: SubscribedData) => {
             callbackFn(data);
         })
     }
 
     // Public methods
-    // Close the connection
+    // Tell the server to close the connection
     disconnect(): void
     {
         this.__socket.emit("close");
+    }
+
+    // Tell the server that it needs to push new tournament data to the other clients
+    update(): void
+    {
+        this.__socket.emit("update");
     }
 }
 
