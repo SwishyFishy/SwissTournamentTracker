@@ -25,9 +25,7 @@ const events = [];
 app.get("/create", (req, res) => {
     console.log("Received request at CREATE");
     const code = codegen.rnd();
-    const io = new Server(server, {
-        cors: {origin: `${ipv4}:${port}/${code}`, methods: ["GET"]}
-    });
+    const io = new Server(server);
     events.push({code: code, tournament: new Tournament, socket: io});
     res.status(200);
     res.json({
