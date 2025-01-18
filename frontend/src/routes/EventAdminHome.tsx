@@ -76,8 +76,8 @@ function EventAdminHome(): JSX.Element
             {
                 setStartRound(true);
             }
-        }      
-    )}, []);
+        });
+    }, []);
 
     return(
         <div className="wrapper eventAdminHome">
