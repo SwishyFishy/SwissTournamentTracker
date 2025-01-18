@@ -18,12 +18,6 @@ class ServerConnection
     }
 
     // Public methods
-    // Tell the server to broadcast a message
-    broadcast(msg: string): void
-    {
-        this.__socket.emit("broadcast", msg)
-    }
-
     // Tell the server to close the connection
     disconnect(): void
     {
@@ -31,9 +25,9 @@ class ServerConnection
     }
 
     // Tell the server that it needs to push new tournament data to the other clients
-    update(): void
+    update(msg: string = ""): void
     {
-        this.__socket.emit("update");
+        this.__socket.emit("update", msg);
     }
 }
 

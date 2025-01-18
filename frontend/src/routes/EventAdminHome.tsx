@@ -47,7 +47,7 @@ function EventAdminHome(): JSX.Element
 
     // Start the round timer
     const handleStartRound = () => {
-        connection.broadcast("round_start");
+        connection.update("round_start");
     }
     
     // Advance to the next round

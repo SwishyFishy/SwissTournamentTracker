@@ -32,14 +32,9 @@ app.get("/create", (req, res) => {
     io.on("connection", (socket) => {
         console.log(`Client connected on socket ${socket.id}`);
 
-        // Forward admin broadcasts to other connected clients
-        socket.on("broadcast", (data) => {
-            socket.broadcast.emit("message", tournamentReport(code, data));
-        });
-
         // Push tournament data to clients on change
-        socket.on("update", () => {
-            socket.broadcast.emit("message", tournamentReport(code, ""));
+        socket.on("update", (msg) => {
+            socket.broadcast.emit("message", tournamentReport(code, msg));
         });
 
         // Close the connection
