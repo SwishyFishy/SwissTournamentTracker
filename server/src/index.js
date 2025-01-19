@@ -28,7 +28,7 @@ app.get("/create", (req, res) => {
     const code = codegen.rnd();
 
     // Socket logic
-    const io = new Server(server).of(code);
+    const io = new Server(server, { cors: {origin: "*", methods: ["GET"], allowedHeaders: "*"}}).of(code);
     io.on("connection", (socket) => {
         console.log(`Client connected on socket ${socket.id}`);
 
