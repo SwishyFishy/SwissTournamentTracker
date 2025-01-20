@@ -13,7 +13,7 @@ function HostSetup(): JSX.Element
 {
     const [players, setPlayers] = useState<Array<Player>>([]);
     const [eventCode, setEventCode] = useState("");
-    let connection: ServerConnection;
+    const [connection, setConnection] = useState<ServerConnection | undefined>(undefined);
 
     const serverUrl: string = useContext(CONTEXT_serverBaseUrl);
     const navigate = useNavigate();
@@ -22,7 +22,7 @@ function HostSetup(): JSX.Element
     const handleStartEvent = () => {
         fetch(serverUrl + `/start/${eventCode}`)
         .then(() => {
-            connection.disconnect();
+            connection!.disconnect();
             navigate(`/host/${eventCode}`);
         })
         .catch((err) =>{
@@ -34,7 +34,7 @@ function HostSetup(): JSX.Element
     const handleCancelEvent = () => {
         fetch(serverUrl + `/delete/${eventCode}`)
         .then(() => {
-            connection.disconnect();
+            connection!.disconnect();
             navigate("/");
         })
         .catch((err) => {
@@ -48,9 +48,9 @@ function HostSetup(): JSX.Element
         .then(response => response.json())
         .then(response => {
             setEventCode(response.code)
-            connection = new ServerConnection(serverUrl, response.code, (data: SubscribedData) => {
+            setConnection(new ServerConnection(serverUrl, response.code, (data: SubscribedData) => {
                 data.players !== undefined ? setPlayers(data.players) : setPlayers([]);
-            });
+            }));
         })
         .catch(err => {
             console.log(err);

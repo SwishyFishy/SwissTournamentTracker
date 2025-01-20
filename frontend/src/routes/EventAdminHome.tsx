@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router";
 
 import Timer from "../components/Timer";
@@ -18,9 +18,16 @@ function EventAdminHome(): JSX.Element
 
     const [eventDetails, setEventDetails] = useState<SubscribedData>();
     const [startRound, setStartRound] = useState<boolean>(false);
+    const connection = useState<ServerConnection>(
+        new ServerConnection(serverUrl, eventCode, (data: SubscribedData) => { 
+            setEventDetails({...data}) 
+            if (data.message == "round_start")
+            {
+                setStartRound(true);
+            }
+        })
+    )[0];
     const round_time: number = 50;
-
-    let connection: ServerConnection;
 
     // Edit player match scores
     const handleEditMatch = (e: any) => {
@@ -67,17 +74,6 @@ function EventAdminHome(): JSX.Element
 
         setStartRound(false);
     }
-
-    // Connect to the server on load
-    useEffect(() => {
-        connection = new ServerConnection(serverUrl, eventCode, (data: SubscribedData) => { 
-            setEventDetails({...data}) 
-            if (data.message == "round_start")
-            {
-                setStartRound(true);
-            }
-        });
-    }, []);
 
     return(
         <div className="wrapper eventAdminHome">
