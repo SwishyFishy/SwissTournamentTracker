@@ -20,7 +20,6 @@ function HostSetup(): JSX.Element
 
     // Start this event
     const handleStartEvent = () => {
-        console.log("Event registered");
         fetch(serverUrl + `/start/${eventCode}`)
         .then(() => {
             connection.disconnect();
