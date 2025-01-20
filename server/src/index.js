@@ -31,6 +31,7 @@ app.get("/create", (req, res) => {
     const io = new Server(server, { cors: {origin: "*", methods: ["GET"], allowedHeaders: "*"}}).of(code);
     io.on("connection", (socket) => {
         console.log(`Client connected on socket ${socket.id}`);
+        socket.emit("message", tournamentReport(code));
 
         // Push tournament data to clients on change
         socket.on("update", (msg) => {
@@ -349,7 +350,7 @@ function compileTournamentData(tournament)
 }
 
 // A wrapper around compileTournamentData for more readable socket code
-function tournamentReport(code, message)
+function tournamentReport(code, message = "")
 {
     return {...compileTournamentData(events.find((tournament) => tournament.code == code)), message: message}
 }
