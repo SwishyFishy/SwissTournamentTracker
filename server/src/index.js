@@ -26,9 +26,10 @@ const events = [];
 app.get("/create", (req, res) => {
     console.log("Received request at CREATE");
     const code = codegen.rnd();
+    const io = new Server(server, { cors: {origin: "*", methods: ["GET"], allowedHeaders: "*"}}).of(code);
+    events.push({code: code, tournament: new Tournament(), socket: io});
 
     // Socket logic
-    const io = new Server(server, { cors: {origin: "*", methods: ["GET"], allowedHeaders: "*"}}).of(code);
     io.on("connection", (socket) => {
         console.log(`Client connected on socket ${socket.id}`);
         socket.emit("message", tournamentReport(code));
@@ -44,7 +45,6 @@ app.get("/create", (req, res) => {
         });
     });
 
-    events.push({code: code, tournament: new Tournament, socket: io});
     res.status(200);
     res.json({
         code: code
@@ -336,6 +336,7 @@ function extractTournament(code, failResp, mode = "EVENT")
 // Compile all of the requested tournament data into a single json object
 function compileTournamentData(tournament)
 {
+    console.log(tournament);
     console.log("Compiling tournament data...");
     const data = {
         rounds: tournament.getRounds(),
