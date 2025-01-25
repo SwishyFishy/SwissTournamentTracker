@@ -352,5 +352,5 @@ function compileTournamentData(tournament)
 // A wrapper around compileTournamentData for more readable socket code
 function tournamentReport(code, message = "")
 {
-    return {...compileTournamentData(events.find((event) => event.code == code)).tournament, message: message}
+    return {...compileTournamentData(events.find((event) => event.code == code).tournament), message: message}
 }
