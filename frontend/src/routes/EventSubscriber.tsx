@@ -1,4 +1,4 @@
-import { useState, useContext, createContext } from "react";
+import { useState, useEffect, useContext, createContext } from "react";
 import { Outlet, useParams, useSearchParams } from "react-router";
 
 import { SubscribedData } from "../types";
@@ -14,15 +14,19 @@ function EventSubscriber(): JSX.Element
     const serverUrl = useContext(CONTEXT_serverBaseUrl);
     const {eventCode} = useParams() as {eventCode: string};
     const player: string = useSearchParams()[0].get("player")!;
-    const connection = useState<ServerConnection>(
-        new ServerConnection(serverUrl, eventCode, (data: SubscribedData) => { 
+    const [connection, setConnection] = useState<ServerConnection | undefined>(undefined);
+
+    // Load a socket connection
+    // Can't be initialized in the useState declaration directly due to its interaction with the 'new' operator
+    useEffect(() => {
+        setConnection(new ServerConnection(serverUrl, eventCode, (data: SubscribedData) => { 
             setDetails({...data});
             if (data.status == "over" || data.players!.find((p) => p.name == player && p.dropped))
             {
-                connection.disconnect();
+                connection!.disconnect();
             }
-        })
-    )[0];
+        }));
+    }, []);
 
     return (
         <CONTEXT_eventDetails.Provider value={details}>

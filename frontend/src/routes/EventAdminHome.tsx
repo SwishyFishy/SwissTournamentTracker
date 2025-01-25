@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate, useParams } from "react-router";
 
 import Timer from "../components/Timer";
@@ -18,16 +18,18 @@ function EventAdminHome(): JSX.Element
 
     const [eventDetails, setEventDetails] = useState<SubscribedData>();
     const [startRound, setStartRound] = useState<boolean>(false);
-    const connection = useState<ServerConnection>(
-        new ServerConnection(serverUrl, eventCode, (data: SubscribedData) => { 
+    const [connection, setConnection] = useState<ServerConnection | undefined>(undefined);
+    const round_time: number = 50;
+
+    useEffect(() => {
+        setConnection(new ServerConnection(serverUrl, eventCode, (data: SubscribedData) => { 
             setEventDetails({...data}) 
             if (data.message == "round_start")
             {
                 setStartRound(true);
             }
-        })
-    )[0];
-    const round_time: number = 50;
+        }));
+    }, []);
 
     // Edit player match scores
     const handleEditMatch = (e: any) => {
@@ -54,7 +56,7 @@ function EventAdminHome(): JSX.Element
 
     // Start the round timer
     const handleStartRound = () => {
-        connection.update("round_start");
+        connection!.update("round_start");
     }
     
     // Advance to the next round
@@ -64,7 +66,7 @@ function EventAdminHome(): JSX.Element
         .then(response => {
             if (response.status == 'over')
             {
-                connection.disconnect();
+                connection!.disconnect();
                 navigate(`/${eventCode}/conclusion?player=`);
             }
         })
