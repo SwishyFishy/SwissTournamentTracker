@@ -336,7 +336,6 @@ function extractTournament(code, failResp, mode = "EVENT")
 // Compile all of the requested tournament data into a single json object
 function compileTournamentData(tournament)
 {
-    console.log(tournament);
     console.log("Compiling tournament data...");
     const data = {
         rounds: tournament.getRounds(),
@@ -353,5 +352,5 @@ function compileTournamentData(tournament)
 // A wrapper around compileTournamentData for more readable socket code
 function tournamentReport(code, message = "")
 {
-    return {...compileTournamentData(events.find((tournament) => tournament.code == code)), message: message}
+    return {...compileTournamentData(events.find((event) => event.code == code)).tournament, message: message}
 }
