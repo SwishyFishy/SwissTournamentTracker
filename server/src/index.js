@@ -27,7 +27,7 @@ app.get("/create", (req, res) => {
     console.log("Received request at CREATE");
     const code = codegen.rnd();
     const io = new Server(server, { cors: {origin: "*", methods: ["GET"], allowedHeaders: "*"}}).of(code);
-    events.push({code: code, tournament: new Tournament(), socket: io});
+    events.push({code: code, tournament: new Tournament(), clients: io});
 
     // Socket logic
     io.on("connection", (socket) => {
@@ -56,8 +56,11 @@ app.get("/delete/:event", (req, res) => {
     console.log("Received request at DELETE");
     const tournamentIndex = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); }, "INDEX");
 
+    // Update clients
+    updateClients(events[tournamentIndex].clients, "cancel_tournament");
+
     // Delete the tournament
-    events.splice(tournamentIndex, 1);
+    events.splice(tournamentIndex, 1);  
     res.status(200);
     res.send("Deleted");
 })
@@ -74,6 +77,9 @@ app.get("/join/:event", (req, res) => {
     {
         if (tournament.AddParticipant(name))
         {
+            // Update clients
+            updateClients(tournamentObj.clients, "player_join");
+
             res.status(200);
             res.send("Added");
         }
@@ -102,7 +108,9 @@ app.get("/leave/:event", (req, res) => {
     {
         if (tournament.RemoveParticipant(name))
         {
-            tournamentObj.clients.splice(tournamentObj.clients.findIndex((client) => client.clientName == name), 1);
+            // Update clients
+            updateClients(tournamentObj.clients, "player_leave");
+
             res.status(200);
             res.send("Removed");
         }
@@ -131,8 +139,9 @@ app.get("/drop/:event", (req, res) => {
     {
         if (tournament.DropParticipant(name))
         {
-            // Remove the player as a client
-            tournamentObj.clients.splice(tournamentObj.clients.findIndex((client) => client.clientName == name), 1);
+            // Update clients
+            updateClients(tournamentObj.clients, "player_drop");
+
             res.status(200);
             res.send("Dropped");
         }
@@ -171,6 +180,10 @@ app.get("/start/:event", (req, res) => {
     try
     {
         tournament.StartTournament();
+        
+        // Update clients
+        updateClients(tournamentObj.clients, "tournament_start");
+
         res.status(200);
         res.send("Started");
     }
@@ -191,6 +204,10 @@ app.get("/advance/:event", (req, res) => {
     try
     {
         const result = tournament.NextRound();
+        
+        // Update clients
+        updateClients(tournamentObj.clients, "tournament_advance");
+
         res.status(200);
         res.json({
             status: result[0] == "Round" ? 'continue' : 'over'
@@ -241,6 +258,9 @@ app.get("/report/:event", (req, res) => {
     {
         if (tournament.ReportMatchResults(p1, p2, p1wins, p2wins))
         {
+            // Update clients
+            updateClients(tournamentObj.clients, "tournament_match_report");
+
             res.status(200);
             res.send("Reported");
         }
@@ -353,4 +373,12 @@ function compileTournamentData(tournament)
 function tournamentReport(code, message = "")
 {
     return {...compileTournamentData(events.find((event) => event.code == code).tournament), message: message}
+}
+
+// Push updated tournament data to all connected clients
+function updateClients(clientio, msg = "")
+{
+    clientio.emit("update", {
+        data: tournamentReport(code, msg)
+    });
 }
