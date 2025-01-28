@@ -27,16 +27,17 @@ app.get("/create", (req, res) => {
     console.log("Received request at CREATE");
     const code = codegen.rnd();
     const io = new Server(server, { cors: {origin: "*", methods: ["GET"], allowedHeaders: "*"}}).of(code);
-    events.push({code: code, tournament: new Tournament(), clients: io});
+    const tournament = new Tournament();
+    events.push({code: code, tournament: tournament, io: io});
 
     // Socket logic
     io.on("connection", (socket) => {
         console.log(`Client connected on socket ${socket.id}`);
-        socket.broadcast.emit("message", tournamentReport(code));
+        socket.broadcast.emit("message", tournamentReport(tournament));
 
         // Push tournament data to clients on change
         socket.on("update", (msg) => {
-            socket.broadcast.emit("message", tournamentReport(code, msg));
+            socket.broadcast.emit("message", tournamentReport(tournament, msg));
         });
 
         // Close the connection
@@ -57,7 +58,7 @@ app.get("/delete/:event", (req, res) => {
     const tournamentIndex = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); }, "INDEX");
 
     // Update clients
-    updateClients(events[tournamentIndex].clients, "cancel_tournament");
+    updateClients(events[tournamentIndex], "cancel_tournament");
 
     // Delete the tournament
     events.splice(tournamentIndex, 1);  
@@ -78,7 +79,7 @@ app.get("/join/:event", (req, res) => {
         if (tournament.AddParticipant(name))
         {
             // Update clients
-            updateClients(tournamentObj.clients, "player_join");
+            updateClients(tournamentObj, "player_join");
 
             res.status(200);
             res.send("Added");
@@ -91,6 +92,7 @@ app.get("/join/:event", (req, res) => {
     }
     catch (Error)
     {
+        console.log(Error);
         res.status(409);
         res.send("This tournament can no longer be joined");
     }
@@ -109,7 +111,7 @@ app.get("/leave/:event", (req, res) => {
         if (tournament.RemoveParticipant(name))
         {
             // Update clients
-            updateClients(tournamentObj.clients, "player_leave");
+            updateClients(tournamentObj, "player_leave");
 
             res.status(200);
             res.send("Removed");
@@ -140,7 +142,7 @@ app.get("/drop/:event", (req, res) => {
         if (tournament.DropParticipant(name))
         {
             // Update clients
-            updateClients(tournamentObj.clients, "player_drop");
+            updateClients(tournamentObj, "player_drop");
 
             res.status(200);
             res.send("Dropped");
@@ -182,7 +184,7 @@ app.get("/start/:event", (req, res) => {
         tournament.StartTournament();
         
         // Update clients
-        updateClients(tournamentObj.clients, "tournament_start");
+        updateClients(tournamentObj, "tournament_start");
 
         res.status(200);
         res.send("Started");
@@ -206,7 +208,7 @@ app.get("/advance/:event", (req, res) => {
         const result = tournament.NextRound();
         
         // Update clients
-        updateClients(tournamentObj.clients, "tournament_advance");
+        updateClients(tournamentObj, "tournament_advance");
 
         res.status(200);
         res.json({
@@ -259,7 +261,7 @@ app.get("/report/:event", (req, res) => {
         if (tournament.ReportMatchResults(p1, p2, p1wins, p2wins))
         {
             // Update clients
-            updateClients(tournamentObj.clients, "tournament_match_report");
+            updateClients(tournamentObj, "tournament_match_report");
 
             res.status(200);
             res.send("Reported");
@@ -370,15 +372,16 @@ function compileTournamentData(tournament)
 }
 
 // A wrapper around compileTournamentData for more readable socket code
-function tournamentReport(code, message = "")
+function tournamentReport(tournament, message = "")
 {
-    return {...compileTournamentData(events.find((event) => event.code == code).tournament), message: message}
+    return {...compileTournamentData(tournament), message: message}
 }
 
 // Push updated tournament data to all connected clients
-function updateClients(clientio, msg = "")
+function updateClients(tournamentObj, msg = "")
 {
-    clientio.emit("update", {
-        data: tournamentReport(code, msg)
+    console.log(tournamentObj.clients);
+    tournamentObj.io.emit("message", {
+        data: tournamentReport(tournamentObj.tournament, msg)
     });
 }
