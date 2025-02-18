@@ -1,7 +1,5 @@
 import io from "socket.io-client";
 
-import { SubscribedData } from "../types";
-
 class ServerConnection
 {
     // Data members
@@ -12,9 +10,7 @@ class ServerConnection
     {
         this.__socket = io(`${serverUrl}/${eventCode}`);
 
-        this.__socket.on("message", (data: SubscribedData) => {
-            callbackFn(data);
-        })
+        this.__socket.on("message", callbackFn);
     }
 
     // Public methods
