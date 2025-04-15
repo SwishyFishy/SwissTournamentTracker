@@ -33,7 +33,7 @@ app.get("/create", (req, res) => {
     // Socket logic
     io.on("connection", (socket) => {
         console.log(`Client connected on socket ${socket.id}`);
-        socket.broadcast.emit("message", tournamentReport(tournament));
+        io.emit("message", tournamentReport(tournament));
 
         // Push tournament data to clients on change
         socket.on("update", (msg) => {
