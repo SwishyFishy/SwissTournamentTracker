@@ -37,7 +37,7 @@ app.get("/create", (req, res) => {
 
         // Push tournament data to clients on change
         socket.on("update", (msg) => {
-            socket.broadcast.emit("message", tournamentReport(tournament, msg));
+            io.emit("message", tournamentReport(tournament, msg));
         });
 
         // Close the connection
