@@ -22,8 +22,8 @@ function EventAdminHome(): JSX.Element
     const round_time: number = 50;
 
     useEffect(() => {
-        setConnection(new ServerConnection(serverUrl, eventCode, (data: SubscribedData) => { 
-            setEventDetails({...data}) 
+        setConnection(new ServerConnection(serverUrl, eventCode, (data: SubscribedData) => {
+            setEventDetails({...data});
             if (data.message == "round_start")
             {
                 setStartRound(true);

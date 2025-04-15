@@ -19,7 +19,7 @@ function EventSubscriber(): JSX.Element
     // Load a socket connection
     // Can't be initialized in the useState declaration directly due to its interaction with the 'new' operator
     useEffect(() => {
-        setConnection(new ServerConnection(serverUrl, eventCode, (data: SubscribedData) => { 
+        setConnection(new ServerConnection(serverUrl, eventCode, (data: SubscribedData) => {
             setDetails({...data});
             if (data.status == "over" || data.players!.find((p) => p.name == player && p.dropped))
             {

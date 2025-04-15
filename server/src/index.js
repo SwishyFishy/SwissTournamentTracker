@@ -380,7 +380,5 @@ function tournamentReport(tournament, message = "")
 // Push updated tournament data to all connected clients
 function updateClients(tournamentObj, msg = "")
 {
-    tournamentObj.io.emit("message", {
-        data: tournamentReport(tournamentObj.tournament, msg)
-    });
+    tournamentObj.io.emit("message", tournamentReport(tournamentObj.tournament, msg));
 }
