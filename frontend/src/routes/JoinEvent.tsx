@@ -73,7 +73,7 @@ function JoinEvent(): JSX.Element
             <h1>Join Event</h1>
             <form>
                 <input type="text" name="name" id="name" placeholder="Your Name" value={name} onChange={handleNameInput}/>
-                <span className={nameError ? "italics" : "hidden"}>Name unavailable or contains non-alphanumeric characters</span>
+                <span className={nameError ? "italics" : "hidden"}>Name unavailable</span>
                 <input type="text" name="code" id="code" placeholder="Event Code" value={code} onChange={handleCodeInput}/>
                 <span className={codeError ? "italics" : "hidden"}>Tournament unavailable</span>
                 <input type="button" name="join" id="join" value="Join Event" onClick={handleSubmitJoin} />
