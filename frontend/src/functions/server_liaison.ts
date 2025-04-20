@@ -14,16 +14,17 @@ class ServerConnection
     }
 
     // Public methods
-    // Tell the server to close the connection
-    disconnect(): void
-    {
-        this.__socket.emit("close");
-    }
-
     // Tell the server that it needs to push new tournament data to the other clients
     update(msg: string = ""): void
     {
         this.__socket.emit("update", msg);
+    }
+
+    // Static methods
+    // Tell the server to close the connection
+    static disconnect(connection: ServerConnection): void
+    {
+        connection.__socket.emit("close");
     }
 }
 
