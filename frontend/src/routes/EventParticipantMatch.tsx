@@ -58,6 +58,11 @@ function EventParticipantMatch(): JSX.Element
     // Monitor for the message broadcast that the round has started
     // Monitor for match submission from either player, then redirect to postmatch page
     useEffect(() => {
+        if (eventDetails.status == "over")
+        {
+            navigate(`/${eventCode}/postmatch?player=${player}`);
+        }
+        
         if (eventDetails.message == "round_start")
         {
             setStartRound(true);
