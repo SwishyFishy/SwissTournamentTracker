@@ -35,7 +35,6 @@ app.get("/create", (req, res) => {
     io.on("connection", (socket) => {
         console.log(`Client connected on socket ${socket.id}`);
         io.emit("message", tournamentReport(tournament));
-        io.
 
         // Push tournament data to clients on change
         socket.on("update", (msg) => {
