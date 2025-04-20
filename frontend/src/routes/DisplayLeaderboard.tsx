@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router";
+import { useParams, useSearchParams, useNavigate } from "react-router";
 
 import { Leaderboard } from "../types";
 
@@ -11,20 +11,31 @@ function DisplayLeaderboard(): JSX.Element
 {
     const [results, setResults] = useState<Leaderboard>([]);  
 
-    const serverURL: string = useContext(CONTEXT_serverBaseUrl);
+    const serverUrl: string = useContext(CONTEXT_serverBaseUrl);
 
     const {eventCode} = useParams() as {eventCode: string};
     const player: string = useSearchParams()[0].get("player")!;
 
+    const navigate = useNavigate();
+
     // Get leaderboard
     useEffect(() => {
-        fetch(serverURL + `/leaderboard/${eventCode}`)
+        fetch(serverUrl + `/leaderboard/${eventCode}`)
         .then(response => response.json())
         .then(response => setResults(response.leaderboard))
         .catch((err) => {
             console.log(err);
         })
     }, [])
+
+    // Home button
+    const handleHome = () => {
+        if (player == "")
+        {
+            fetch(serverUrl + `/silence/${eventCode}`);
+        }
+        navigate("/");
+    }
 
     return(
         <div className="wrapper" id="displayLeaderboard">
@@ -50,6 +61,7 @@ function DisplayLeaderboard(): JSX.Element
                 ))}
             </ul>
             <span className="italics">Scroll for more details</span>
+            <input type="button" name="home" id="home" value="Home" onClick={handleHome} />
         </div>
     );
 }   
