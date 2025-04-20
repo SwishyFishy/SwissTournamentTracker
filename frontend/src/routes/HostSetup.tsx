@@ -22,7 +22,7 @@ function HostSetup(): JSX.Element
     const handleStartEvent = () => {
         fetch(serverUrl + `/start/${eventCode}`)
         .then(() => {
-            connection!.disconnect();
+            ServerConnection.disconnect(connection!);
             navigate(`/host/${eventCode}`);
         })
         .catch((err) =>{
@@ -34,7 +34,6 @@ function HostSetup(): JSX.Element
     const handleCancelEvent = () => {
         fetch(serverUrl + `/delete/${eventCode}`)
         .then(() => {
-            connection!.disconnect();
             navigate("/");
         })
         .catch((err) => {

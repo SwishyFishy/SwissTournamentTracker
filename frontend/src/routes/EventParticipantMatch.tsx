@@ -60,7 +60,7 @@ function EventParticipantMatch(): JSX.Element
     useEffect(() => {
         if (eventDetails.status == "over")
         {
-            navigate(`/${eventCode}/postmatch?player=${player}`);
+            navigate(`/${eventCode}/conclusion?player=${player}`);
         }
         
         if (eventDetails.message == "round_start")

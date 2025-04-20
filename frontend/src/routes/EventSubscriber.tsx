@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext, createContext } from "react";
-import { Outlet, useParams, useSearchParams } from "react-router";
+import { Outlet, useParams, useNavigate } from "react-router";
 
 import { SubscribedData } from "../types";
 import ServerConnection from "../functions/server_liaison";
@@ -13,18 +13,19 @@ function EventSubscriber(): JSX.Element
     const [details, setDetails] = useState<SubscribedData>(init);
     const serverUrl = useContext(CONTEXT_serverBaseUrl);
     const {eventCode} = useParams() as {eventCode: string};
-    const player: string = useSearchParams()[0].get("player")!;
     const [connection, setConnection] = useState<ServerConnection | undefined>(undefined);
+    const navigate = useNavigate();
 
     // Load a socket connection
     // Can't be initialized in the useState declaration directly due to its interaction with the 'new' operator
     useEffect(() => {
         setConnection(new ServerConnection(serverUrl, eventCode, (data: SubscribedData) => {
-            setDetails({...data});
-            if (data.status == "over" || data.players!.find((p) => p.name == player && p.dropped))
+            if (data.message == "cancel_tournament")
             {
-                connection!.disconnect();
+                try {ServerConnection.disconnect(connection!); } catch(error) {}
+                navigate("/", {state: {error: true, emsg: "The host cancelled the tournament"}});
             }
+            setDetails({...data});
         }));
     }, []);
 

@@ -64,9 +64,8 @@ function EventAdminHome(): JSX.Element
         fetch(serverUrl + `/advance/${eventCode}`)
         .then(response => response.json())
         .then(response => {
-            if (response.status == 'over')
+            if (response.status == "over")
             {
-                connection!.disconnect();
                 navigate(`/${eventCode}/conclusion?player=`);
             }
         })
