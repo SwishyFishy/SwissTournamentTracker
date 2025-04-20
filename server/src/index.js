@@ -14,6 +14,7 @@ const {ipv4, port} = require("./private.js");
 // Get modules for tournament object
 const Tournament = require("./event/tournament.js");
 const ShortUniqueId = require("short-unique-id");
+const { toUnicode } = require("punycode");
 const codegen = new ShortUniqueId({length: 8, dictionary: 'alphanum_lower'});
 
 const events = [];
@@ -34,6 +35,7 @@ app.get("/create", (req, res) => {
     io.on("connection", (socket) => {
         console.log(`Client connected on socket ${socket.id}`);
         io.emit("message", tournamentReport(tournament));
+        io.
 
         // Push tournament data to clients on change
         socket.on("update", (msg) => {
@@ -42,6 +44,7 @@ app.get("/create", (req, res) => {
 
         // Close the connection
         socket.on("close", () => {
+            console.log(`Client ${socket.id} disconnected`);
             socket.disconnect();
         });
     });
@@ -277,6 +280,18 @@ app.get("/report/:event", (req, res) => {
         res.status(409);
         res.send("Tournament cannot accept match reports");
     }
+})
+
+// Kill all client connections
+app.get("/silence/:event", (req, res) => {
+    console.log("Received request at SILENCE");
+    const tournamentIndex = extractTournament(req.params.event, () => { res.status(404); res.send("Tournament does not exist"); }, "INDEX");
+    
+    // Destroy all connections
+    events[tournamentIndex].io.disconnectSockets();
+
+    res.status(200);
+    res.send("All sockets closed");
 })
 
 // Debugging page
