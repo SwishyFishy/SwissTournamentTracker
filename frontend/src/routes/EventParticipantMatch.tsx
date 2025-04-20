@@ -62,16 +62,17 @@ function EventParticipantMatch(): JSX.Element
         {
             navigate(`/${eventCode}/conclusion?player=${player}`);
         }
-        
-        if (eventDetails.message == "round_start")
+        else if (eventDetails.message == "round_start")
         {
             setStartRound(true);
         }
-
-        const match: Match = eventDetails.matches!.find((match) => match.p1 == player || match.p2 == player)!
-        if (match.reported)
+        else
         {
-            navigate(`/${eventCode}/postmatch?player=${player}`);
+            const match: Match = eventDetails.matches!.find((match) => match.p1 == player || match.p2 == player)!
+            if (match.reported)
+            {
+                navigate(`/${eventCode}/postmatch?player=${player}`);
+            }
         }
     }, [eventDetails])
 
