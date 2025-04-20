@@ -18,7 +18,11 @@ function EventParticipantPostmatch(): JSX.Element
 
     // Monitor for the round to update, then redirect to pairings or event conclusion
     useEffect(() => {
-        if (round < eventDetails?.rounds?.currentRound!)
+        if (eventDetails?.players !== undefined && eventDetails?.players?.find((p) => p.name == player) == undefined)
+        {
+            navigate("/", {state: {error: true, emsg: "You have been removed from the tournament"}});
+        }
+        else if (round < eventDetails?.rounds?.currentRound!)
         {
             if(eventDetails.status == "running") 
             {

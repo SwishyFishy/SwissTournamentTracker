@@ -17,6 +17,10 @@ function EventParticipantLobby(): JSX.Element
         {
             navigate(`/${eventCode}/pairing?player=${player}`);
         }
+        else if (eventDetails?.players !== undefined && eventDetails?.players?.find((p) => p.name == player) == undefined)
+        {
+            navigate("/", {state: {error: true, emsg: "You have been removed from the tournament"}});
+        }
     }, [eventDetails])
 
     return(
