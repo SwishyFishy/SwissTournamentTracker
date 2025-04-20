@@ -61,7 +61,7 @@ function DisplayLeaderboard(): JSX.Element
                 ))}
             </ul>
             <span className="italics">Scroll for more details</span>
-            <input type="button" name="home" id="home" value="Home" onClick={handleHome} />
+            <input type="button" name="home" id="home" value={player == "" ? "End Tournament" : "Home"} onClick={handleHome} />
         </div>
     );
 }   
