@@ -14,7 +14,6 @@ const {ipv4, port} = require("./private.js");
 // Get modules for tournament object
 const Tournament = require("./event/tournament.js");
 const ShortUniqueId = require("short-unique-id");
-const { toUnicode } = require("punycode");
 const codegen = new ShortUniqueId({length: 8, dictionary: 'alphanum_lower'});
 
 const events = [];
