@@ -61,6 +61,9 @@ app.get("/delete/:event", (req, res) => {
     // Update clients
     updateClients(events[tournamentIndex], "cancel_tournament");
 
+    // Close connections
+    events[tournamentIndex].io.disconnectSockets();
+
     // Delete the tournament
     events.splice(tournamentIndex, 1);  
     res.status(200);
@@ -304,6 +307,14 @@ app.get("/debug", (req, res) => {
             else if (key === 'clients')
             {
                 return '[clients]';
+            }
+            else if (key == 'sockets')
+            {
+                return '[sockets]';
+            }
+            else if (key == 'adapter')
+            {
+                return '[adapter]';
             }
             return value;
         }))

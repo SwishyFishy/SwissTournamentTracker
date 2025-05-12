@@ -25,6 +25,10 @@ function EventSubscriber(): JSX.Element
                 try {ServerConnection.disconnect(connection!); } catch(error) {}
                 navigate("/", {state: {error: true, emsg: "The host cancelled the tournament"}});
             }
+            else if (data.status == "over")
+            {
+                try {ServerConnection.disconnect(connection!); } catch(error) {}
+            }
             setDetails({...data});
         }));
     }, []);

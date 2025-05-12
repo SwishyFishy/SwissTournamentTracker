@@ -33,6 +33,7 @@ function DisplayLeaderboard(): JSX.Element
         if (player == "")
         {
             fetch(serverUrl + `/silence/${eventCode}`);
+            fetch(serverUrl + `/delete/${eventCode}`);
         }
         navigate("/");
     }
