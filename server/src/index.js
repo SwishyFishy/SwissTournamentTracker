@@ -47,6 +47,11 @@ app.get("/create", (req, res) => {
         });
     });
 
+    // Set a timeout to delete the event in 48 hours
+    setTimeout(() => {
+        io.disconnectSockets();
+    }, 1000 * 60 * 60 * 48); // 1000ms * 60s * 60m * 48h
+
     res.status(200);
     res.json({
         code: code
