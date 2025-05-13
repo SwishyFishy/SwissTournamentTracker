@@ -1,101 +1,95 @@
+// Participant class to store player information
+class Participant
+{
+    // Constructor
+    // name: string
+    constructor(name)
+    {
+        // Data members
+        this.id = 0;
+        this.name = name;
+        this.dropped = false;
+        this.opponents = [];
+        this.opponentNames = [];
+        this.mWins = 0;
+        this.mLosses = 0;
+        this.mDraws = 0;
+        this.matches = 0;
+        this.gWins = 0;
+        this.gLosses = 0;
+        this.games = 0;
+    }
+
+    // User-Facing Methods
+    //////////////////////
+    CalcPoints()
+    {
+        return (3 * this.mWins) + this.mDraws;
+    }
+
+    CalcMW()
+    {
+        return this.matches == 0 ? 0 : (this.mWins / this.matches) * 100;
+    }
+
+    CalcOMW()
+    {
+        let oppWins = 0;
+        let oppMatches = 0;
+        this.opponents.forEach((opponent) => {
+            oppWins += opponent.mWins;
+            oppMatches += opponent.matches;
+        })
+        return oppMatches == 0 ? 0 : (oppWins / oppMatches) * 100
+    }
+
+    CalcGW()
+    {
+        return this.games == 0 ? 0 : (this.gWins / this.games) * 100;
+    }
+
+    CalcOGW()
+    {
+        let oppWins = 0;
+        let oppGames = 0;
+        this.opponents.forEach((opponent) => {
+            oppWins += opponent.gWins;
+            oppGames += opponent.games;
+        })
+        return oppGames == 0 ? 0 : (oppWins / oppGames) * 100
+    }
+
+    HasBye()
+    {
+        this.mWins += 1;
+        this.matches += 1;
+    }
+
+    SubmitMatchResults(wins, losses, opponent)
+    {
+        this.gWins += wins;
+        this.gLosses += losses;
+        this.games += wins + losses;
+        if (wins > losses)
+        {
+            this.mWins++;
+        }
+        else if (wins < losses)
+        {
+            this.mLosses++;
+        }
+        else
+        {
+            this.mDraws++;
+        }
+        this.matches++;
+        this.opponents.push(opponent);
+        this.opponentNames.push(opponent.name);
+    }
+}   
+
 class Tournament
 {
-    // Nested Participant class to store player information
-    __Participant = class
-    {
-        // Constructor
-        // name: string
-        constructor(name)
-        {
-            // Data members
-            this.id = 0;
-            this.name = name;
-            this.dropped = false;
-
-            this.opponents = [];
-            this.opponentNames = [];
-            this.mWins = 0;
-            this.mLosses = 0;
-            this.mDraws = 0;
-            this.matches = 0;
-            this.gWins = 0;
-            this.gLosses = 0;
-            this.games = 0;
-        }
-
-        // User-Facing Methods
-        //////////////////////
-
-        CalcPoints()
-        {
-            return (3 * this.mWins) + this.mDraws;
-        }
-
-        CalcMW()
-        {
-            return this.matches == 0 ? 0 : (this.mWins / this.matches) * 100;
-        }
-
-        CalcOMW()
-        {
-            let oppWins = 0;
-            let oppMatches = 0;
-            this.opponents.forEach((opponent) => {
-                oppWins += opponent.mWins;
-                oppMatches += opponent.matches;
-            })
-
-            return oppMatches == 0 ? 0 : (oppWins / oppMatches) * 100
-        }
-
-        CalcGW()
-        {
-            return this.games == 0 ? 0 : (this.gWins / this.games) * 100;
-        }
-
-        CalcOGW()
-        {
-            let oppWins = 0;
-            let oppGames = 0;
-            this.opponents.forEach((opponent) => {
-                oppWins += opponent.gWins;
-                oppGames += opponent.games;
-            })
-
-            return oppGames == 0 ? 0 : (oppWins / oppGames) * 100
-        }
-
-        HasBye()
-        {
-            this.mWins += 1;
-            this.matches += 1;
-        }
-
-        SubmitMatchResults(wins, losses, opponent)
-        {
-            this.gWins += wins;
-            this.gLosses += losses;
-            this.games += wins + losses;
-
-            if (wins > losses)
-            {
-                this.mWins++;
-            }
-            else if (wins < losses)
-            {
-                this.mLosses++;
-            }
-            else
-            {
-                this.mDraws++;
-            }
-            this.matches++;
-
-            this.opponents.push(opponent);
-            this.opponentNames.push(opponent.name);
-        }
-    }   
-
     // Constructor
     // participants: array<string>
     constructor(participants = [])
@@ -253,7 +247,7 @@ class Tournament
             return false;
         }
 
-        this.participants.push(new this.__Participant(participant));
+        this.participants.push(new Participant(participant));
         return true;
     }
 

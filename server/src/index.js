@@ -9,7 +9,6 @@ const cors = require("cors");
 app.use(cors());
 
 const { Server } = require("socket.io");
-const {ipv4, port} = require("./private.js");
 
 // Get modules for tournament object
 const Tournament = require("./event/tournament.js");
@@ -329,9 +328,9 @@ app.use("*", (req, res) => {
 ///////////////////
 
 // Listen on port
-server.listen(port, ipv4, () => {
-    console.log(`Server started on port ${port}`);
-    console.log(`${ipv4}:${port}/dumpraw`);
+server.listen(3000, '0.0.0.0', () => {
+    console.log(`Server started on port 3000`);
+    console.log(`/dumpraw`);
 });
 
 ////////////////////
