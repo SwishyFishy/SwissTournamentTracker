@@ -84,8 +84,10 @@ app.get("/join/:event", (req, res) => {
 
     // Attempt to add player
     try
-    {
-        if (tournament.AddParticipant(name))
+    {   
+        const nameRegex = new RegExp("[a-zA-Z0-9_]");
+
+        if (nameRegex.test(name) && tournament.AddParticipant(name))
         {
             // Update clients
             updateClients(tournamentObj, "player_join");

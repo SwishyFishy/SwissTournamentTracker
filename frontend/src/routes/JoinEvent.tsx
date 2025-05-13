@@ -29,7 +29,7 @@ function JoinEvent(): JSX.Element
         setNameError(false);
         setCodeError(false);
 
-        const nameRegex: RegExp = new RegExp("[a-zA-Z0-9]");
+        const nameRegex: RegExp = new RegExp("[a-zA-Z0-9_]");
 
         // Validate user input
         if (name == "" || !nameRegex.test(name))
