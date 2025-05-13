@@ -303,25 +303,17 @@ app.get("/silence/:event", (req, res) => {
 })
 
 // Debugging page
-app.get("/debug", (req, res) => {
+app.get("/dumpraw", (req, res) => {
     res.status(200);
     res.json({
         events: JSON.parse(JSON.stringify(events, (key, value) => {
-            if (key === 'opponents') 
+            if (key === 'io') 
             { 
-                return '[opponents]'; 
+                return '[io]'; 
             }
-            else if (key === 'clients')
+            else if (key === 'opponents')
             {
-                return '[clients]';
-            }
-            else if (key == 'sockets')
-            {
-                return '[sockets]';
-            }
-            else if (key == 'adapter')
-            {
-                return '[adapter]';
+                return '[opponents]';
             }
             return value;
         }))

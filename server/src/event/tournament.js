@@ -13,6 +13,7 @@ class Tournament
             this.dropped = false;
 
             this.opponents = [];
+            this.opponentNames = [];
             this.mWins = 0;
             this.mLosses = 0;
             this.mDraws = 0;
@@ -91,6 +92,7 @@ class Tournament
             this.matches++;
 
             this.opponents.push(opponent);
+            this.opponentNames.push(opponent.name);
         }
     }   
 
