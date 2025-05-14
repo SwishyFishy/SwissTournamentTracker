@@ -1,92 +1,123 @@
 // Participant class to store player information
-class Participant
-{
-    // Constructor
-    // name: string
-    constructor(name)
+    class Participant
     {
-        // Data members
-        this.id = 0;
-        this.name = name;
-        this.dropped = false;
-        this.opponents = [];
-        this.opponentNames = [];
-        this.mWins = 0;
-        this.mLosses = 0;
-        this.mDraws = 0;
-        this.matches = 0;
-        this.gWins = 0;
-        this.gLosses = 0;
-        this.games = 0;
-    }
-
-    // User-Facing Methods
-    //////////////////////
-    CalcPoints()
-    {
-        return (3 * this.mWins) + this.mDraws;
-    }
-
-    CalcMW()
-    {
-        return this.matches == 0 ? 0 : (this.mWins / this.matches) * 100;
-    }
-
-    CalcOMW()
-    {
-        let oppWins = 0;
-        let oppMatches = 0;
-        this.opponents.forEach((opponent) => {
-            oppWins += opponent.mWins;
-            oppMatches += opponent.matches;
-        })
-        return oppMatches == 0 ? 0 : (oppWins / oppMatches) * 100
-    }
-
-    CalcGW()
-    {
-        return this.games == 0 ? 0 : (this.gWins / this.games) * 100;
-    }
-
-    CalcOGW()
-    {
-        let oppWins = 0;
-        let oppGames = 0;
-        this.opponents.forEach((opponent) => {
-            oppWins += opponent.gWins;
-            oppGames += opponent.games;
-        })
-        return oppGames == 0 ? 0 : (oppWins / oppGames) * 100
-    }
-
-    HasBye()
-    {
-        this.mWins += 1;
-        this.matches += 1;
-    }
-
-    SubmitMatchResults(wins, losses, opponent)
-    {
-        this.gWins += wins;
-        this.gLosses += losses;
-        this.games += wins + losses;
-        if (wins > losses)
+        // Constructor
+        // name: string
+        constructor(name)
         {
-            this.mWins++;
+            // Data members
+            this.id = 0;
+            this.name = name;
+            this.dropped = false;
+
+            this.opponents = [];
+            this.opponentNames = [];
+            this.mWins = 0;
+            this.mLosses = 0;
+            this.mDraws = 0;
+            this.matches = 0;
+            this.gWins = 0;
+            this.gLosses = 0;
+            this.games = 0;
         }
-        else if (wins < losses)
+
+        // User-Facing Methods
+        //////////////////////
+
+        Clone()
         {
-            this.mLosses++;
+            const newParticipant = Participant(this.name);
+            newParticipant.id = this.id;
+            newParticipant.dropped = this.dropped;
+            newParticipant.mWins = this.mWins;
+            newParticipant.mLosses = this.mLosses;
+            newParticipant.mDraws = this.mDraws;
+            newParticipant.matches = this.matches;
+            newParticipant.gWins = this.gWins;
+            newParticipant.gLosses = this.gLosses;
+            newParticipant.games = this.games;
+            newParticipant.opponents = [];
+            newParticipant.opponentNames = [];
+          
+            for (let i = 0; i < this.opponents.length; i++)
+            {
+                newParticipant.opponents.push(this.opponents[i]);
+                newParticipant.opponentNames.push(this.opponentNames[i]);
+            }
+            console.log(newParticipant);
+            return newParticipant;
         }
-        else
+      
+        CalcPoints()
         {
-            this.mDraws++;
+            return (3 * this.mWins) + this.mDraws;
         }
-        this.matches++;
-        this.opponents.push(opponent);
-        this.opponentNames.push(opponent.name);
-    }
-}   
+
+        CalcMW()
+        {
+            return this.matches == 0 ? 0 : (this.mWins / this.matches) * 100;
+        }
+
+        CalcOMW()
+        {
+            let oppWins = 0;
+            let oppMatches = 0;
+            this.opponents.forEach((opponent) => {
+                oppWins += opponent.mWins;
+                oppMatches += opponent.matches;
+            })
+
+            return oppMatches == 0 ? 0 : (oppWins / oppMatches) * 100
+        }
+
+        CalcGW()
+        {
+            return this.games == 0 ? 0 : (this.gWins / this.games) * 100;
+        }
+
+        CalcOGW()
+        {
+            let oppWins = 0;
+            let oppGames = 0;
+            this.opponents.forEach((opponent) => {
+                oppWins += opponent.gWins;
+                oppGames += opponent.games;
+            })
+
+            return oppGames == 0 ? 0 : (oppWins / oppGames) * 100
+        }
+
+        HasBye()
+        {
+            this.mWins += 1;
+            this.matches += 1;
+        }
+
+        SubmitMatchResults(wins, losses, opponent)
+        {
+            this.gWins += wins;
+            this.gLosses += losses;
+            this.games += wins + losses;
+
+            if (wins > losses)
+            {
+                this.mWins++;
+            }
+            else if (wins < losses)
+            {
+                this.mLosses++;
+            }
+            else
+            {
+                this.mDraws++;
+            }
+            this.matches++;
+
+            this.opponents.push(opponent);
+            this.opponentNames.push(opponent.name);
+        }
+    }   
+
 
 class Tournament
 {
@@ -412,12 +443,20 @@ class Tournament
         if (this.currentRound > this.rounds)
         {
             return this.EndTournament();
-        }
+        }      
 
         // Set up next round
         // Pass __MatchBuilder an array of players in leaderboard order, with any that dropped the event filtered out.
-        this.__RankParticipants();
-        this.currentMatches = this.__MatchBuilder(structuredClone(this.participants).filter((player) => this.matches[player.id] !== "DROP"))
+        this.__RankParticipants();      
+        const matchBuilderParticipants = [];
+        for (let i = 0; i < this.participants.length; i++)
+        {
+            matchBuilderParticipants.push(this.participants[i].Clone());    
+        }
+      
+        console.log(matchBuilderParticipants);
+        this.currentMatches = this.__MatchBuilder(matchBuilderParticipants.filter((player) => this.matches[player.id] !== "DROP"))
+        console.log(this.currentMatches);
         if (this.currentMatches === false)
         {
             return ["Fail", this.participants];
@@ -429,6 +468,7 @@ class Tournament
     // proposedPairs: array<Object>
     __MatchBuilder(unmatchedParticipants, proposedPairs = [])
     {
+        console.log("MatchBuilder Checkin");
         // Recursively find a pairing, remove those players, call self, until all pairings made successfully
         // For the highest-ranked unmatched player, check all possible pairings in descending leaderboared order
         // Use the bye only as a last resort

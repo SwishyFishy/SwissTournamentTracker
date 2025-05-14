@@ -192,17 +192,17 @@ app.get("/start/:event", (req, res) => {
     try
     {
         tournament.StartTournament();
-        
+      
         // Update clients
         updateClients(tournamentObj, "tournament_start");
-
+        
         res.status(200);
         res.send("Started");
     }
     catch(Error)
     {
         res.status(409);
-        res.send("This tournament cannot be started");
+        res.send("Either the tournament failed to start or connection to the clients was lost");
     }
 })
 
@@ -328,7 +328,7 @@ app.use("*", (req, res) => {
 ///////////////////
 
 // Listen on port
-server.listen(3000, '0.0.0.0', () => {
+server.listen(3000, "0.0.0.0", () => {
     console.log(`Server started on port 3000`);
     console.log(`/dumpraw`);
 });
