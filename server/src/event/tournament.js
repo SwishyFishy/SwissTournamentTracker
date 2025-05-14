@@ -228,7 +228,7 @@ class Tournament
     }
     
     // Determine participant placement on the leaderboard
-    // Associated private function __ComparePlacement is the CompareFn implementation for Array.Protoptype.sort
+    // Associated private function __ComparePlacement is the CompareFn implementation for Array.Prototype.sort
     __RankParticipants()
     {
         this.participants.sort(this.__ComparePlacement);
@@ -447,8 +447,10 @@ class Tournament
 
         // Set up next round
         // Pass __MatchBuilder an array of players in leaderboard order, with any that dropped the event filtered out.
+        console.log("Pre-ranking");
+        console.log(this.participants, this.participants.length);
         this.__RankParticipants();      
-        const matchBuilderParticipants = [];
+        let matchBuilderParticipants = [];
         for (let i = 0; i < this.participants.length; i++)
         {
             matchBuilderParticipants.push(this.participants[i].Clone());    
